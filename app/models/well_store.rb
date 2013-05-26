@@ -43,8 +43,8 @@ class WellStore
   def self.load
     $stdout.sync = true
     # Finds and opens a CSV file, from the resources dir, which contains the data to be loaded
-#    path = NSBundle.mainBundle.pathForResource("abandoned_wells_20130513", ofType:"csv")
-    path = NSBundle.mainBundle.pathForResource("small_wells", ofType:"csv")
+    path = NSBundle.mainBundle.pathForResource("abandoned_wells_20130513", ofType:"csv")
+#    path = NSBundle.mainBundle.pathForResource("small_wells", ofType:"csv")
     loaded = 0
     FCSV.foreach( path, headers: true ) do |row|
       WellStore.shared.create_well do |info, details|
@@ -105,13 +105,13 @@ class WellStore
   def store_url
     store_url = NSURL.fileURLWithPath(File.join(NSHomeDirectory(), 'Documents', 'wells.sqlite'))
     # Check if a data store already exists in the documents directory.
-    #unless NSFileManager.defaultManager.fileExistsAtPath(store_url.path)
-    #  sqlite_url = NSURL.fileURLWithPath(NSBundle.mainBundle.pathForResource("wells", ofType:"sqlite"))
-    #  error_ptr = Pointer.new(:object)
-    #  unless NSFileManager.defaultManager.copyItemAtURL(sqlite_url, toURL: store_url, error: error_ptr)
-    #    NSLog("Failed to copy preloaded database file")
-    #  end
-    #end
+    unless NSFileManager.defaultManager.fileExistsAtPath(store_url.path)
+      sqlite_url = NSURL.fileURLWithPath(NSBundle.mainBundle.pathForResource("wells", ofType:"sqlite"))
+      error_ptr = Pointer.new(:object)
+      unless NSFileManager.defaultManager.copyItemAtURL(sqlite_url, toURL: store_url, error: error_ptr)
+        NSLog("Failed to copy preloaded database file")
+      end
+    end
     store_url
   end
 

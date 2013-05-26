@@ -1,0 +1,1 @@
+../../app/models/well_store.rb
