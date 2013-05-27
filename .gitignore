@@ -3,7 +3,7 @@
 .bundle
 .config
 .repl_history
-**/build
+**build
 coverage
 InstalledFiles
 lib/bundler/man
