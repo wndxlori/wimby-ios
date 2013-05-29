@@ -5,18 +5,18 @@ class WellStore
   end
 
 
-  #def fetched_results_controller
-  #  fetch_request = NSFetchRequest.alloc.init
-  #  fetch_request.entity = NSEntityDescription.entityForName('WellInfo', inManagedObjectContext:@context)
-  #  sort = NSSortDescriptor.alloc.initWithKey("details.uwi_sort", ascending: false)
-  #  fetch_request.sortDescriptors = [sort]
-  #  fetch_request.fetchBatchSize = 20
-  #
-  #  NSFetchedResultsController.alloc.initWithFetchRequest(fetch_request,
-  #                                                        managedObjectContext:@context,
-  #                                                        sectionNameKeyPath:nil,
-  #                                                        cacheName:"Well")
-  #end
+  def fetched_results_controller
+    fetch_request = NSFetchRequest.alloc.init
+    fetch_request.entity = NSEntityDescription.entityForName('WellInfo', inManagedObjectContext:@context)
+    sort = NSSortDescriptor.alloc.initWithKey("details.uwi_sort", ascending: false)
+    fetch_request.sortDescriptors = [sort]
+    fetch_request.fetchBatchSize = 20
+
+    NSFetchedResultsController.alloc.initWithFetchRequest(fetch_request,
+                                                          managedObjectContext:@context,
+                                                          sectionNameKeyPath:nil,
+                                                          cacheName:"Well")
+  end
 
   # TODO: will we ever need this, or should It just get rid of it?
   def add_well

@@ -4,3 +4,6 @@ gem 'rake'
 gem 'rubymotion_generators'
 gem "bubble-wrap", "~> 1.3.0.osx"
 
+gem 'sugarcube'
+gem 'teacup'
+gem 'sweettea'
