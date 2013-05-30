@@ -3,7 +3,7 @@ class AppDelegate
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
     tabbar = UITabBarController.alloc.init
     tabbar.viewControllers = [WellMapController.alloc.init, WellTableViewController.alloc.init]
-    tabbar.selectedIndex = 0
+    tabbar.selectedIndex = 1
     @window.rootViewController = UINavigationController.alloc.initWithRootViewController(tabbar)
     @window.rootViewController.wantsFullScreenLayout = true
     @window.makeKeyAndVisible
