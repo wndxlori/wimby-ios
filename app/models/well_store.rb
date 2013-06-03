@@ -8,7 +8,7 @@ class WellStore
   def fetched_results_controller
     fetch_request = NSFetchRequest.alloc.init
     fetch_request.entity = NSEntityDescription.entityForName('WellInfo', inManagedObjectContext:@context)
-    sort = NSSortDescriptor.alloc.initWithKey("details.uwi_sort", ascending: false)
+    sort = NSSortDescriptor.alloc.initWithKey("details.uwi_sort", ascending: true)
     fetch_request.sortDescriptors = [sort]
     fetch_request.fetchBatchSize = 20
 
@@ -105,7 +105,7 @@ class WellStore
   def store_url
     store_url = NSURL.fileURLWithPath(File.join(NSHomeDirectory(), 'Documents', 'wells.sqlite'))
     # Check if a data store already exists in the documents directory.
-    unless NSFileManager.defaultManager.fileExistsAtPath(store_url.path)
+    unless Kernel.const_defined?(:NSApplication) || NSFileManager.defaultManager.fileExistsAtPath(store_url.path)
       sqlite_url = NSURL.fileURLWithPath(NSBundle.mainBundle.pathForResource("wells", ofType:"sqlite"))
       error_ptr = Pointer.new(:object)
       unless NSFileManager.defaultManager.copyItemAtURL(sqlite_url, toURL: store_url, error: error_ptr)
