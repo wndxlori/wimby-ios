@@ -1,14 +1,20 @@
 class AppDelegate
   def application(application, didFinishLaunchingWithOptions:launchOptions)
-    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
+
+    menu = WimbyViewController.new
     tabbar = UITabBarController.alloc.init
     tabbar.viewControllers = [WellMapController.alloc.init, WellTableViewController.alloc.init]
     tabbar.selectedIndex = 1
-    @window.rootViewController = UINavigationController.alloc.initWithRootViewController(tabbar)
-    @window.rootViewController.wantsFullScreenLayout = true
+
+    UINavigationBar.appearance.titleTextAttributes = { UITextAttributeFont => 'Copperplate Bold'.uifont(20) }
+
+    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
+    root = NVSlideMenuController.alloc.initWithMenuViewController(menu, andContentViewController: tabbar)
+    @window.rootViewController = root
     @window.makeKeyAndVisible
     true
   end
+
 
   def well_details_controller
     @well_details_controller ||= WellDetailsController.alloc.init

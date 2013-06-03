@@ -2,6 +2,12 @@ class WellTableViewController < UITableViewController
 
   include NSFetchedResultsControllerDelegate
 
+  def init
+    super.tap do
+      self.tabBarItem = UITabBarItem.alloc.initWithTitle('List', image:UIImage.imageNamed('list.png'), tag:2)
+    end
+  end
+
   def viewDidLoad
     super
     error_ptr = Pointer.new(:object)
