@@ -28,8 +28,8 @@ class WellTableViewController < UITableViewController
 
   def configureCell(cell, atIndexPath:index)
     well = @fetch_controller.objectAtIndexPath(index)
-    cell.textLabel.text = well.well_name
-    cell.detailTextLabel.text = "#{well.well_name}, #{well.uwi_display}"
+    cell.textLabel.text = well.uwi_display
+    cell.detailTextLabel.text = well.well_name
     return cell
   end
 
