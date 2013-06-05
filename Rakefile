@@ -5,6 +5,7 @@ require 'motion/project/template/ios'
 require 'bundler'
 Bundler.setup
 Bundler.require
+require 'bubble-wrap/location'
 
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.

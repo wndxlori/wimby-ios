@@ -1,12 +1,19 @@
 class AppDelegate
+
+  attr_accessor :location
+
   def application(application, didFinishLaunchingWithOptions:launchOptions)
+
+    self.get_location
 
     menu = WimbyViewController.new
     tableview = WellTableViewController.alloc.init
-    nav = WellNavController.alloc.initWithRootViewController(tableview)
+    tablenav = WellNavController.alloc.initWithRootViewController(tableview)
+    mapview = WellMapController.alloc.init
+    mapnav = WellNavController.alloc.initWithRootViewController(mapview)
 
     tabbar = UITabBarController.alloc.init
-    tabbar.viewControllers = [WellMapController.alloc.init, nav]
+    tabbar.viewControllers = [mapnav, tablenav]
     tabbar.selectedIndex = 1
 
 #    UINavigationBar.appearance.titleTextAttributes = { UITextAttributeFont => 'Copperplate Bold'.uifont(20) }
@@ -21,5 +28,11 @@ class AppDelegate
 
   def well_details_controller
     @well_details_controller ||= WellDetailsController.alloc.init
+  end
+
+  def get_location
+    BubbleWrap::Location.get_once do |location|
+      self.location = location
+    end
   end
 end

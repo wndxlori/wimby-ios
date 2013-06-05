@@ -23,7 +23,7 @@ class WellTableViewController < UITableViewController
   end
 
   def viewWillAppear(animated)
-    navigationItem.title = 'Wells in View'
+    navigationItem.title = 'Wells on Map'
     #navigationItem.leftBarButtonItem = editButtonItem
     #navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemAdd, target:self, action:'add_well')
   end
