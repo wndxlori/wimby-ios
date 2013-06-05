@@ -41,15 +41,23 @@ class WellTableViewController < UITableViewController
 
   CellID = 'CellIdentifier'
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    cell = tableView.dequeueReusableCellWithIdentifier(CellID) || UITableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:CellID)
+    cell = tableView.dequeueReusableCellWithIdentifier(CellID) || begin
+      cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:CellID)
+      cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton
+      cell
+    end
     configureCell(cell, atIndexPath:indexPath)
   end
 
+  # Ya.  Don't let people delete the wells
   def tableView(tableView, editingStyleForRowAtIndexPath:indexPath)
-    UITableViewCellEditingStyleDelete
+    UITableViewCellEditingStyleNone
   end
 
-  def tableView(tableView, commitEditingStyle:editingStyle, forRowAtIndexPath:indexPath)
-    WellStore.shared.remove_well(@fetch_controller.objectAtIndexPath(indexPath))
+  def tableView(tableView, accessoryButtonTappedForRowWithIndexPath:indexPath)
+    well = @fetch_controller.fetchedObjects[indexPath.row]
+    controller = UIApplication.sharedApplication.delegate.well_details_controller
+    self.navigationController.pushViewController(controller, animated:true)
+    controller.showDetailsForWell(well)
   end
 end
