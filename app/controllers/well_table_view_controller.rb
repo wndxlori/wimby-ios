@@ -15,8 +15,7 @@ class WellTableViewController < UITableViewController
     end
   end
 
-  def viewDidLoad
-    super
+  def layoutDidLoad
     error_ptr = Pointer.new(:object)
     @fetch_controller = WellStore.shared.fetched_results_controller
     @fetch_controller.delegate = self
@@ -25,7 +24,7 @@ class WellTableViewController < UITableViewController
     end
   end
 
-  def viewDidUnload
+  def layoutDidUnload
     @fetch_controller = nil
   end
 
