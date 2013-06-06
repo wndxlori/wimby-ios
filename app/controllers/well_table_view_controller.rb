@@ -4,7 +4,14 @@ class WellTableViewController < UITableViewController
 
   def init
     super.tap do
-      self.tabBarItem = UITabBarItem.alloc.initWithTitle('List', image:UIImage.imageNamed('list.png'), tag:2)
+      self.tabBarItem = UITabBarItem.alloc.initWithTitle('List', image:'list.png'.uiimage, tag:2)
+      self.navigationItem.title = 'Wells on Map'
+      self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithImage(
+        'menuicon.png'.uiimage,
+        style: UIBarButtonItemStylePlain,
+        target: self,
+        action: "show_menu:"
+      )
     end
   end
 
@@ -20,12 +27,6 @@ class WellTableViewController < UITableViewController
 
   def viewDidUnload
     @fetch_controller = nil
-  end
-
-  def viewWillAppear(animated)
-    navigationItem.title = 'Wells on Map'
-    #navigationItem.leftBarButtonItem = editButtonItem
-    #navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemAdd, target:self, action:'add_well')
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
@@ -60,4 +61,10 @@ class WellTableViewController < UITableViewController
     self.navigationController.pushViewController(controller, animated:true)
     controller.showDetailsForWell(well)
   end
+
+  # Show/hide the slidemenucontroller
+  def show_menu(sender)
+    self.navigationController.slideMenuController.toggleMenuAnimated(self)
+  end
+
 end

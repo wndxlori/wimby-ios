@@ -1,35 +1,34 @@
 class WellMapController < UIViewController
   include MapKit
 
+  stylesheet :map_sheet
+
+  attr_accessor :map
+
   def init
     super.tap do
       self.tabBarItem = UITabBarItem.alloc.initWithTitle('Map', image:UIImage.imageNamed('map.png'), tag:1)
+      self.navigationItem.title = 'Wells near ...'
+      self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithImage(
+        'menuicon.png'.uiimage,
+        style: UIBarButtonItemStylePlain,
+        target: self,
+        action: "show_menu:"
+      )
     end
   end
 
-  def loadView
-    self.view = MKMapView.alloc.init
-    view.delegate = self
+  layout :root do
+    @map = subview(MapView, :map)
+    @map.delegate = self
+    region = CoordinateRegion.new(LocationCoordinate.new([62.4,-96.5]),CoordinateSpan.new([25.0,25.0]))
+    @map.region = {region: region, animated: true}
+    track_button = MKUserTrackingBarButtonItem.alloc.initWithMapView(@map)
+    track_button.target = self
+    track_button.action = "track:"
+    self.navigationItem.rightBarButtonItem = track_button
   end
 
-  def viewDidLoad
-    view.frame = tabBarController.view.bounds
-    map = MapView.new
-    map.frame = self.view.frame
-    map.delegate = self
-    map.shows_user_location = true
-    region = CoordinateRegion.new(LocationCoordinate.new(App.delegate.location),CoordinateSpan.new([0.25,0.25]))
-    map.region = {region: region, animated: true}
-    view.addSubview(map)
-
-    #Beer::All.each { |beer| self.view.addAnnotation(beer) }
-  end
-
-  def viewWillAppear(animated)
-    navigationItem.title = 'Wells near ...'
-    navigationController.setNavigationBarHidden(true, animated:true)
-  end
-#
 #  ViewIdentifier = 'ViewIdentifier'
 #  def mapView(mapView, viewForAnnotation:beer)
 #    if view = mapView.dequeueReusableAnnotationViewWithIdentifier(ViewIdentifier)
@@ -54,4 +53,16 @@ class WellMapController < UIViewController
 #      controller.showDetailsForBeer(beer)
 #    end
 #  end
+
+  # Show/hide the slidemenucontroller
+  def show_menu(sender)
+    self.navigationController.slideMenuController.toggleMenuAnimated(self)
+  end
+
+  # Enable/disable user tracking
+  def track(sender)
+    @map.shows_user_location = !@map.shows_user_location?
+    @map.userTrackingMode = @map.userTrackingMode == MKUserTrackingModeNone ? MKUserTrackingModeFollow : MKUserTrackingModeNone
+  end
+
 end

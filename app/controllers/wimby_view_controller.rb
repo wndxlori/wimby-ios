@@ -1,3 +1,7 @@
 class WimbyViewController < UIViewController
-  # To change this template use File | Settings | File Templates.
+  stylesheet :menu_sheet
+
+  layout :root do
+  end
+
 end
