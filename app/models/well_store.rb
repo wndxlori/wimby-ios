@@ -4,18 +4,39 @@ class WellStore
     @shared ||= WellStore.new
   end
 
+  def predicateForCoordinates(min_lat,max_lat,min_lng,max_lng)
+#    predicate = NSPredicate.predicateWithFormat("latitude BETWEEN %@ AND longitude BETWEEN %@",argumentArray:[[51.00860706, 51.09593565],[-114.14132653,-114.00182106]])
+    @predicate = NSPredicate.predicateWithFormat("(latitude > %f AND latitude < %f) AND (longitude > %f AND longitude < %f)", argumentArray:[min_lat,max_lat,min_lng,max_lng])
+    NSLog(@predicate.predicateFormat)
+    @predicate
+  end
+
+  def fetch_request
+#    @request ||= begin
+        fetch_request = NSFetchRequest.new
+        fetch_request.entity = NSEntityDescription.entityForName('WellInfo', inManagedObjectContext:@context)
+        sort = NSSortDescriptor.alloc.initWithKey("details.uwi_sort", ascending: true)
+        fetch_request.sortDescriptors = [sort]
+
+        fetch_request
+ #   end
+  end
 
   def fetched_results_controller
-    fetch_request = NSFetchRequest.alloc.init
-    fetch_request.entity = NSEntityDescription.entityForName('WellInfo', inManagedObjectContext:@context)
-    sort = NSSortDescriptor.alloc.initWithKey("details.uwi_sort", ascending: true)
-    fetch_request.sortDescriptors = [sort]
-    fetch_request.fetchBatchSize = 20
-
-    NSFetchedResultsController.alloc.initWithFetchRequest(fetch_request,
+    request = self.fetch_request
+    request.fetchBatchSize = 20
+    request.predicate = self.predicate
+    NSFetchedResultsController.alloc.initWithFetchRequest(request,
                                                           managedObjectContext:@context,
                                                           sectionNameKeyPath:nil,
-                                                          cacheName:"Well")
+                                                          cacheName:nil)
+  end
+
+  def fetch(predicate)
+    request = self.fetch_request
+    request.predicate = predicate
+    error_ptr = Pointer.new(:object)
+    @context.executeFetchRequest(request, error:error_ptr)
   end
 
   # TODO: will we ever need this, or should It just get rid of it?

@@ -29,30 +29,41 @@ class WellMapController < UIViewController
     self.navigationItem.rightBarButtonItem = track_button
   end
 
-#  ViewIdentifier = 'ViewIdentifier'
-#  def mapView(mapView, viewForAnnotation:beer)
-#    if view = mapView.dequeueReusableAnnotationViewWithIdentifier(ViewIdentifier)
-#      view.annotation = beer
-#    else
-#      view = MKAnnotationView.alloc.initWithAnnotation(beer, reuseIdentifier:ViewIdentifier)
-#      view.image = UIImage.imageNamed('signpost.png')
-#      view.canShowCallout = true
-##      view.animatesDrop = true
-#      button = UIButton.buttonWithType(UIButtonTypeDetailDisclosure)
-#      button.addTarget(self, action: :'showDetails:', forControlEvents:UIControlEventTouchUpInside)
-#      view.rightCalloutAccessoryView = button
-#    end
-#    view
-#  end
+  ViewIdentifier = 'WellIdentifier'
+  def mapView(mapView, viewForAnnotation:well)
+    if view = mapView.dequeueReusableAnnotationViewWithIdentifier(ViewIdentifier)
+      view.annotation = well
+    else
+      view = MKAnnotationView.alloc.initWithAnnotation(well, reuseIdentifier:ViewIdentifier)
+      view.image = UIImage.imageNamed('well_marker.png')
+      #view.canShowCallout = true
+      #view.animatesDrop = true
+      #button = UIButton.buttonWithType(UIButtonTypeDetailDisclosure)
+      #button.addTarget(self, action: :'showDetails:', forControlEvents:UIControlEventTouchUpInside)
+      #view.rightCalloutAccessoryView = button
+    end
+    NSLog("Adding well at #{well.coordinate.latitude},#{well.coordinate.longitude}")
+    view
+  end
 #
 #  def showDetails(sender)
 #    if view.selectedAnnotations.size == 1
-#      beer = view.selectedAnnotations[0]
-#      controller = UIApplication.sharedApplication.delegate.beer_details_controller
+#      well = view.selectedAnnotations[0]
+#      controller = UIApplication.sharedApplication.delegate.well_details_controller
 #      navigationController.pushViewController(controller, animated:true)
-#      controller.showDetailsForBeer(beer)
+#      controller.showDetailsForBeer(well)
 #    end
 #  end
+
+  def mapView(mapView, regionDidChangeAnimated:animated)
+    center = mapView.region.center
+    span = mapView.region.span
+    min_lat, max_lat = center.latitude - (span.latitude_delta/2),center.latitude + (span.latitude_delta/2)
+    min_lng, max_lng = center.longitude - (span.longitude_delta/2),center.longitude + (span.longitude_delta/2)
+    NSLog("Map Region = #{min_lat},#{min_lng},#{max_lat},#{max_lng}")
+    store = WellStore.shared
+    @map.addAnnotations(store.fetch(store.predicateForCoordinates(min_lat,max_lat,min_lng,max_lng)))
+  end
 
   # Show/hide the slidemenucontroller
   def show_menu(sender)

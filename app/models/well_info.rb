@@ -1,5 +1,8 @@
 class WellInfo < NSManagedObject
 
+  def title; self.well_name; end
+  def coordinate; @coordinate ||= CLLocationCoordinate2DMake(self.latitude, self.longitude); end
+
   # Available fields:
   # UWI_DISPLAY,UWI,UWI_SORT,WELL_NAME,CURRENT_STATUS,STATUS,STATUS_DATE,PLOT_SYMBOL,LATITUDE,LONGITUDE
   def self.attributes
