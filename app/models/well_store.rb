@@ -11,19 +11,8 @@ class WellStore
     @predicate
   end
 
-  def fetch_request
-#    @request ||= begin
-        fetch_request = NSFetchRequest.new
-        fetch_request.entity = NSEntityDescription.entityForName('WellInfo', inManagedObjectContext:@context)
-        sort = NSSortDescriptor.alloc.initWithKey("details.uwi_sort", ascending: true)
-        fetch_request.sortDescriptors = [sort]
-
-        fetch_request
- #   end
-  end
-
   def fetched_results_controller
-    request = self.fetch_request
+    request = new_fetch_request
     request.fetchBatchSize = 20
     request.predicate = self.predicate
     NSFetchedResultsController.alloc.initWithFetchRequest(request,
@@ -32,9 +21,7 @@ class WellStore
                                                           cacheName:nil)
   end
 
-  def fetch(predicate)
-    request = self.fetch_request
-    request.predicate = predicate
+  def fetch(request)
     error_ptr = Pointer.new(:object)
     @context.executeFetchRequest(request, error:error_ptr)
   end
@@ -104,23 +91,41 @@ class WellStore
     end
   end
 
+  def fetch_request_template(substitution_hash, forName:name)
+    @mom.fetchRequestFromTemplateWithName(name,  substitutionVariables:substitution_hash);
+  end
+
+  def set_fetch_request_template(predicate, forName:name)
+    request = new_fetch_request
+    request.predicate = predicate
+    @mom.setFetchRequestTemplate(request, forName:name)
+  end
+
   private
 
   def initialize
     # Create the model programmatically. Our model has multiple entities, and the data will be stored in a SQLite database, inside the application's Documents folder.
-    model ||= NSManagedObjectModel.alloc.init.tap do |m|
+    @mom = NSManagedObjectModel.alloc.init.tap do |m|
       m.entities = [WellInfo, WellDetails].collect {|c| c.entity}
       m.entities.each {|entity| set_entity_properties(entity,m)}
     end
-    store = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(model)
+    @store = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(@mom)
     error_ptr = Pointer.new(:object)
-    unless store.addPersistentStoreWithType(NSSQLiteStoreType, configuration:nil, URL:store_url, options:nil, error:error_ptr)
+    unless @store.addPersistentStoreWithType(NSSQLiteStoreType, configuration:nil, URL:store_url, options:nil, error:error_ptr)
       raise "Can't add persistent SQLite store: #{error_ptr[0].description}"
     end
 
-    context = NSManagedObjectContext.alloc.init
-    context.persistentStoreCoordinator = store
-    @context = context
+    @context = NSManagedObjectContext.alloc.init
+    @context.persistentStoreCoordinator = @store
+  end
+
+  def new_fetch_request
+    fetch_request = NSFetchRequest.new
+    fetch_request.entity = NSEntityDescription.entityForName('WellInfo', inManagedObjectContext:@context)
+    sort = NSSortDescriptor.alloc.initWithKey("details.uwi_sort", ascending: true)
+    fetch_request.sortDescriptors = [sort]
+
+    fetch_request
   end
 
   def store_url

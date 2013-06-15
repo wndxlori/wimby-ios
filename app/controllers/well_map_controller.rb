@@ -5,7 +5,11 @@ class WellMapController < UIViewController
 
   attr_accessor :map
 
+  MAP_QUERY_NAME   = 'QueryByMapRegion'
+  MAP_QUERY_FORMAT = "(latitude > $min_lat AND latitude < $max_lat) AND (longitude > $min_lng AND longitude < $max_lng)"
+
   def init
+    WellStore.shared.set_fetch_request_template(NSPredicate.predicateWithFormat(MAP_QUERY_FORMAT), forName:MAP_QUERY_NAME)
     super.tap do
       self.tabBarItem = UITabBarItem.alloc.initWithTitle('Map', image:UIImage.imageNamed('map.png'), tag:1)
       self.navigationItem.title = 'Wells near ...'
@@ -42,7 +46,6 @@ class WellMapController < UIViewController
       #button.addTarget(self, action: :'showDetails:', forControlEvents:UIControlEventTouchUpInside)
       #view.rightCalloutAccessoryView = button
     end
-    NSLog("Adding well at #{well.coordinate.latitude},#{well.coordinate.longitude}")
     view
   end
 #
@@ -56,13 +59,18 @@ class WellMapController < UIViewController
 #  end
 
   def mapView(mapView, regionDidChangeAnimated:animated)
+    return unless mapView.shows_user_location?
     center = mapView.region.center
     span = mapView.region.span
-    min_lat, max_lat = center.latitude - (span.latitude_delta/2),center.latitude + (span.latitude_delta/2)
-    min_lng, max_lng = center.longitude - (span.longitude_delta/2),center.longitude + (span.longitude_delta/2)
-    NSLog("Map Region = #{min_lat},#{min_lng},#{max_lat},#{max_lng}")
+    region_hash = {}
+    region_hash['min_lat'] = center.latitude - (span.latitude_delta/2)
+    region_hash['max_lat'] = center.latitude + (span.latitude_delta/2)
+    region_hash['min_lng'] = center.longitude - (span.longitude_delta/2)
+    region_hash['max_lng'] = center.longitude + (span.longitude_delta/2)
+    NSLog("Map Region = #{region_hash}")
     store = WellStore.shared
-    @map.addAnnotations(store.fetch(store.predicateForCoordinates(min_lat,max_lat,min_lng,max_lng)))
+    request = store.fetch_request_template(region_hash, forName:MAP_QUERY_NAME)
+    @map.addAnnotations(store.fetch(request))
   end
 
   # Show/hide the slidemenucontroller
