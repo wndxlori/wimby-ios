@@ -20,4 +20,5 @@ Motion::Project::App.setup do |app|
     pod 'NVSlideMenuController'
     pod 'AFNetworking'
   end
+  app.vendor_project('vendor/Tapstream', :static)
 end
