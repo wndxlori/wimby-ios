@@ -6,6 +6,6 @@ gem "bubble-wrap", "~> 1.3.0.osx"
 gem 'motion-cocoapods'
 gem 'map-kit-wrapper'
 
-gem 'sugarcube'
+gem 'sugarcube', :require => 'sugarcube-classic'
 gem 'teacup'
 gem 'sweettea'
