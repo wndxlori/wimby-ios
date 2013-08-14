@@ -35,6 +35,8 @@ class WellMapController < UIViewController
 
   ViewIdentifier = 'WellIdentifier'
   def mapView(mapView, viewForAnnotation:well)
+    return nil if well.instance_of?(MKUserLocation)
+
     if view = mapView.dequeueReusableAnnotationViewWithIdentifier(ViewIdentifier)
       view.annotation = well
     else
