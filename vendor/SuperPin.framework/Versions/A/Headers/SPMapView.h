@@ -24,8 +24,6 @@
     
     NSArray *skipAnnotations;
     
-    
-    UIImageView* arrView;
 
 }
 

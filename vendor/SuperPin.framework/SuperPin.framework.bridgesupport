@@ -1,101 +1,101 @@
 <?xml version='1.0'?>
 <signatures version='1.0'>
 <struct name='CompassPoint' type='{_CompassPoint=&quot;x&quot;d&quot;y&quot;d}'>
-<field name='x' declared_type='double' type='d'/>
-<field name='y' declared_type='double' type='d'/>
+<field declared_type='double' name='x' type='d'/>
+<field declared_type='double' name='y' type='d'/>
 </struct>
 <struct name='CompassRect' type='{_CompassRect=&quot;origin&quot;{_CompassPoint=&quot;x&quot;d&quot;y&quot;d}&quot;size&quot;{_CompassSize=&quot;width&quot;d&quot;height&quot;d}}'>
-<field name='origin' declared_type='CompassPoint' type='{_CompassPoint=&quot;x&quot;d&quot;y&quot;d}'/>
-<field name='size' declared_type='CompassSize' type='{_CompassSize=&quot;width&quot;d&quot;height&quot;d}'/>
+<field declared_type='CompassPoint' name='origin' type='{_CompassPoint=&quot;x&quot;d&quot;y&quot;d}'/>
+<field declared_type='CompassSize' name='size' type='{_CompassSize=&quot;width&quot;d&quot;height&quot;d}'/>
 </struct>
 <struct name='CompassSize' type='{_CompassSize=&quot;width&quot;d&quot;height&quot;d}'>
-<field name='width' declared_type='double' type='d'/>
-<field name='height' declared_type='double' type='d'/>
+<field declared_type='double' name='width' type='d'/>
+<field declared_type='double' name='height' type='d'/>
 </struct>
 <opaque name='Compass' type='^{_Compass=}'/>
-<function name='CompassMakePoint' inline='true'>
-<arg name='x' declared_type='double' type='d'/>
-<arg name='y' declared_type='double' type='d'/>
+<function inline='true' name='CompassMakePoint'>
+<arg declared_type='double' name='x' type='d'/>
+<arg declared_type='double' name='y' type='d'/>
 <retval declared_type='CompassPoint' type='{_CompassPoint=dd}'/>
 </function>
-<function name='CompassMakeRect' inline='true'>
-<arg name='x' declared_type='double' type='d'/>
-<arg name='y' declared_type='double' type='d'/>
-<arg name='w' declared_type='double' type='d'/>
-<arg name='h' declared_type='double' type='d'/>
+<function inline='true' name='CompassMakeRect'>
+<arg declared_type='double' name='x' type='d'/>
+<arg declared_type='double' name='y' type='d'/>
+<arg declared_type='double' name='w' type='d'/>
+<arg declared_type='double' name='h' type='d'/>
 <retval declared_type='CompassRect' type='{_CompassRect={_CompassPoint=dd}{_CompassSize=dd}}'/>
 </function>
 <function name='compass_add_point'>
-<arg name='compass' declared_type='Compass*' type='^{_Compass=}'/>
-<arg name='point' declared_type='CompassPoint' type='{_CompassPoint=dd}'/>
-<arg name='payload' declared_type='void*' type='^v'/>
+<arg declared_type='Compass*' name='compass' type='^{_Compass=}'/>
+<arg declared_type='CompassPoint' name='point' type='{_CompassPoint=dd}'/>
+<arg declared_type='void*' name='payload' type='^v'/>
 <retval declared_type='void' type='v'/>
 </function>
 <function name='compass_create'>
-<arg name='maxLevel' declared_type='int' type='i'/>
-<arg name='rect' declared_type='CompassRect' type='{_CompassRect={_CompassPoint=dd}{_CompassSize=dd}}'/>
+<arg declared_type='int' name='maxLevel' type='i'/>
+<arg declared_type='CompassRect' name='rect' type='{_CompassRect={_CompassPoint=dd}{_CompassSize=dd}}'/>
 <retval declared_type='Compass*' type='^{_Compass=}'/>
 </function>
 <function name='compass_destroy'>
-<arg name='config' declared_type='Compass*' type='^{_Compass=}'/>
+<arg declared_type='Compass*' name='config' type='^{_Compass=}'/>
 <retval declared_type='void' type='v'/>
 </function>
 <function name='compass_find_points_in_rect'>
-<arg name='compass' declared_type='Compass*' type='^{_Compass=}'/>
-<arg name='rect' declared_type='CompassRect' type='{_CompassRect={_CompassPoint=dd}{_CompassSize=dd}}'/>
-<arg name='callback' declared_type='CompassFindCallback' type='^?' function_pointer='true'>
+<arg declared_type='Compass*' name='compass' type='^{_Compass=}'/>
+<arg declared_type='CompassRect' name='rect' type='{_CompassRect={_CompassPoint=dd}{_CompassSize=dd}}'/>
+<arg declared_type='CompassFindCallback' name='callback' function_pointer='true' type='^?'>
 <arg declared_type='CompassPoint' type='{_CompassPoint=dd}'/>
 <arg declared_type='void*' type='^v'/>
 <arg declared_type='void*' type='^v'/>
 <retval declared_type='void' type='v'/>
 </arg>
-<arg name='callback_context' declared_type='void*' type='^v'/>
+<arg declared_type='void*' name='callback_context' type='^v'/>
 <retval declared_type='unsigned int' type='I'/>
 </function>
 <function name='compass_remove_payload_at_point'>
-<arg name='compass' declared_type='Compass*' type='^{_Compass=}'/>
-<arg name='point' declared_type='CompassPoint' type='{_CompassPoint=dd}'/>
-<arg name='payload' declared_type='void*' type='^v'/>
+<arg declared_type='Compass*' name='compass' type='^{_Compass=}'/>
+<arg declared_type='CompassPoint' name='point' type='{_CompassPoint=dd}'/>
+<arg declared_type='void*' name='payload' type='^v'/>
 <retval declared_type='void' type='v'/>
 </function>
 <function name='compass_visit_all'>
-<arg name='config' declared_type='Compass*' type='^{_Compass=}'/>
-<arg name='callback' declared_type='CompassFindCallback' type='^?' function_pointer='true'>
+<arg declared_type='Compass*' name='config' type='^{_Compass=}'/>
+<arg declared_type='CompassFindCallback' name='callback' function_pointer='true' type='^?'>
 <arg declared_type='CompassPoint' type='{_CompassPoint=dd}'/>
 <arg declared_type='void*' type='^v'/>
 <arg declared_type='void*' type='^v'/>
 <retval declared_type='void' type='v'/>
 </arg>
-<arg name='callback_context' declared_type='void*' type='^v'/>
+<arg declared_type='void*' name='callback_context' type='^v'/>
 <retval declared_type='unsigned int' type='I'/>
 </function>
 <class name='SPAnnotationsIndex'>
 <method selector='addAnnotation:'>
-<arg name='annotation' index='0' declared_type='id' type='@'/>
+<arg declared_type='id' name='annotation' index='0' type='@'/>
 <retval declared_type='void' type='v'/>
 </method>
 <method selector='allAnnotations'>
 <retval declared_type='NSArray*' type='@'/>
 </method>
 <method selector='annotationsForMapRect:'>
-<arg name='rect' index='0' declared_type='MKMapRect' type='{_MKMapRect={?=dd}{?=dd}}'/>
+<arg declared_type='MKMapRect' name='rect' index='0' type='{_MKMapRect={?=dd}{?=dd}}'/>
 <retval declared_type='NSSet*' type='@'/>
 </method>
 <method selector='removeAllAnnotations'>
 <retval declared_type='void' type='v'/>
 </method>
 <method selector='removeAnnotation:'>
-<arg name='annotation' index='0' declared_type='id' type='@'/>
+<arg declared_type='id' name='annotation' index='0' type='@'/>
 <retval declared_type='void' type='v'/>
 </method>
 </class>
 <class name='SPCluster'>
 <method selector='addAnnotation:'>
-<arg name='annotation' index='0' declared_type='id' type='@'/>
+<arg declared_type='id' name='annotation' index='0' type='@'/>
 <retval declared_type='void' type='v'/>
 </method>
 <method selector='addMapPoint:'>
-<arg name='point' index='0' declared_type='MKMapPoint' type='{_MKMapPoint=dd}'/>
+<arg declared_type='MKMapPoint' name='point' index='0' type='{_MKMapPoint=dd}'/>
 <retval declared_type='void' type='v'/>
 </method>
 <method selector='annotations'>
@@ -114,56 +114,56 @@
 <retval declared_type='MKMapRect' type='{_MKMapRect={?=dd}{?=dd}}'/>
 </method>
 <method selector='removeMapPoint:'>
-<arg name='point' index='0' declared_type='MKMapPoint' type='{_MKMapPoint=dd}'/>
+<arg declared_type='MKMapPoint' name='point' index='0' type='{_MKMapPoint=dd}'/>
 <retval declared_type='void' type='v'/>
 </method>
 </class>
 <class name='SPClusterView'>
-<method class_method='true' selector='backgroundImage'>
+<method selector='backgroundImage' class_method='true'>
 <retval declared_type='UIImage*' type='@'/>
 </method>
 <method selector='drawRect:'>
-<arg name='rect' index='0' declared_type='CGRect' type='{CGRect={CGPoint=ff}{CGSize=ff}}'/>
+<arg declared_type='CGRect' name='rect' index='0' type='{CGRect={CGPoint=ff}{CGSize=ff}}'/>
 <retval declared_type='void' type='v'/>
 </method>
-<method class_method='true' selector='edgeInsets'>
+<method selector='edgeInsets' class_method='true'>
 <retval declared_type='UIEdgeInsets' type='{UIEdgeInsets=ffff}'/>
 </method>
-<method class_method='true' selector='font'>
+<method selector='font' class_method='true'>
 <retval declared_type='UIFont*' type='@'/>
 </method>
 <method selector='initWithAnnotation:reuseIdentifier:'>
-<arg name='annotation' index='0' declared_type='id' type='@'/>
-<arg name='reuseIdentifier' index='1' declared_type='NSString*' type='@'/>
+<arg declared_type='id' name='annotation' index='0' type='@'/>
+<arg declared_type='NSString*' name='reuseIdentifier' index='1' type='@'/>
 <retval declared_type='id' type='@'/>
 </method>
 <method selector='setAnnotation:'>
-<arg name='annotation' index='0' declared_type='id' type='@'/>
+<arg declared_type='id' name='annotation' index='0' type='@'/>
 <retval declared_type='void' type='v'/>
 </method>
-<method class_method='true' selector='setBackgroundImage:'>
-<arg name='image' index='0' declared_type='UIImage*' type='@'/>
+<method selector='setBackgroundImage:' class_method='true'>
+<arg declared_type='UIImage*' name='image' index='0' type='@'/>
 <retval declared_type='void' type='v'/>
 </method>
-<method class_method='true' selector='setEdgeInsets:'>
-<arg name='newEdgeInsets' index='0' declared_type='UIEdgeInsets' type='{UIEdgeInsets=ffff}'/>
+<method selector='setEdgeInsets:' class_method='true'>
+<arg declared_type='UIEdgeInsets' name='newEdgeInsets' index='0' type='{UIEdgeInsets=ffff}'/>
 <retval declared_type='void' type='v'/>
 </method>
-<method class_method='true' selector='setFont:'>
-<arg name='newFont' index='0' declared_type='UIFont*' type='@'/>
+<method selector='setFont:' class_method='true'>
+<arg declared_type='UIFont*' name='newFont' index='0' type='@'/>
 <retval declared_type='void' type='v'/>
 </method>
-<method class_method='true' selector='setTextColor:'>
-<arg name='newTextColor' index='0' declared_type='UIColor*' type='@'/>
+<method selector='setTextColor:' class_method='true'>
+<arg declared_type='UIColor*' name='newTextColor' index='0' type='@'/>
 <retval declared_type='void' type='v'/>
 </method>
-<method class_method='true' selector='textColor'>
+<method selector='textColor' class_method='true'>
 <retval declared_type='UIColor*' type='@'/>
 </method>
 </class>
 <class name='SPMapView'>
 <method selector='annotationsInMapRect:'>
-<arg name='mapRect' index='0' declared_type='MKMapRect' type='{_MKMapRect={?=dd}{?=dd}}'/>
+<arg declared_type='MKMapRect' name='mapRect' index='0' type='{_MKMapRect={?=dd}{?=dd}}'/>
 <retval declared_type='NSSet*' type='@'/>
 </method>
 <method selector='clusteringCellSize'>
@@ -194,31 +194,31 @@
 <retval declared_type='void' type='v'/>
 </method>
 <method selector='setClusteringCellSize:'>
-<arg name='clusteringCellSize' index='0' declared_type='CGFloat' type='f'/>
+<arg declared_type='CGFloat' name='clusteringCellSize' index='0' type='f'/>
 <retval declared_type='void' type='v'/>
 </method>
 <method selector='setClusteringEnabled:'>
-<arg name='clusteringEnabled' index='0' declared_type='BOOL' type='B'/>
+<arg declared_type='BOOL' name='clusteringEnabled' index='0' type='B'/>
 <retval declared_type='void' type='v'/>
 </method>
 <method selector='setClusteringThreshold:'>
-<arg name='clusteringThreshold' index='0' declared_type='NSUInteger' type='I'/>
+<arg declared_type='NSUInteger' name='clusteringThreshold' index='0' type='I'/>
 <retval declared_type='void' type='v'/>
 </method>
 <method selector='setDefaultClusterViewClass:'>
-<arg name='defaultClusterViewClass' index='0' declared_type='Class' type='#'/>
+<arg declared_type='Class' name='defaultClusterViewClass' index='0' type='#'/>
 <retval declared_type='void' type='v'/>
 </method>
 <method selector='setDelegate:'>
-<arg name='delegate' index='0' declared_type='id' type='@'/>
+<arg declared_type='id' name='delegate' index='0' type='@'/>
 <retval declared_type='void' type='v'/>
 </method>
 <method selector='setLastClusteringOpId:'>
-<arg name='lastClusteringOpId' index='0' declared_type='NSUInteger' type='I'/>
+<arg declared_type='NSUInteger' name='lastClusteringOpId' index='0' type='I'/>
 <retval declared_type='void' type='v'/>
 </method>
 <method selector='setSkipAnnotations:'>
-<arg name='skipAnnotations' index='0' declared_type='NSArray*' type='@'/>
+<arg declared_type='NSArray*' name='skipAnnotations' index='0' type='@'/>
 <retval declared_type='void' type='v'/>
 </method>
 <method selector='skipAnnotations'>

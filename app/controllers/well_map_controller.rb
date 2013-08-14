@@ -25,8 +25,9 @@ class WellMapController < UIViewController
   layout :root do
     @map = subview(MapView, :map)
     @map.delegate = self
-    region = CoordinateRegion.new(LocationCoordinate.new([62.4,-96.5]),CoordinateSpan.new([25.0,25.0]))
+    region = CoordinateRegion.new(LocationCoordinate.new([62.4,-96.5]),CoordinateSpan.new([80.26-42.38,140.43-46.17]))
     @map.region = {region: region, animated: true}
+    add_wells(region)
     track_button = MKUserTrackingBarButtonItem.alloc.initWithMapView(@map)
     track_button.target = self
     track_button.action = "track:"
@@ -34,36 +35,35 @@ class WellMapController < UIViewController
   end
 
   ViewIdentifier = 'WellIdentifier'
-  def mapView(mapView, viewForAnnotation:well)
-    return nil if well.instance_of?(MKUserLocation)
+  def mapView(mapView, viewForAnnotation:annotation)
+    return nil if annotation.is_a?(MKUserLocation) or annotation.is_a?(SPCluster)
 
     if view = mapView.dequeueReusableAnnotationViewWithIdentifier(ViewIdentifier)
-      view.annotation = well
+      view.annotation = annotation
     else
-      view = MKAnnotationView.alloc.initWithAnnotation(well, reuseIdentifier:ViewIdentifier)
+      view = MKAnnotationView.alloc.initWithAnnotation(annotation, reuseIdentifier:ViewIdentifier)
       view.image = UIImage.imageNamed('well_marker.png')
-      #view.canShowCallout = true
+      view.canShowCallout = true
       #view.animatesDrop = true
-      #button = UIButton.buttonWithType(UIButtonTypeDetailDisclosure)
-      #button.addTarget(self, action: :'showDetails:', forControlEvents:UIControlEventTouchUpInside)
-      #view.rightCalloutAccessoryView = button
+      button = UIButton.buttonWithType(UIButtonTypeDetailDisclosure)
+      button.addTarget(self, action: :'showDetails:', forControlEvents:UIControlEventTouchUpInside)
+      view.rightCalloutAccessoryView = button
     end
     view
   end
-#
-#  def showDetails(sender)
-#    if view.selectedAnnotations.size == 1
-#      well = view.selectedAnnotations[0]
-#      controller = UIApplication.sharedApplication.delegate.well_details_controller
-#      navigationController.pushViewController(controller, animated:true)
-#      controller.showDetailsForBeer(well)
-#    end
-#  end
 
-  def mapView(mapView, regionDidChangeAnimated:animated)
-    return unless mapView.shows_user_location?
-    center = mapView.region.center
-    span = mapView.region.span
+  def showDetails(sender)
+    if @map.selectedAnnotations.size == 1
+      well = @map.selectedAnnotations[0]
+      controller = UIApplication.sharedApplication.delegate.well_details_controller
+      navigationController.pushViewController(controller, animated:true)
+      controller.showDetailsForWell(well)
+    end
+  end
+
+  def add_wells(region)
+    center = region.center
+    span = region.span
     region_hash = {}
     region_hash['min_lat'] = center.latitude - (span.latitude_delta/2)
     region_hash['max_lat'] = center.latitude + (span.latitude_delta/2)
