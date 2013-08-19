@@ -75,6 +75,22 @@ class WellMapController < UIViewController
     @map.addAnnotations(store.fetch(request))
   end
 
+  # Will update the region predicate for the Well Store, so that only visible wells will
+  # be in the list, if/when we switch to the list view
+  def mapView(mapView, regionDidChangeAnimated:animated)
+    center = mapView.region.center
+    span = mapView.region.span
+    region_hash = {}
+    region_hash['min_lat'] = center.latitude - (span.latitude_delta/2)
+    region_hash['max_lat'] = center.latitude + (span.latitude_delta/2)
+    region_hash['min_lng'] = center.longitude - (span.longitude_delta/2)
+    region_hash['max_lng'] = center.longitude + (span.longitude_delta/2)
+    NSLog("Map Region = #{region_hash}")
+    store = WellStore.shared
+    store.predicateForCoordinates(region_hash)
+    mapView
+  end
+
   # Show/hide the slidemenucontroller
   def show_menu(sender)
     self.navigationController.slideMenuController.toggleMenuAnimated(self)

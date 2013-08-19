@@ -1,20 +1,27 @@
 class WellStore
+
+  attr_reader :predicate
+
   def self.shared
     # Our store is a singleton object.
     @shared ||= WellStore.new
   end
 
-  def predicateForCoordinates(min_lat,max_lat,min_lng,max_lng)
+  def predicateForCoordinates(region_hash)
 #    predicate = NSPredicate.predicateWithFormat("latitude BETWEEN %@ AND longitude BETWEEN %@",argumentArray:[[51.00860706, 51.09593565],[-114.14132653,-114.00182106]])
-    @predicate = NSPredicate.predicateWithFormat("(latitude > %f AND latitude < %f) AND (longitude > %f AND longitude < %f)", argumentArray:[min_lat,max_lat,min_lng,max_lng])
-    NSLog(@predicate.predicateFormat)
-    @predicate
+    self.predicate = NSPredicate.predicateWithFormat("(latitude > %f AND latitude < %f) AND (longitude > %f AND longitude < %f)",
+                                                argumentArray:[
+                                                    region_hash['min_lat'],
+                                                    region_hash['max_lat'],
+                                                    region_hash['min_lng'],
+                                                    region_hash['max_lng'],
+                                                ])
   end
 
   def fetched_results_controller
     request = new_fetch_request
     request.fetchBatchSize = 20
-    request.predicate = self.predicate
+    request.predicate = self.predicate unless self.predicate.nil?
     NSFetchedResultsController.alloc.initWithFetchRequest(request,
                                                           managedObjectContext:@context,
                                                           sectionNameKeyPath:nil,
@@ -26,24 +33,9 @@ class WellStore
     @context.executeFetchRequest(request, error:error_ptr)
   end
 
-  # TODO: will we ever need this, or should It just get rid of it?
-  def add_well
-    # Yield a blank, newly created well entity, then save the model.
-    yield NSEntityDescription.insertNewObjectForEntityForName('WellInfo', inManagedObjectContext:@context),
-        NSEntityDescription.insertNewObjectForEntityForName('WellDetails', inManagedObjectContext:@context)
-    save
-  end
-
   def create_well
     yield NSEntityDescription.insertNewObjectForEntityForName('WellInfo', inManagedObjectContext:@context),
         NSEntityDescription.insertNewObjectForEntityForName('WellDetails', inManagedObjectContext:@context)
-  end
-
-  # TODO: will we ever need this, or should It just get rid of it?
-  def remove_well(well)
-    # Delete the given entity, then save the model.
-    @context.deleteObject(well)
-    save
   end
 
   # The purpose of the load, is to pull in data from an external source, and load it into your CoreData store. It can
@@ -122,10 +114,14 @@ class WellStore
   def new_fetch_request
     fetch_request = NSFetchRequest.new
     fetch_request.entity = NSEntityDescription.entityForName('WellInfo', inManagedObjectContext:@context)
-    sort = NSSortDescriptor.alloc.initWithKey("details.uwi_sort", ascending: true)
+    sort = NSSortDescriptor.alloc.initWithKey('details.uwi_sort', ascending: true)
     fetch_request.sortDescriptors = [sort]
 
     fetch_request
+  end
+
+  def predicate=(new_predicate)
+    @predicate = new_predicate
   end
 
   def store_url

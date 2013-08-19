@@ -15,17 +15,20 @@ class WellTableViewController < UITableViewController
     end
   end
 
-  def layoutDidLoad
+  def viewWillAppear(animated)
+    super
     error_ptr = Pointer.new(:object)
     @fetch_controller = WellStore.shared.fetched_results_controller
     @fetch_controller.delegate = self
     unless @fetch_controller.performFetch(error_ptr)
       raise "Error when fetching wells: #{error_ptr[0].description}"
     end
+    tableView.reloadData
   end
 
-  def layoutDidUnload
+  def viewWillDisappear(animated)
     @fetch_controller = nil
+    super
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
