@@ -6,9 +6,9 @@ class AppDelegate
 
     menu = WimbyViewController.new
     tableview = WellTableViewController.alloc.init
-    tablenav = WellNavController.alloc.initWithRootViewController(tableview)
+    tablenav = UINavigationController.alloc.initWithRootViewController(tableview)
     mapview = WellMapController.alloc.init
-    mapnav = WellNavController.alloc.initWithRootViewController(mapview)
+    mapnav = UINavigationController.alloc.initWithRootViewController(mapview)
 
     tabbar = UITabBarController.alloc.init
     tabbar.viewControllers = [mapnav, tablenav]
