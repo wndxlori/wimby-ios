@@ -27,7 +27,10 @@ class WellMapController < UIViewController
     @map.delegate = self
     region = CoordinateRegion.new(LocationCoordinate.new([62.4,-96.5]),CoordinateSpan.new([80.26-42.38,140.43-46.17]))
     @map.region = {region: region, animated: true}
-    add_wells(region)
+    queue = Dispatch::Queue.concurrent('com.wndx.wimby.task')
+    queue.async do
+      add_wells(region)
+    end
     track_button = MKUserTrackingBarButtonItem.alloc.initWithMapView(@map)
     track_button.target = self
     track_button.action = "track:"
