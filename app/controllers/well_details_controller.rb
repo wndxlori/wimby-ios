@@ -1,6 +1,8 @@
 class WellDetailsController < UIViewController
-  def loadView
-    self.view = UIWebView.alloc.init
+
+  def init
+    super.tap do
+    end
   end
 
   def viewWillAppear(animated)
@@ -9,7 +11,5 @@ class WellDetailsController < UIViewController
 
   def showDetailsForWell(well)
     navigationItem.title = well.uwi_display
-    request = NSURLRequest.requestWithURL(NSURL.URLWithString( "http://www.welltriever.com/wells/#{well.details.uwi}"))
-    view.loadRequest(request)
   end
 end
