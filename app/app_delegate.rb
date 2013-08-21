@@ -1,6 +1,6 @@
 class AppDelegate
 
-  attr_accessor :location
+  attr_accessor :tab_bar_controller
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
 
@@ -10,9 +10,9 @@ class AppDelegate
     mapview = WellMapController.alloc.init
     mapnav = UINavigationController.alloc.initWithRootViewController(mapview)
 
-    tabbar = UITabBarController.alloc.init
-    tabbar.viewControllers = [mapnav, tablenav]
-    tabbar.selectedIndex = 0
+    self.tab_bar_controller = UITabBarController.alloc.init
+    self.tab_bar_controller.viewControllers = [mapnav, tablenav]
+    self.tab_bar_controller.selectedIndex = 0
 
 #    UINavigationBar.appearance.titleTextAttributes = { UITextAttributeFont => 'Copperplate Bold'.uifont(20) }
 
@@ -20,7 +20,7 @@ class AppDelegate
     TSTapstream.createWithAccountName("wndxgroup", developerSecret:"SIeEgUZ-QaWg3nDdrAg88g", config:config)
 
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
-    root = NVSlideMenuController.alloc.initWithMenuViewController(menu, andContentViewController: tabbar)
+    root = NVSlideMenuController.alloc.initWithMenuViewController(menu, andContentViewController: self.tab_bar_controller)
     @window.rootViewController = root
     @window.makeKeyAndVisible
     true
