@@ -3,8 +3,8 @@ class WellStore
   attr_reader :predicate
 
   def self.shared
-    # Our store is a singleton object.
-    @shared ||= WellStore.new
+    Dispatch.once { @instance ||= new }
+    @instance
   end
 
   def predicateForCoordinates(region_hash)
