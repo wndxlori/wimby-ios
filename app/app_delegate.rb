@@ -16,8 +16,7 @@ class AppDelegate
 
 #    UINavigationBar.appearance.titleTextAttributes = { UITextAttributeFont => 'Copperplate Bold'.uifont(20) }
 
-    config = TSConfig.configWithDefaults();
-    TSTapstream.createWithAccountName("wndxgroup", developerSecret:"SIeEgUZ-QaWg3nDdrAg88g", config:config)
+    setup_tapstream
 
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
     root = NVSlideMenuController.alloc.initWithMenuViewController(menu, andContentViewController: self.tab_bar_controller)
@@ -28,6 +27,13 @@ class AppDelegate
 
   def well_details_controller
     @well_details_controller ||= WellDetailsController.alloc.init
+  end
+
+  private
+
+  def setup_tapstream
+    config = TSConfig.configWithDefaults();
+    TSTapstream.createWithAccountName("wndxgroup", developerSecret:"SIeEgUZ-QaWg3nDdrAg88g", config:config)
   end
 
 end
