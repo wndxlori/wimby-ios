@@ -15,18 +15,21 @@ class WellTableViewController < UITableViewController
     end
   end
 
-  def viewWillAppear(animated)
+  def viewDidLoad
     super
-    error_ptr = Pointer.new(:object)
-    @fetch_controller = WellStore.shared.fetched_results_controller
-    @fetch_controller.delegate = self
-    unless @fetch_controller.performFetch(error_ptr)
-      raise "Error when fetching wells: #{error_ptr[0].description}"
+    App.notification_center.observe RegionChanged do |notification|
+      update(notification.object)
     end
-    tableView.reloadData
   end
 
-  def viewWillDisappear(animated)
+  def viewWillAppear(animated)
+    unless @fetch_controller
+      fetch_results
+    end
+  end
+
+  def viewDidUnload
+    App.notification_center.unobserve RegionChanged
     @fetch_controller = nil
     super
   end
@@ -69,4 +72,25 @@ class WellTableViewController < UITableViewController
     self.navigationController.slideMenuController.toggleMenuAnimated(self)
   end
 
+  def update(region_hash)
+    store = WellStore.shared
+    request = store.fetch_request_template(region_hash, forName:WellMapController::MAP_QUERY_NAME)
+    fetch_results(request)
+  end
+
+  private
+
+  def fetch_results(request=nil)
+    @fetch_controller = WellStore.shared.fetched_results_controller(request)
+    @fetch_controller.delegate = self
+    NSLog("Loading table data")
+    queue = Dispatch::Queue.concurrent('com.wndx.wimby.task')
+    queue.sync do
+      error_ptr = Pointer.new(:object)
+      unless @fetch_controller.performFetch(error_ptr)
+        raise "Error when fetching wells: #{error_ptr[0].description}"
+      end
+      tableView.reloadData
+    end
+  end
 end

@@ -1,3 +1,5 @@
+RegionChanged = "RegionChanged"
+
 class WellMapController < UIViewController
   include MapKit
 
@@ -76,6 +78,7 @@ class WellMapController < UIViewController
     store = WellStore.shared
     request = store.fetch_request_template(region_hash, forName:MAP_QUERY_NAME)
     @map.addAnnotations(store.fetch(request))
+    App.notification_center.post(RegionChanged, region_hash)
   end
 
   # Will update the region predicate for the Well Store, so that only visible wells will
@@ -89,8 +92,7 @@ class WellMapController < UIViewController
     region_hash['min_lng'] = center.longitude - (span.longitude_delta/2)
     region_hash['max_lng'] = center.longitude + (span.longitude_delta/2)
     NSLog("Map Region = #{region_hash}")
-    store = WellStore.shared
-    store.predicateForCoordinates(region_hash)
+    App.notification_center.post(RegionChanged, region_hash)
     mapView
   end
 

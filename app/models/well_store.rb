@@ -18,8 +18,8 @@ class WellStore
                                                 ])
   end
 
-  def fetched_results_controller
-    request = new_fetch_request
+  def fetched_results_controller(request)
+    request ||= new_fetch_request
     request.fetchBatchSize = 20
     request.predicate = self.predicate unless self.predicate.nil?
     NSFetchedResultsController.alloc.initWithFetchRequest(request,
@@ -83,10 +83,12 @@ class WellStore
     end
   end
 
+  # Getter for fetch request
   def fetch_request_template(substitution_hash, forName:name)
     @mom.fetchRequestFromTemplateWithName(name,  substitutionVariables:substitution_hash);
   end
 
+  # Setter for fetch request (once per name)
   def set_fetch_request_template(predicate, forName:name)
     request = new_fetch_request
     request.predicate = predicate
