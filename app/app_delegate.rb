@@ -26,7 +26,11 @@ class AppDelegate
   end
 
   def well_details_controller
-    @well_details_controller ||= WellDetailsController.alloc.init
+    @well_details_controller ||= begin
+      controller =  WellDetailsController.alloc.init
+      controller.hidesBottomBarWhenPushed = true
+      controller
+    end
   end
 
   private
