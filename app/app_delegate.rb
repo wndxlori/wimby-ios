@@ -26,7 +26,18 @@ class AppDelegate
   end
 
   def well_details_controller
-    @well_details_controller ||= WellDetailsController.alloc.init
+    @well_details_controller ||= begin
+      controller =  WellDetailsController.alloc.initWithStyle(UITableViewStyleGrouped)
+      controller.hidesBottomBarWhenPushed = true
+      controller
+    end
+  end
+
+  private
+
+  def setup_tapstream
+    config = TSConfig.configWithDefaults();
+    TSTapstream.createWithAccountName("wndxgroup", developerSecret:"SIeEgUZ-QaWg3nDdrAg88g", config:config)
   end
 
   private

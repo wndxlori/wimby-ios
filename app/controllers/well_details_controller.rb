@@ -1,15 +1,56 @@
-class WellDetailsController < UIViewController
-  def loadView
-    self.view = UIWebView.alloc.init
+class WellDetailsController < UITableViewController
+
+  stylesheet :details
+
+  SECTIONS = %w(Name Status Location)
+
+  def viewDidLoad
+    super
+    navigationItem.title = "Well Details"
   end
 
   def viewWillAppear(animated)
     navigationController.setNavigationBarHidden(false, animated:true)
   end
 
+  def numberOfSectionsInTableView(tableView)
+    SECTIONS.size
+  end
+
+  def tableView(tableView, numberOfRowsInSection:section)
+    2
+  end
+
+  def tableView(tableView, titleForHeaderInSection:section)
+    SECTIONS[section]
+  end
+
+  CellID = self.class.name
+
+  def tableView(tableView, cellForRowAtIndexPath:indexPath)
+    cell = tableView.dequeueReusableCellWithIdentifier(CellID) || begin
+      cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleValue1, reuseIdentifier:CellID)
+      cell.textLabel.text = @details[indexPath.section][indexPath.row][:label]
+      cell.detailTextLabel.text = @details[indexPath.section][indexPath.row][:value]
+      cell
+    end
+  end
+
   def showDetailsForWell(well)
-    navigationItem.title = well.uwi_display
-    request = NSURLRequest.requestWithURL(NSURL.URLWithString( "http://www.welltriever.com/wells/#{well.details.uwi}"))
-    view.loadRequest(request)
+    @details = [
+      [
+        {label: 'UWI', value: well.uwi_display},
+        {label: 'Well Name', value: well.well_name},
+      ],
+      [
+        {label: 'Current', value: well.status},
+        {label: 'Last Updated', value: well.status_date.strftime('%Y-%m-%d')},
+      ],
+      [
+        {label: 'Latitude', value: well.latitude.stringValue},
+        {label: 'Longitude', value: well.longitude.stringValue},
+      ]
+    ]
+    tableView.reloadData
   end
 end

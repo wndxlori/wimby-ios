@@ -14,8 +14,8 @@ class WellMapController < UIViewController
     WellStore.shared.set_fetch_request_template(NSPredicate.predicateWithFormat(MAP_QUERY_FORMAT), forName:MAP_QUERY_NAME)
     super.tap do
       self.tabBarItem = UITabBarItem.alloc.initWithTitle('Map', image:UIImage.imageNamed('map.png'), tag:1)
-      self.navigationItem.title = 'Wells near ...'
-      self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithImage(
+      navigationItem.title = 'Wells'
+      navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithImage(
         'menuicon.png'.uiimage,
         style: UIBarButtonItemStylePlain,
         target: self,

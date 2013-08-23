@@ -5,7 +5,7 @@ class WellTableViewController < UITableViewController
   def init
     super.tap do
       self.tabBarItem = UITabBarItem.alloc.initWithTitle('List', image:'list.png'.uiimage, tag:2)
-      self.navigationItem.title = 'Wells on Map'
+      self.navigationItem.title = 'Wells List'
       self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithImage(
         'menuicon.png'.uiimage,
         style: UIBarButtonItemStylePlain,
