@@ -1,10 +1,6 @@
-class WellDetailsController < UIViewController
+class WellDetailsController < UITableViewController
 
   stylesheet :details
-
-  layout do
-    @label = subview(UILabel, :label, text: 'UWI')
-  end
 
   def viewDidLoad
     super
@@ -16,6 +12,6 @@ class WellDetailsController < UIViewController
   end
 
   def showDetailsForWell(well)
-    @label.text = well.uwi_display
+    tableView.reloadData
   end
 end
