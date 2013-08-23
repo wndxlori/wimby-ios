@@ -27,7 +27,7 @@ class AppDelegate
 
   def well_details_controller
     @well_details_controller ||= begin
-      controller =  WellDetailsController.alloc.init
+      controller =  WellDetailsController.alloc.initWithStyle(UITableViewStyleGrouped)
       controller.hidesBottomBarWhenPushed = true
       controller
     end
