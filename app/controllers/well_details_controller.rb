@@ -31,9 +31,10 @@ class WellDetailsController < UITableViewController
     cell = tableView.dequeueReusableCellWithIdentifier(CellID) || begin
       cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleValue2, reuseIdentifier:CellID)
       cell.textLabel.text = @details[indexPath.section][indexPath.row][:label]
-      cell.detailTextLabel.text = @details[indexPath.section][indexPath.row][:value]
       cell
     end
+    cell.detailTextLabel.text = @details[indexPath.section][indexPath.row][:value]
+    cell
   end
 
   def showDetailsForWell(well)

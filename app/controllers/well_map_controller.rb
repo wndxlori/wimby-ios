@@ -61,8 +61,8 @@ class WellMapController < UIViewController
     if @map.selectedAnnotations.size == 1
       well = @map.selectedAnnotations[0]
       controller = UIApplication.sharedApplication.delegate.well_details_controller
-      navigationController.pushViewController(controller, animated:true)
       controller.showDetailsForWell(well)
+      navigationController.pushViewController(controller, animated:true)
     end
   end
 
