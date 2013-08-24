@@ -29,7 +29,7 @@ class WellDetailsController < UITableViewController
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     cell = tableView.dequeueReusableCellWithIdentifier(CellID) || begin
-      cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleValue1, reuseIdentifier:CellID)
+      cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleValue2, reuseIdentifier:CellID)
       cell.textLabel.text = @details[indexPath.section][indexPath.row][:label]
       cell.detailTextLabel.text = @details[indexPath.section][indexPath.row][:value]
       cell
@@ -44,7 +44,7 @@ class WellDetailsController < UITableViewController
       ],
       [
         {label: 'Current', value: well.status},
-        {label: 'Last Updated', value: well.status_date.strftime('%Y-%m-%d')},
+        {label: 'Updated', value: well.status_date.strftime('%Y-%m-%d')},
       ],
       [
         {label: 'Latitude', value: well.latitude.stringValue},
