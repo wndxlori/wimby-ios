@@ -19,7 +19,7 @@ class WellStore
   end
 
   def fetched_results_controller(request)
-    request ||= fetch_request
+    request ||= new_fetch_request
     request.fetchBatchSize = 20
     request.predicate = self.predicate unless self.predicate.nil?
     NSFetchedResultsController.alloc.initWithFetchRequest(request,
@@ -34,7 +34,7 @@ class WellStore
   end
 
   def wells
-    @wells ||= fetch(fetch_request)
+    @wells ||= fetch(new_fetch_request)
   end
 
   def create_well
@@ -94,18 +94,9 @@ class WellStore
 
   # Setter for fetch request (once per name)
   def set_fetch_request_template(predicate, forName:name)
-    request = fetch_request
+    request = new_fetch_request
     request.predicate = predicate
     @mom.setFetchRequestTemplate(request, forName:name)
-  end
-
-  def fetch_request
-    fetch_request = NSFetchRequest.new
-    fetch_request.entity = NSEntityDescription.entityForName('WellInfo', inManagedObjectContext:@context)
-    sort = NSSortDescriptor.alloc.initWithKey('details.uwi_sort', ascending: true)
-    fetch_request.sortDescriptors = [sort]
-
-    fetch_request
   end
 
   private
@@ -124,6 +115,15 @@ class WellStore
 
     @context = NSManagedObjectContext.alloc.init
     @context.persistentStoreCoordinator = @store
+  end
+
+  def new_fetch_request
+    fetch_request = NSFetchRequest.new
+    fetch_request.entity = NSEntityDescription.entityForName('WellInfo', inManagedObjectContext:@context)
+    sort = NSSortDescriptor.alloc.initWithKey('details.uwi_sort', ascending: true)
+    fetch_request.sortDescriptors = [sort]
+
+    fetch_request
   end
 
   def predicate=(new_predicate)
