@@ -1,7 +1,5 @@
 class AppDelegate
 
-  attr_accessor :tab_bar_controller
-
   def application(application, didFinishLaunchingWithOptions:launchOptions)
 
     menu = WimbyViewController.new
@@ -10,16 +8,16 @@ class AppDelegate
     mapview = WellMapController.alloc.init
     mapnav = UINavigationController.alloc.initWithRootViewController(mapview)
 
-    self.tab_bar_controller = UITabBarController.alloc.init
-    self.tab_bar_controller.viewControllers = [mapnav, tablenav]
-    self.tab_bar_controller.selectedIndex = 0
+    tab_bar_controller = UITabBarController.alloc.init
+    tab_bar_controller.viewControllers = [mapnav, tablenav]
+    tab_bar_controller.selectedIndex = 0
 
 #    UINavigationBar.appearance.titleTextAttributes = { UITextAttributeFont => 'Copperplate Bold'.uifont(20) }
 
     setup_tapstream
 
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
-    root = NVSlideMenuController.alloc.initWithMenuViewController(menu, andContentViewController: self.tab_bar_controller)
+    root = NVSlideMenuController.alloc.initWithMenuViewController(menu, andContentViewController: tab_bar_controller)
     @window.rootViewController = root
     @window.makeKeyAndVisible
     true
