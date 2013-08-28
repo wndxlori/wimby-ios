@@ -31,7 +31,7 @@ class WellMapController < UIViewController
     @map.region = {region: region, animated: true}
     queue = Dispatch::Queue.concurrent('com.wndx.wimby.task')
     queue.async do
-      add_wells(region)
+      @map.addAnnotations(WellStore.shared.wells)
     end
     track_button = MKUserTrackingBarButtonItem.alloc.initWithMapView(@map)
     track_button.target = self
@@ -64,21 +64,6 @@ class WellMapController < UIViewController
       controller.showDetailsForWell(well)
       navigationController.pushViewController(controller, animated:true)
     end
-  end
-
-  def add_wells(region)
-    center = region.center
-    span = region.span
-    region_hash = {}
-    region_hash['min_lat'] = center.latitude - (span.latitude_delta/2)
-    region_hash['max_lat'] = center.latitude + (span.latitude_delta/2)
-    region_hash['min_lng'] = center.longitude - (span.longitude_delta/2)
-    region_hash['max_lng'] = center.longitude + (span.longitude_delta/2)
-    NSLog("Map Region = #{region_hash}")
-    store = WellStore.shared
-    request = store.fetch_request_template(region_hash, forName:MAP_QUERY_NAME)
-    @map.addAnnotations(store.fetch(request))
-    App.notification_center.post(RegionChanged, region_hash)
   end
 
   # Will update the region predicate for the Well Store, so that only visible wells will
