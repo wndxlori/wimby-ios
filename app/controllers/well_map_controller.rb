@@ -29,10 +29,7 @@ class WellMapController < UIViewController
     @map.delegate = self
     region = CoordinateRegion.new(LocationCoordinate.new([62.4,-96.5]),CoordinateSpan.new([80.26-42.38,140.43-46.17]))
     @map.region = {region: region, animated: true}
-    queue = Dispatch::Queue.concurrent('com.wndx.wimby.task')
-    queue.async do
-      @map.addAnnotations(WellStore.shared.wells)
-    end
+    load_wells
     track_button = MKUserTrackingBarButtonItem.alloc.initWithMapView(@map)
     track_button.target = self
     track_button.action = "track:"
@@ -89,6 +86,15 @@ class WellMapController < UIViewController
   def track(sender)
     @map.shows_user_location = !@map.shows_user_location?
     @map.userTrackingMode = @map.userTrackingMode == MKUserTrackingModeNone ? MKUserTrackingModeFollow : MKUserTrackingModeNone
+  end
+
+  private
+
+  def load_wells
+    queue = Dispatch::Queue.concurrent('com.wndx.wimby.task')
+    queue.async do
+      @map.addAnnotations(WellStore.shared.wells)
+    end
   end
 
 end
