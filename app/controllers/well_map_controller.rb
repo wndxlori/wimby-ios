@@ -78,7 +78,6 @@ class WellMapController < UIViewController
     region_hash['max_lng'] = center.longitude + (span.longitude_delta/2)
     NSLog("Map Region = #{region_hash}")
     App.notification_center.post(RegionChanged, region_hash)
-    mapView
   end
 
   # Show/hide the slidemenucontroller
