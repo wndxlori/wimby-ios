@@ -33,14 +33,7 @@ class AppDelegate
     end
   end
 
-  private
-
-  def setup_tapstream
-    config = TSConfig.configWithDefaults();
-    TSTapstream.createWithAccountName("wndxgroup", developerSecret:"SIeEgUZ-QaWg3nDdrAg88g", config:config)
-  end
-
-  private
+private
 
   def setup_tapstream
     config = TSConfig.configWithDefaults();
