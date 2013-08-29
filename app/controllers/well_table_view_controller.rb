@@ -1,6 +1,7 @@
 class WellTableViewController < UITableViewController
 
   include NSFetchedResultsControllerDelegate
+  attr_accessor :fetch_controller
 
   def init
     super.tap do
@@ -13,33 +14,30 @@ class WellTableViewController < UITableViewController
         action: "show_menu:"
       )
     end
+    @fetch_controller = WellStore.shared.fetched_results_controller
+    @fetch_controller.delegate = self
   end
 
   def viewDidLoad
     super
-    App.notification_center.observe RegionChanged do |notification|
-      update(notification.object)
-    end
+    @fetch_controller ||= WellStore.shared.fetched_results_controller
   end
 
   def viewWillAppear(animated)
-    unless @fetch_controller
-      fetch_results
-    end
+    tableView.reloadData
   end
 
   def viewDidUnload
-    App.notification_center.unobserve RegionChanged
     @fetch_controller = nil
     super
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
-    @fetch_controller.sections.objectAtIndex(section).numberOfObjects
+    fetch_controller.sections.objectAtIndex(section).numberOfObjects
   end
 
   def configureCell(cell, atIndexPath:index)
-    well = @fetch_controller.objectAtIndexPath(index)
+    well = fetch_controller.objectAtIndexPath(index)
     cell.textLabel.text = well.uwi_display
     cell.detailTextLabel.text = well.well_name
     return cell
@@ -61,7 +59,7 @@ class WellTableViewController < UITableViewController
   end
 
   def tableView(tableView, accessoryButtonTappedForRowWithIndexPath:indexPath)
-    well = @fetch_controller.fetchedObjects[indexPath.row]
+    well = fetch_controller.fetchedObjects[indexPath.row]
     controller = UIApplication.sharedApplication.delegate.well_details_controller
     controller.showDetailsForWell(well)
     self.navigationController.pushViewController(controller, animated:true)
@@ -72,25 +70,4 @@ class WellTableViewController < UITableViewController
     self.navigationController.slideMenuController.toggleMenuAnimated(self)
   end
 
-  def update(region_hash)
-    store = WellStore.shared
-    request = store.fetch_request_template(region_hash, forName:WellMapController::MAP_QUERY_NAME)
-    fetch_results(request)
-  end
-
-  private
-
-  def fetch_results(request=nil)
-    @fetch_controller = WellStore.shared.fetched_results_controller(request)
-    @fetch_controller.delegate = self
-    NSLog("Loading table data")
-    queue = Dispatch::Queue.concurrent('com.wndx.wimby.task')
-    queue.sync do
-      error_ptr = Pointer.new(:object)
-      unless @fetch_controller.performFetch(error_ptr)
-        raise "Error when fetching wells: #{error_ptr[0].description}"
-      end
-      tableView.reloadData
-    end
-  end
 end

@@ -3,7 +3,12 @@ class WellStore
   attr_reader :predicate
 
   def self.shared
-    Dispatch.once { @instance ||= new }
+    Dispatch.once do
+      @instance ||= new
+      App.notification_center.observe RegionChanged do |notification|
+        @instance.predicateForCoordinates(notification.object)
+      end
+    end
     @instance
   end
 
@@ -16,25 +21,31 @@ class WellStore
                                                     region_hash['min_lng'],
                                                     region_hash['max_lng'],
                                                 ])
+    NSLog("performing fetch - many times")
+    unless fetched_results_controller.performFetch(error_ptr = Pointer.new(:object))
+     raise "Error when fetching wells: #{error_ptr[0].description}"
+    end
   end
 
-  def fetched_results_controller(request)
-    request ||= new_fetch_request
-    request.fetchBatchSize = 20
-    request.predicate = self.predicate unless self.predicate.nil?
-    NSFetchedResultsController.alloc.initWithFetchRequest(request,
-                                                          managedObjectContext:@context,
-                                                          sectionNameKeyPath:nil,
-                                                          cacheName:nil)
+  def fetched_results_controller
+    @fetched_results_controller ||= begin
+      NSLog( "Creating fetch controller - only once")
+      request = new_fetch_request
+      request.fetchBatchSize = 20
+      request.predicate = self.predicate unless self.predicate.nil?
+      NSFetchedResultsController.alloc.initWithFetchRequest(request,
+                                                            managedObjectContext:@context,
+                                                            sectionNameKeyPath:nil,
+                                                            cacheName:nil)
+    end
   end
 
-  def fetch(request)
-    error_ptr = Pointer.new(:object)
-    @context.executeFetchRequest(request, error:error_ptr)
-  end
-
+  # Returns all wells, with an unfiltered fetch request
   def wells
-    @wells ||= fetch(new_fetch_request)
+    @wells ||= begin
+      error_ptr = Pointer.new(:object)
+      @context.executeFetchRequest(new_fetch_request, error:error_ptr)
+    end
   end
 
   def create_well
@@ -87,18 +98,6 @@ class WellStore
     end
   end
 
-  # Getter for fetch request
-  def fetch_request_template(substitution_hash, forName:name)
-    @mom.fetchRequestFromTemplateWithName(name,  substitutionVariables:substitution_hash);
-  end
-
-  # Setter for fetch request (once per name)
-  def set_fetch_request_template(predicate, forName:name)
-    request = new_fetch_request
-    request.predicate = predicate
-    @mom.setFetchRequestTemplate(request, forName:name)
-  end
-
   private
 
   def initialize
@@ -127,7 +126,7 @@ class WellStore
   end
 
   def predicate=(new_predicate)
-    @predicate = new_predicate
+    @predicate = self.fetched_results_controller.fetchRequest.predicate = new_predicate
   end
 
   def store_url
