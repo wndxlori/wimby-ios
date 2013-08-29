@@ -7,11 +7,7 @@ class WellMapController < UIViewController
 
   attr_accessor :map
 
-  MAP_QUERY_NAME   = 'QueryByMapRegion'
-  MAP_QUERY_FORMAT = "(latitude > $min_lat AND latitude < $max_lat) AND (longitude > $min_lng AND longitude < $max_lng)"
-
   def init
-    WellStore.shared.set_fetch_request_template(NSPredicate.predicateWithFormat(MAP_QUERY_FORMAT), forName:MAP_QUERY_NAME)
     super.tap do
       self.tabBarItem = UITabBarItem.alloc.initWithTitle('Map', image:UIImage.imageNamed('map.png'), tag:1)
       navigationItem.title = 'Wells'
@@ -74,7 +70,7 @@ class WellMapController < UIViewController
     region_hash['min_lng'] = center.longitude - (span.longitude_delta/2)
     region_hash['max_lng'] = center.longitude + (span.longitude_delta/2)
     NSLog("Map Region = #{region_hash}")
-    App.notification_center.post(RegionChanged, region_hash)
+    App.notification_center.post(RegionChanged, region_hash) unless region_hash['min_lat'].nan?
   end
 
   # Show/hide the slidemenucontroller
@@ -91,8 +87,7 @@ class WellMapController < UIViewController
   private
 
   def load_wells
-    queue = Dispatch::Queue.concurrent('com.wndx.wimby.task')
-    queue.async do
+    Dispatch::Queue.concurrent('com.wndx.wimby.task').async do
       @map.addAnnotations(WellStore.shared.wells)
     end
   end
