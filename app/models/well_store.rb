@@ -21,10 +21,6 @@ class WellStore
                                                     region_hash['min_lng'],
                                                     region_hash['max_lng'],
                                                 ])
-    NSLog("performing fetch - many times")
-    unless fetched_results_controller.performFetch(error_ptr = Pointer.new(:object))
-     raise "Error when fetching wells: #{error_ptr[0].description}"
-    end
   end
 
   def fetched_results_controller
@@ -42,10 +38,11 @@ class WellStore
 
   # Returns all wells, with an unfiltered fetch request
   def wells
-    @wells ||= begin
-      error_ptr = Pointer.new(:object)
-      @context.executeFetchRequest(new_fetch_request, error:error_ptr)
+    error_ptr = Pointer.new(:object)
+    unless wells = @context.executeFetchRequest(new_fetch_request, error:error_ptr)
+      raise "Error when fetching wells: #{error_ptr[0].description}"
     end
+    wells
   end
 
   def create_well
@@ -126,7 +123,11 @@ class WellStore
   end
 
   def predicate=(new_predicate)
-    @predicate = self.fetched_results_controller.fetchRequest.predicate = new_predicate
+    @predicate = fetched_results_controller.fetchRequest.predicate = new_predicate
+    NSLog("performing fetch with new predicate")
+    unless fetched_results_controller.performFetch(error_ptr = Pointer.new(:object))
+     raise "Error when fetching wells: #{error_ptr[0].description}"
+    end
   end
 
   def store_url

@@ -25,7 +25,7 @@ class WellMapController < UIViewController
     @map.delegate = self
     region = CoordinateRegion.new(LocationCoordinate.new([62.4,-96.5]),CoordinateSpan.new([80.26-42.38,140.43-46.17]))
     @map.region = {region: region, animated: true}
-    load_wells
+#    load_wells
     track_button = MKUserTrackingBarButtonItem.alloc.initWithMapView(@map)
     track_button.target = self
     track_button.action = "track:"
