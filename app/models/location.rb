@@ -9,7 +9,32 @@ class Location
   def title; @name; end
   def coordinate; @coordinate; end
 
-  Previous = App::Persistence['previous_locations'].nil? ? [] : App::Persistence['previous_locations']
+  # Given a location, attempts to find it's lat/long coords, and saves to the Previous list
+  def self.find(address)
+    geo = CLGeocoder.new
+    geo.geocodeAddressString(address, completionHandler: lambda {|placemarks, err|
+      if placemarks.size == 0
+        # TODO: display some error message
+      else
+        coordinate = placemarks[0].location.coordinate
+        Previous.unshift(Location.new(coordinate.latitude, coordinate.longitude, address))
+        self.current = Previous.first
+      end
+    })
+  end
+
+  def self.current
+    App::Persistence['current_location']
+  end
+
+  def self.current=(location)
+    # The map should be monitoring this for change
+    App::Persistence['current_location'] = location
+  end
+
+  Previous = App::Persistence['previous_locations'].nil? ?
+      App::Persistence['previous_locations'] = [] :
+      App::Persistence['previous_locations']
 
   Interesting =
     [
