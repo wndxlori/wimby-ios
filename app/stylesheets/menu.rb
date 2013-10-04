@@ -1,7 +1,9 @@
 Teacup::Stylesheet.new(:menu_sheet) do
-  style :root,
-    landscape: true,  # this must be on the root-view, to indicate that this view is
-    gradient: {
-      colors: ['#7a7a7a'.uicolor, '#414141'.uicolor]
-    }
+  style :scroll_view,
+    frame: [[0, '60%'],['85%', '40%']]
+
+  style :table_view,
+    scrollEnabled: false,
+    width: '100%',
+    height: '100%'
 end

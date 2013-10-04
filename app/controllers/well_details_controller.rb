@@ -1,7 +1,5 @@
 class WellDetailsController < UITableViewController
 
-  stylesheet :details
-
   SECTIONS = %w(Name Status Location)
 
   def viewDidLoad
