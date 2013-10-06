@@ -96,7 +96,7 @@ class WellMapController < UIViewController
   end
 
   def load_wells(wells)
-    Dispatch::Queue.concurrent('com.wndx.wimby.task').async do
+    Dispatch::Queue.concurrent(:high).async do
       @map.addAnnotations(wells)
     end
   end

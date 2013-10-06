@@ -125,10 +125,13 @@ class WellStore
   def predicate=(new_predicate)
     @predicate = fetched_results_controller.fetchRequest.predicate = new_predicate
     NSLog("performing fetch with new predicate")
-    unless fetched_results_controller.performFetch(error_ptr = Pointer.new(:object))
-     raise "Error when fetching wells: #{error_ptr[0].description}"
+    Dispatch::Queue.concurrent(:high).async do
+      if fetched_results_controller.performFetch(error_ptr = Pointer.new(:object))
+        App.notification_center.post(WellsLoaded, fetched_results_controller.fetchedObjects)
+      else
+       raise "Error when fetching wells: #{error_ptr[0].description}"
+      end
     end
-    App.notification_center.post(WellsLoaded, fetched_results_controller.fetchedObjects)
   end
 
   def store_url
