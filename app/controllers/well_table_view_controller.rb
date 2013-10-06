@@ -58,11 +58,19 @@ class WellTableViewController < UITableViewController
     UITableViewCellEditingStyleNone
   end
 
-  def tableView(tableView, accessoryButtonTappedForRowWithIndexPath:indexPath)
+  def selectWellAtIndexPath(indexPath)
     well = fetch_controller.fetchedObjects[indexPath.row]
     controller = UIApplication.sharedApplication.delegate.well_details_controller
     controller.showDetailsForWell(well)
     self.navigationController.pushViewController(controller, animated:true)
+  end
+
+  def tableView(tableView, accessoryButtonTappedForRowWithIndexPath:indexPath)
+    selectWellAtIndexPath(indexPath)
+  end
+
+  def tableView(tableView, didSelectRowAtIndexPath:indexPath)
+    selectWellAtIndexPath(indexPath)
   end
 
   # Show/hide the slidemenucontroller
