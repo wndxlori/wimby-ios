@@ -1,4 +1,6 @@
 RegionChanged = "RegionChanged"
+LocationEntered = "LocationEntered"
+WellsLoaded = "WellsLoaded"
 
 class WellMapController < UIViewController
   include MapKit
@@ -30,6 +32,15 @@ class WellMapController < UIViewController
     track_button.target = self
     track_button.action = "track:"
     self.navigationItem.rightBarButtonItem = track_button
+
+    App.notification_center.observe LocationEntered do |notification|
+      region = CoordinateRegion.new(notification.object.coordinate, CoordinateSpan.new([0.15,0.15]) )
+      @map.region = {region: region, animated: true}
+    end
+
+    App.notification_center.observe WellsLoaded do |notification|
+      self.load_wells(notification.object) unless App::Persistence['current_location'].nil?
+    end
   end
 
   ViewIdentifier = 'WellIdentifier'
@@ -84,11 +95,9 @@ class WellMapController < UIViewController
     @map.userTrackingMode = @map.userTrackingMode == MKUserTrackingModeNone ? MKUserTrackingModeFollow : MKUserTrackingModeNone
   end
 
-  private
-
-  def load_wells
+  def load_wells(wells)
     Dispatch::Queue.concurrent('com.wndx.wimby.task').async do
-      @map.addAnnotations(WellStore.shared.wells)
+      @map.addAnnotations(wells)
     end
   end
 

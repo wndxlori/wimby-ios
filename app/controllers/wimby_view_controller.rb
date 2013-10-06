@@ -58,13 +58,18 @@ class WimbyViewController < UIViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    location = Location.previous_locations[indexPath.row]
-    controller = UIApplication.sharedApplication.delegate.tab_bar_controller
+    location = if numberOfSectionsInTableView(tableView) > 1 and section == 0
+      Location::Previous[indexPath.row]
+    else
+      Location::Interesting[indexPath.row]
+    end
+    App::Persistence['current_location'] = {title: location.title, latitude: location.coordinate.latitude, longitude: location.coordinate.longitude }
+    App.notification_center.post(LocationEntered, location)
 
     # Set the map to be the current tab
-    self.tab_bar_controller.selectedIndex = 0
-    # TODO: Set the map to this location
+    controller = UIApplication.sharedApplication.delegate.tab_bar_controller
+    controller.selectedIndex = 0
 
-    UIApplication.sharedApplication.delegate.slideMenuController.closeMenuBehindContentViewController(controller, animated:true, completion:nil)
+    UIApplication.sharedApplication.delegate.slide_menu_controller.closeMenuBehindContentViewController(controller, animated:true, completion:nil)
   end
 end
