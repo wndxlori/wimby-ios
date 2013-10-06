@@ -17,19 +17,12 @@ class Location
         # TODO: display some error message
       else
         coordinate = placemarks[0].location.coordinate
-        Previous.unshift(Location.new(coordinate.latitude, coordinate.longitude, address))
-        self.current = Previous.first
+        location = Location.new(coordinate.latitude, coordinate.longitude, address)
+        Previous.unshift(location)
+        App::Persistence['current_location'] = {title: location.title, latitude: location.coordinate.latitude, longitude: location.coordinate.longitude }
+        App.notification_center.post(LocationEntered, location)
       end
     })
-  end
-
-  def self.current
-    App::Persistence['current_location']
-  end
-
-  def self.current=(location)
-    # The map should be monitoring this for change
-    App::Persistence['current_location'] = location
   end
 
   Previous = App::Persistence['previous_locations'].nil? ?
@@ -38,9 +31,9 @@ class Location
 
   Interesting =
     [
-      Location.new(50.6739032, -114.2788625, 'Turner Valley, AB'),
-      Location.new(50.67024, -114.275143, 'Medicine Hat, AB'),
-      Location.new( 53.2722685, -113.5434225, 'Midale, SK')
+      Location.new(50.67390, -114.27886, 'Turner Valley, AB'),
+      Location.new(50.041069, -110.678093, 'Medicine Hat, AB'),
+      Location.new(49.39593, -103.41105, 'Midale, SK')
     ]
 end
 
