@@ -6,21 +6,25 @@ class WellStore
     Dispatch.once do
       @instance ||= new
       App.notification_center.observe RegionChanged do |notification|
-        @instance.predicateForCoordinates(notification.object)
+        @instance.fetchForCoordinates(notification.object)
       end
     end
     @instance
   end
 
-  def predicateForCoordinates(region_hash)
-#    predicate = NSPredicate.predicateWithFormat("latitude BETWEEN %@ AND longitude BETWEEN %@",argumentArray:[[51.00860706, 51.09593565],[-114.14132653,-114.00182106]])
-    self.predicate = NSPredicate.predicateWithFormat("(latitude > %f AND latitude < %f) AND (longitude > %f AND longitude < %f)",
-                                                argumentArray:[
-                                                    region_hash['min_lat'],
-                                                    region_hash['max_lat'],
-                                                    region_hash['min_lng'],
-                                                    region_hash['max_lng'],
-                                                ])
+  def fetchForCoordinates(region_hash)
+    new_predicate = fetched_results_controller.fetchRequest.predicate = @predicate.predicateWithSubstitutionVariables(region_hash)
+    NSLog("performing fetch with new predicate #{new_predicate.predicateFormat}")
+    Dispatch::Queue.concurrent(:high).async do
+      error_ptr = Pointer.new(:object)
+      @fetch_request.predicate = new_predicate
+      if  wells = @context.executeFetchRequest(@fetch_request, error:error_ptr)
+        NSLog("Loaded #{wells.count} wells")
+        App.notification_center.post(WellsLoaded, wells)
+      else
+       raise "Error when fetching wells: #{error_ptr[0].description}"
+      end
+    end
   end
 
   def fetched_results_controller
@@ -111,6 +115,9 @@ class WellStore
 
     @context = NSManagedObjectContext.alloc.init
     @context.persistentStoreCoordinator = @store
+
+    @predicate = NSPredicate.predicateWithFormat("(latitude > $min_lat AND latitude < $max_lat) AND (longitude > $min_lng AND longitude < $max_lng)")
+    @fetch_request = new_fetch_request
   end
 
   def new_fetch_request
@@ -120,18 +127,6 @@ class WellStore
     fetch_request.sortDescriptors = [sort]
 
     fetch_request
-  end
-
-  def predicate=(new_predicate)
-    @predicate = fetched_results_controller.fetchRequest.predicate = new_predicate
-    NSLog("performing fetch with new predicate")
-    Dispatch::Queue.concurrent(:high).async do
-      if fetched_results_controller.performFetch(error_ptr = Pointer.new(:object))
-        App.notification_center.post(WellsLoaded, fetched_results_controller.fetchedObjects)
-      else
-       raise "Error when fetching wells: #{error_ptr[0].description}"
-      end
-    end
   end
 
   def store_url

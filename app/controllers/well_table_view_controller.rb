@@ -24,7 +24,13 @@ class WellTableViewController < UITableViewController
   end
 
   def viewWillAppear(animated)
-    tableView.reloadData
+    Dispatch::Queue.concurrent(:high).async do
+      if @fetch_controller.performFetch(error_ptr = Pointer.new(:object))
+        tableView.reloadData
+      else
+       raise "Error when fetching wells: #{error_ptr[0].description}"
+      end
+    end
   end
 
   def viewDidUnload
@@ -33,7 +39,7 @@ class WellTableViewController < UITableViewController
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
-    fetch_controller.sections.objectAtIndex(section).numberOfObjects
+    fetch_controller.fetchedObjects.count
   end
 
   def configureCell(cell, atIndexPath:index)
