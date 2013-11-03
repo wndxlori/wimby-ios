@@ -1,6 +1,7 @@
 class WellStore
 
   attr_reader :predicate
+  attr_accessor :wells
 
   def self.shared
     Dispatch.once do
@@ -13,12 +14,12 @@ class WellStore
   end
 
   def fetchForCoordinates(region_hash)
-    new_predicate = fetched_results_controller.fetchRequest.predicate = @predicate.predicateWithSubstitutionVariables(region_hash)
+    new_predicate = @predicate.predicateWithSubstitutionVariables(region_hash)
     NSLog("performing fetch with new predicate #{new_predicate.predicateFormat}")
     Dispatch::Queue.concurrent(:high).async do
       error_ptr = Pointer.new(:object)
       @fetch_request.predicate = new_predicate
-      if  wells = @context.executeFetchRequest(@fetch_request, error:error_ptr)
+      if self.wells = @context.executeFetchRequest(@fetch_request, error:error_ptr)
         NSLog("Loaded #{wells.count} wells")
         App.notification_center.post(WellsLoaded, wells)
       else
@@ -27,31 +28,13 @@ class WellStore
     end
   end
 
-  def fetched_results_controller
-    @fetched_results_controller ||= begin
-      NSLog( "Creating fetch controller - only once")
-      request = new_fetch_request
-      request.fetchBatchSize = 20
-      request.predicate = self.predicate unless self.predicate.nil?
-      NSFetchedResultsController.alloc.initWithFetchRequest(request,
-                                                            managedObjectContext:@context,
-                                                            sectionNameKeyPath:nil,
-                                                            cacheName:nil)
-    end
-  end
-
-  # Returns all wells, with an unfiltered fetch request
-  def wells
-    error_ptr = Pointer.new(:object)
-    unless wells = @context.executeFetchRequest(new_fetch_request, error:error_ptr)
-      raise "Error when fetching wells: #{error_ptr[0].description}"
-    end
-    wells
-  end
-
   def create_well
     yield NSEntityDescription.insertNewObjectForEntityForName('WellInfo', inManagedObjectContext:@context),
         NSEntityDescription.insertNewObjectForEntityForName('WellDetails', inManagedObjectContext:@context)
+  end
+
+  def wells
+    @wells ||= []
   end
 
   # The purpose of the load, is to pull in data from an external source, and load it into your CoreData store. It can

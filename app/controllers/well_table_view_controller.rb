@@ -1,8 +1,5 @@
 class WellTableViewController < UITableViewController
 
-  include NSFetchedResultsControllerDelegate
-  attr_accessor :fetch_controller
-
   def init
     super.tap do
       self.tabBarItem = UITabBarItem.alloc.initWithTitle('List', image:'list.png'.uiimage, tag:2)
@@ -14,36 +11,32 @@ class WellTableViewController < UITableViewController
         action: "show_menu:"
       )
     end
-    @fetch_controller = WellStore.shared.fetched_results_controller
-    @fetch_controller.delegate = self
-  end
-
-  def viewDidLoad
-    super
-    @fetch_controller ||= WellStore.shared.fetched_results_controller
+    tableView.delegate = self
+    tableView.dataSource = self
   end
 
   def viewWillAppear(animated)
-    Dispatch::Queue.concurrent(:high).async do
-      if @fetch_controller.performFetch(error_ptr = Pointer.new(:object))
-        tableView.reloadData
-      else
-       raise "Error when fetching wells: #{error_ptr[0].description}"
-      end
+    if @wells.nil?
+      @wells = WellStore.shared.wells
+      tableView.reloadData
+      add_observers
     end
   end
 
-  def viewDidUnload
-    @fetch_controller = nil
+  def viewWillDisappear(animated)
+    if view_did_pop?
+      remove_observers
+      @wells = nil
+    end
     super
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
-    fetch_controller.fetchedObjects.count
+    @wells.count
   end
 
   def configureCell(cell, atIndexPath:index)
-    well = fetch_controller.objectAtIndexPath(index)
+    well = @wells[index.row]
     cell.textLabel.text = well.uwi_display
     cell.detailTextLabel.text = well.well_name
     return cell
@@ -65,7 +58,7 @@ class WellTableViewController < UITableViewController
   end
 
   def selectWellAtIndexPath(indexPath)
-    well = fetch_controller.fetchedObjects[indexPath.row]
+    well = @wells[indexPath.row]
     controller = UIApplication.sharedApplication.delegate.well_details_controller
     controller.showDetailsForWell(well)
     self.navigationController.pushViewController(controller, animated:true)
@@ -82,6 +75,19 @@ class WellTableViewController < UITableViewController
   # Show/hide the slidemenucontroller
   def show_menu(sender)
     self.navigationController.slideMenuController.toggleMenuAnimated(self)
+  end
+
+private
+
+  def add_observers
+    App.notification_center.observe WellsLoaded do |notification|
+      @wells = notification.object
+      tableView.reloadData
+    end
+  end
+
+  def remove_observers
+    App.notification_center.unobserve WellsLoaded
   end
 
 end
