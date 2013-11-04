@@ -7,7 +7,8 @@ class WellMapController < UIViewController
 
   stylesheet :map_sheet
 
-  attr_accessor :map
+  attr_accessor :map,
+                :saved_region
 
   def init
     super.tap do
@@ -19,6 +20,8 @@ class WellMapController < UIViewController
         target: self,
         action: "show_menu:"
       )
+      @last_update = Time.now
+      @did_show_details = false
     end
   end
 
@@ -27,20 +30,19 @@ class WellMapController < UIViewController
     @map.delegate = self
     region = CoordinateRegion.new(LocationCoordinate.new([62.4,-96.5]),CoordinateSpan.new([80.26-42.38,140.43-46.17]))
     @map.region = {region: region, animated: true}
-#    load_wells
     track_button = MKUserTrackingBarButtonItem.alloc.initWithMapView(@map)
     track_button.target = self
     track_button.action = "track:"
     self.navigationItem.rightBarButtonItem = track_button
+  end
 
-    App.notification_center.observe LocationEntered do |notification|
-      region = CoordinateRegion.new(notification.object.coordinate, CoordinateSpan.new([0.15,0.15]) )
-      @map.region = {region: region, animated: true}
-    end
+  def viewWillAppear(animated)
+    add_observers unless @has_observers
+  end
 
-    App.notification_center.observe WellsLoaded do |notification|
-      self.load_wells(notification.object) unless App::Persistence['current_location'].nil?
-    end
+  def viewWillDisappear(animated)
+    remove_observers unless view_did_pop?
+    super
   end
 
   ViewIdentifier = 'WellIdentifier'
@@ -66,6 +68,7 @@ class WellMapController < UIViewController
       well = @map.selectedAnnotations[0]
       controller = UIApplication.sharedApplication.delegate.well_details_controller
       controller.showDetailsForWell(well)
+      @did_show_details = true
       navigationController.pushViewController(controller, animated:true)
     end
   end
@@ -73,6 +76,11 @@ class WellMapController < UIViewController
   # Will update the region predicate for the Well Store, so that only visible wells will
   # be in the list, if/when we switch to the list view
   def mapView(mapView, regionDidChangeAnimated:animated)
+    return if not_so_fast
+    if @did_show_details
+      @did_show_details = false
+      return
+    end
     center = mapView.region.center
     span = mapView.region.span
     region_hash = {}
@@ -81,7 +89,10 @@ class WellMapController < UIViewController
     region_hash['min_lng'] = center.longitude - (span.longitude_delta/2)
     region_hash['max_lng'] = center.longitude + (span.longitude_delta/2)
     NSLog("Map Region = #{region_hash}")
-    App.notification_center.post(RegionChanged, region_hash) unless region_hash['min_lat'].nan?
+    if did_region_hash_change?(region_hash)
+      @last_update = Time.now
+      App.notification_center.post(RegionChanged, region_hash) unless region_hash['min_lat'].nan?
+    end
   end
 
   # Show/hide the slidemenucontroller
@@ -96,9 +107,45 @@ class WellMapController < UIViewController
   end
 
   def load_wells(wells)
-    Dispatch::Queue.concurrent(:high).async do
+    WellStore.shared.context.performBlock -> {
+      @map.removeAnnotations(self.annotations_to_remove) if @map.annotations
       @map.addAnnotations(wells)
+    }
+  end
+
+  def did_region_hash_change?(region_hash)
+    self.saved_region == region_hash ? false : self.saved_region = region_hash
+  end
+
+  def annotations_to_remove
+    user_annotation = @map.userLocation
+    annotations_to_remove = NSMutableArray.arrayWithArray(@map.annotations)
+    annotations_to_remove.removeObject(user_annotation) if user_annotation
+    annotations_to_remove
+  end
+
+  def not_so_fast
+    (Time.now - @last_update) < 1.0
+  end
+
+private
+
+  def add_observers
+    @has_observers = true
+    App.notification_center.observe LocationEntered do |notification|
+      region = CoordinateRegion.new(notification.object.coordinate, CoordinateSpan.new([0.15,0.15]) )
+      @map.region = {region: region, animated: true}
+    end
+    App.notification_center.observe WellsLoaded do |notification|
+      self.load_wells(notification.object) unless App::Persistence['current_location'].nil?
     end
   end
+
+  def remove_observers
+    App.notification_center.unobserve WellsLoaded
+    App.notification_center.unobserve LocationEntered
+    @has_observers = false
+  end
+
 
 end

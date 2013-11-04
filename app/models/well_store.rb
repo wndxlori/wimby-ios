@@ -1,6 +1,6 @@
 class WellStore
 
-  attr_reader :predicate
+  attr_reader :context
   attr_accessor :wells
 
   def self.shared
@@ -16,7 +16,8 @@ class WellStore
   def fetchForCoordinates(region_hash)
     new_predicate = @predicate.predicateWithSubstitutionVariables(region_hash)
     NSLog("performing fetch with new predicate #{new_predicate.predicateFormat}")
-    Dispatch::Queue.concurrent(:high).async do
+
+    @context.performBlock -> {
       error_ptr = Pointer.new(:object)
       @fetch_request.predicate = new_predicate
       if self.wells = @context.executeFetchRequest(@fetch_request, error:error_ptr)
@@ -25,7 +26,7 @@ class WellStore
       else
        raise "Error when fetching wells: #{error_ptr[0].description}"
       end
-    end
+    }
   end
 
   def create_well
@@ -96,7 +97,7 @@ class WellStore
       raise "Can't add persistent SQLite store: #{error_ptr[0].description}"
     end
 
-    @context = NSManagedObjectContext.alloc.init
+    @context = NSManagedObjectContext.alloc.initWithConcurrencyType(NSPrivateQueueConcurrencyType)
     @context.persistentStoreCoordinator = @store
 
     @predicate = NSPredicate.predicateWithFormat("(latitude > $min_lat AND latitude < $max_lat) AND (longitude > $min_lng AND longitude < $max_lng)")
@@ -113,16 +114,7 @@ class WellStore
   end
 
   def store_url
-    store_url = NSURL.fileURLWithPath(File.join(NSHomeDirectory(), 'Documents', 'wells.sqlite'))
-    # Check if a data store already exists in the documents directory.
-    unless Kernel.const_defined?(:NSApplication) || NSFileManager.defaultManager.fileExistsAtPath(store_url.path)
-      sqlite_url = NSURL.fileURLWithPath(NSBundle.mainBundle.pathForResource("wells", ofType:"sqlite"))
-      error_ptr = Pointer.new(:object)
-      unless NSFileManager.defaultManager.copyItemAtURL(sqlite_url, toURL: store_url, error: error_ptr)
-        NSLog("Failed to copy preloaded database file")
-      end
-    end
-    store_url
+    NSURL.fileURLWithPath(NSBundle.mainBundle.pathForResource("wells", ofType:"sqlite"))
   end
 
   def set_entity_properties(entity, model)
