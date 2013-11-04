@@ -108,20 +108,12 @@ class WellMapController < UIViewController
 
   def load_wells(wells)
     WellStore.shared.context.performBlock -> {
-      @map.removeAnnotations(self.annotations_to_remove) if @map.annotations
       @map.addAnnotations(wells)
     }
   end
 
   def did_region_hash_change?(region_hash)
     self.saved_region == region_hash ? false : self.saved_region = region_hash
-  end
-
-  def annotations_to_remove
-    user_annotation = @map.userLocation
-    annotations_to_remove = NSMutableArray.arrayWithArray(@map.annotations)
-    annotations_to_remove.removeObject(user_annotation) if user_annotation
-    annotations_to_remove
   end
 
   def not_so_fast
