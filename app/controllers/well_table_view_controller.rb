@@ -19,7 +19,7 @@ class WellTableViewController < UITableViewController
     if @wells.nil?
       @wells = WellStore.shared.wells
       tableView.reloadData
-      add_observers
+      add_observers unless @has_observers
     end
   end
 
@@ -80,6 +80,7 @@ class WellTableViewController < UITableViewController
 private
 
   def add_observers
+    @has_observers = true
     App.notification_center.observe WellsLoaded do |notification|
       @wells = notification.object
       tableView.reloadData
@@ -88,6 +89,7 @@ private
 
   def remove_observers
     App.notification_center.unobserve WellsLoaded
+    @has_observers = false
   end
 
 end
