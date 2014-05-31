@@ -7,7 +7,7 @@ DEPENDENCIES:
   - NVSlideMenuController
 
 SPEC CHECKSUMS:
-  AFNetworking: e528f20d06b1b818c3571266fb5efa20031a8ace
-  NVSlideMenuController: 5c1558dbbddf7f0d3a86720074dfe656c7fbd224
+  AFNetworking: 5c9ad4a4033a58dc7aa4680be246a5f19c09eb3d
+  NVSlideMenuController: 48fabd22cc315cafd00ceb283b872f1d0afdfecf
 
-COCOAPODS: 0.23.0
+COCOAPODS: 0.33.1
