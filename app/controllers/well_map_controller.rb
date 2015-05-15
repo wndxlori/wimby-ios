@@ -28,6 +28,7 @@ class WellMapController < UIViewController
     @map = subview(MKMapView, :map)
     @map.delegate = self
     @map_cluster_controller = CCHMapClusterController.alloc.initWithMapView(@map)
+    @map_cluster_controller.delegate = self
 
     region = MKCoordinateRegionMake(CLLocationCoordinate2D.new(62.4,-96.5), MKCoordinateSpanMake(80.26-42.38,140.43-46.17))
 
@@ -47,27 +48,49 @@ class WellMapController < UIViewController
     super
   end
 
+
+  def mapClusterController(mapClusterController, willReuseMapClusterAnnotation:mapClusterAnnotation)
+    view = mapView(@map, viewForAnnotation:mapClusterAnnotation)
+    # view.count = mapClusterAnnotation.annotations.count
+    # view.uniqueLocation = mapClusterAnnotation.isUniqueLocation
+  end
+
   ViewIdentifier = 'WellIdentifier'
   def mapView(mapView, viewForAnnotation:annotation)
-    return nil if annotation.is_a?(MKUserLocation) or annotation.is_a?(CCHMapClusterAnnotation)
+    return nil if annotation.is_a?(MKUserLocation)
 
     if view = mapView.dequeueReusableAnnotationViewWithIdentifier(ViewIdentifier)
       view.annotation = annotation
     else
       view = MKAnnotationView.alloc.initWithAnnotation(annotation, reuseIdentifier:ViewIdentifier)
-      view.image = UIImage.imageNamed('well_marker.png')
       view.canShowCallout = true
-      #view.animatesDrop = true
-      button = UIButton.buttonWithType(UIButtonTypeDetailDisclosure)
-      button.addTarget(self, action: :'showDetails:', forControlEvents:UIControlEventTouchUpInside)
-      view.rightCalloutAccessoryView = button
+      if annotation.isCluster
+        view.image = UIImage.imageNamed('cluster.png')
+        # view.count = annotation.annotations.count
+        # view.uniqueLocation = annotation.isUniqueLocation
+      else
+        view.image = UIImage.imageNamed('well_marker.png')
+        button = UIButton.buttonWithType(UIButtonTypeDetailDisclosure)
+        button.addTarget(self, action: :'showDetails:', forControlEvents:UIControlEventTouchUpInside)
+        view.rightCalloutAccessoryView = button
+      end
     end
     view
   end
 
+  def mapClusterController(mapClusterController, titleForMapClusterAnnotation:mapClusterAnnotation)
+    count = mapClusterAnnotation.annotations.count
+    count > 1 ?
+      "#{count} wells" : mapClusterAnnotation.annotations.allObjects.first.title
+  end
+
+  # def mapClusterController(mapClusterController, willReuseMapClusterAnnotation: mapClusterAnnotation)
+  #   clusterAnnotationView = mapView(@map, viewForAnnotation:mapClusterAnnotation)
+  # end
+
   def showDetails(sender)
     if @map.selectedAnnotations.size == 1
-      well = @map.selectedAnnotations[0]
+      well = @map.selectedAnnotations.first.annotations.allObjects.first
       controller = UIApplication.sharedApplication.delegate.well_details_controller
       controller.showDetailsForWell(well)
       @did_show_details = true
