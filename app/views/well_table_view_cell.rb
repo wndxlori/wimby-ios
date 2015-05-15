@@ -1,0 +1,3 @@
+class WellTableViewCell < UITableViewCell
+
+end

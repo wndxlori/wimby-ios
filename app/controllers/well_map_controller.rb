@@ -3,7 +3,6 @@ LocationEntered = "LocationEntered"
 WellsLoaded = "WellsLoaded"
 
 class WellMapController < UIViewController
-  include MapKit
 
   stylesheet :map_sheet
 
@@ -26,10 +25,13 @@ class WellMapController < UIViewController
   end
 
   layout :root do
-    @map = subview(MapView, :map)
+    @map = subview(MKMapView, :map)
     @map.delegate = self
-    region = CoordinateRegion.new(LocationCoordinate.new([62.4,-96.5]),CoordinateSpan.new([80.26-42.38,140.43-46.17]))
-    @map.region = {region: region, animated: true}
+    @map_cluster_controller = CCHMapClusterController.alloc.initWithMapView(@map)
+
+    region = MKCoordinateRegionMake(CLLocationCoordinate2D.new(62.4,-96.5), MKCoordinateSpanMake(80.26-42.38,140.43-46.17))
+
+    @map.region = region
     track_button = MKUserTrackingBarButtonItem.alloc.initWithMapView(@map)
     track_button.target = self
     track_button.action = "track:"
@@ -47,7 +49,7 @@ class WellMapController < UIViewController
 
   ViewIdentifier = 'WellIdentifier'
   def mapView(mapView, viewForAnnotation:annotation)
-    return nil if annotation.is_a?(MKUserLocation) or annotation.is_a?(SPCluster)
+    return nil if annotation.is_a?(MKUserLocation) or annotation.is_a?(CCHMapClusterAnnotation)
 
     if view = mapView.dequeueReusableAnnotationViewWithIdentifier(ViewIdentifier)
       view.annotation = annotation
@@ -84,10 +86,10 @@ class WellMapController < UIViewController
     center = mapView.region.center
     span = mapView.region.span
     region_hash = {}
-    region_hash['min_lat'] = center.latitude - (span.latitude_delta/2)
-    region_hash['max_lat'] = center.latitude + (span.latitude_delta/2)
-    region_hash['min_lng'] = center.longitude - (span.longitude_delta/2)
-    region_hash['max_lng'] = center.longitude + (span.longitude_delta/2)
+    region_hash['min_lat'] = center.latitude - (span.latitudeDelta/2)
+    region_hash['max_lat'] = center.latitude + (span.latitudeDelta/2)
+    region_hash['min_lng'] = center.longitude - (span.longitudeDelta/2)
+    region_hash['max_lng'] = center.longitude + (span.longitudeDelta/2)
     NSLog("Map Region = #{region_hash}")
     if did_region_hash_change?(region_hash)
       @last_update = Time.now
@@ -108,7 +110,7 @@ class WellMapController < UIViewController
 
   def load_wells(wells)
     WellStore.shared.context.performBlock -> {
-      @map.addAnnotations(wells)
+      @map_cluster_controller.addAnnotations(wells, withCompletionHandler:nil)
     }
   end
 
@@ -125,8 +127,8 @@ private
   def add_observers
     @has_observers = true
     App.notification_center.observe LocationEntered do |notification|
-      region = CoordinateRegion.new(notification.object.coordinate, CoordinateSpan.new([0.15,0.15]) )
-      @map.region = {region: region, animated: true}
+      region = MKCoordinateRegionMake(notification.object.coordinate, MKCoordinateSpanMake(0.15,0.15))
+      @map.region = region
     end
     App.notification_center.observe WellsLoaded do |notification|
       self.load_wells(notification.object) unless App::Persistence['current_location'].nil?

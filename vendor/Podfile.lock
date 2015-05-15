@@ -1,13 +1,16 @@
 PODS:
   - AFNetworking (1.3.0)
+  - CCHMapClusterController (1.6.6)
   - NVSlideMenuController (1.5.0)
 
 DEPENDENCIES:
   - AFNetworking
+  - CCHMapClusterController
   - NVSlideMenuController
 
 SPEC CHECKSUMS:
-  AFNetworking: 5c9ad4a4033a58dc7aa4680be246a5f19c09eb3d
-  NVSlideMenuController: 48fabd22cc315cafd00ceb283b872f1d0afdfecf
+  AFNetworking: 41b8a0001576968fb87be90c3faac525c529a9f5
+  CCHMapClusterController: 982db41114b42a575798366371bd9908e0f9ec8b
+  NVSlideMenuController: 4b4f919cbd488b0f92707b1b30a92d5b5086854b
 
 COCOAPODS: 0.33.1
