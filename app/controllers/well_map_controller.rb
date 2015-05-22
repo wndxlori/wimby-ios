@@ -55,26 +55,28 @@ class WellMapController < UIViewController
     # view.uniqueLocation = mapClusterAnnotation.isUniqueLocation
   end
 
-  ViewIdentifier = 'WellIdentifier'
+  WellIdentifier = 'WellIdentifier'
+  ClusterIdentifier = 'ClusterIdentifier'
   def mapView(mapView, viewForAnnotation:annotation)
     return nil if annotation.is_a?(MKUserLocation)
 
-    if view = mapView.dequeueReusableAnnotationViewWithIdentifier(ViewIdentifier)
-      view.annotation = annotation
-    else
-      view = MKAnnotationView.alloc.initWithAnnotation(annotation, reuseIdentifier:ViewIdentifier)
-      view.canShowCallout = true
-      if annotation.isCluster
-        view.image = UIImage.imageNamed('cluster.png')
-        # view.count = annotation.annotations.count
-        # view.uniqueLocation = annotation.isUniqueLocation
+    if annotation.isCluster
+      if view = mapView.dequeueReusableAnnotationViewWithIdentifier(ClusterIdentifier)
+        view.annotation = annotation
       else
-        view.image = UIImage.imageNamed('well_marker.png')
-        button = UIButton.buttonWithType(UIButtonTypeDetailDisclosure)
-        button.addTarget(self, action: :'showDetails:', forControlEvents:UIControlEventTouchUpInside)
-        view.rightCalloutAccessoryView = button
+        view = WellClusterAnnotationView.alloc.initWithAnnotation(annotation, reuseIdentifier:ClusterIdentifier)
       end
+    else
+      if view = mapView.dequeueReusableAnnotationViewWithIdentifier(WellIdentifier)
+        view.annotation = annotation
+      else
+        view = WellAnnotationView.alloc.initWithAnnotation(annotation, reuseIdentifier:WellIdentifier)
+      end
+      button = UIButton.buttonWithType(UIButtonTypeDetailDisclosure)
+      button.addTarget(self, action: :'show_details:', forControlEvents:UIControlEventTouchUpInside)
+      view.rightCalloutAccessoryView = button
     end
+    view.canShowCallout = true
     view
   end
 
@@ -88,7 +90,7 @@ class WellMapController < UIViewController
   #   clusterAnnotationView = mapView(@map, viewForAnnotation:mapClusterAnnotation)
   # end
 
-  def showDetails(sender)
+  def show_details(sender)
     if @map.selectedAnnotations.size == 1
       well = @map.selectedAnnotations.first.annotations.allObjects.first
       controller = UIApplication.sharedApplication.delegate.well_details_controller
