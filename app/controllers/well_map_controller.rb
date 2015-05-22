@@ -66,6 +66,7 @@ class WellMapController < UIViewController
       else
         view = WellClusterAnnotationView.alloc.initWithAnnotation(annotation, reuseIdentifier:ClusterIdentifier)
       end
+      view.count = annotation.annotations.count
     else
       if view = mapView.dequeueReusableAnnotationViewWithIdentifier(WellIdentifier)
         view.annotation = annotation
