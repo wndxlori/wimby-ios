@@ -22,6 +22,7 @@ class AppDelegate
     self.slide_menu_controller = NVSlideMenuController.alloc.initWithMenuViewController(menu, andContentViewController: tab_bar_controller)
     @window.rootViewController = self.slide_menu_controller
     @window.makeKeyAndVisible
+    initialize_datastore
     true
   end
 
@@ -34,6 +35,10 @@ class AppDelegate
   end
 
 private
+
+  def initialize_datastore
+    WellStore.shared
+  end
 
   def setup_tapstream
     config = TSConfig.configWithDefaults();
