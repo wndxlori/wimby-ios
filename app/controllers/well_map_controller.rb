@@ -43,6 +43,18 @@ class WellMapController < UIViewController
     add_observers unless @has_observers
   end
 
+  def viewDidAppear(animated)
+    center = @map.region.center
+    span = @map.region.span
+    region_hash = {}
+    region_hash['min_lat'] = center.latitude - (span.latitudeDelta/2)
+    region_hash['max_lat'] = center.latitude + (span.latitudeDelta/2)
+    region_hash['min_lng'] = center.longitude - (span.longitudeDelta/2)
+    region_hash['max_lng'] = center.longitude + (span.longitudeDelta/2)
+    App.notification_center.post(RegionChanged, region_hash)
+    super
+  end
+
   def viewWillDisappear(animated)
     remove_observers unless view_did_pop?
     super
@@ -51,32 +63,32 @@ class WellMapController < UIViewController
 
   def mapClusterController(mapClusterController, willReuseMapClusterAnnotation:mapClusterAnnotation)
     view = mapView(@map, viewForAnnotation:mapClusterAnnotation)
-    # view.count = mapClusterAnnotation.annotations.count
-    # view.uniqueLocation = mapClusterAnnotation.isUniqueLocation
+    view.count = mapClusterAnnotation.annotations.count if mapClusterAnnotation.isCluster
   end
 
   WellIdentifier = 'WellIdentifier'
   ClusterIdentifier = 'ClusterIdentifier'
   def mapView(mapView, viewForAnnotation:annotation)
-    return nil if annotation.is_a?(MKUserLocation)
+    return nil unless annotation.is_a?(CCHMapClusterAnnotation)
 
     if annotation.isCluster
-      if view = mapView.dequeueReusableAnnotationViewWithIdentifier(ClusterIdentifier)
-        view.annotation = annotation
-      else
+      unless view = mapView.dequeueReusableAnnotationViewWithIdentifier(ClusterIdentifier)
         view = WellClusterAnnotationView.alloc.initWithAnnotation(annotation, reuseIdentifier:ClusterIdentifier)
       end
+      view.annotation = annotation
       view.count = annotation.annotations.count
+      view.image = WellClusterAnnotationView.image_for_count(view.count)
+      view.setNeedsDisplay
     else
-      if view = mapView.dequeueReusableAnnotationViewWithIdentifier(WellIdentifier)
-        view.annotation = annotation
-      else
+      unless view = mapView.dequeueReusableAnnotationViewWithIdentifier(WellIdentifier)
         view = WellAnnotationView.alloc.initWithAnnotation(annotation, reuseIdentifier:WellIdentifier)
       end
+      view.annotation = annotation
       button = UIButton.buttonWithType(UIButtonTypeDetailDisclosure)
       button.addTarget(self, action: :'show_details:', forControlEvents:UIControlEventTouchUpInside)
       view.rightCalloutAccessoryView = button
     end
+    view.enabled = true
     view.canShowCallout = true
     view
   end
@@ -86,10 +98,6 @@ class WellMapController < UIViewController
     count > 1 ?
       "#{count} wells" : mapClusterAnnotation.annotations.allObjects.first.title
   end
-
-  # def mapClusterController(mapClusterController, willReuseMapClusterAnnotation: mapClusterAnnotation)
-  #   clusterAnnotationView = mapView(@map, viewForAnnotation:mapClusterAnnotation)
-  # end
 
   def show_details(sender)
     if @map.selectedAnnotations.size == 1
@@ -103,25 +111,26 @@ class WellMapController < UIViewController
 
   # Will update the region predicate for the Well Store, so that only visible wells will
   # be in the list, if/when we switch to the list view
-  def mapView(mapView, regionDidChangeAnimated:animated)
-    return if not_so_fast
-    if @did_show_details
-      @did_show_details = false
-      return
-    end
-    center = mapView.region.center
-    span = mapView.region.span
-    region_hash = {}
-    region_hash['min_lat'] = center.latitude - (span.latitudeDelta/2)
-    region_hash['max_lat'] = center.latitude + (span.latitudeDelta/2)
-    region_hash['min_lng'] = center.longitude - (span.longitudeDelta/2)
-    region_hash['max_lng'] = center.longitude + (span.longitudeDelta/2)
-    NSLog("Map Region = #{region_hash}")
-    if did_region_hash_change?(region_hash)
-      @last_update = Time.now
-      App.notification_center.post(RegionChanged, region_hash) unless region_hash['min_lat'].nan?
-    end
-  end
+  # def mapView(mapView, regionDidChangeAnimated:animated)
+  #   return if not_so_fast
+  #   if @did_show_details
+  #     @did_show_details = false
+  #     return
+  #   end
+  #   center = mapView.region.center
+  #   span = mapView.region.span
+  #   region_hash = {}
+  #   region_hash['min_lat'] = center.latitude - (span.latitudeDelta/2)
+  #   region_hash['max_lat'] = center.latitude + (span.latitudeDelta/2)
+  #   region_hash['min_lng'] = center.longitude - (span.longitudeDelta/2)
+  #   region_hash['max_lng'] = center.longitude + (span.longitudeDelta/2)
+  #   NSLog("Map Region = #{region_hash}")
+  #   if did_region_hash_change?(region_hash)
+  #     @last_update = Time.now
+  #     App.notification_center.post(RegionChanged, region_hash) unless region_hash['min_lat'].nan?
+  #     mapView.removeAnnotations(mapView.annotations)
+  #   end
+  # end
 
   # Show/hide the slidemenucontroller
   def show_menu(sender)
