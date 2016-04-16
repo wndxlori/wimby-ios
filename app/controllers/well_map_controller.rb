@@ -29,6 +29,7 @@ class WellMapController < UIViewController
     @map.delegate = self
     @map_cluster_controller = CCHMapClusterController.alloc.initWithMapView(@map)
     @map_cluster_controller.delegate = self
+    @map_cluster_controller.reuseExistingClusterAnnotations = false
 
     region = MKCoordinateRegionMake(CLLocationCoordinate2D.new(62.4,-96.5), MKCoordinateSpanMake(80.26-42.38,140.43-46.17))
 
@@ -77,8 +78,6 @@ class WellMapController < UIViewController
       end
       view.annotation = annotation
       view.count = annotation.annotations.count
-      view.image = WellClusterAnnotationView.image_for_count(view.count)
-      view.setNeedsDisplay
     else
       unless view = mapView.dequeueReusableAnnotationViewWithIdentifier(WellIdentifier)
         view = WellAnnotationView.alloc.initWithAnnotation(annotation, reuseIdentifier:WellIdentifier)
@@ -97,6 +96,15 @@ class WellMapController < UIViewController
     count = mapClusterAnnotation.annotations.count
     count > 1 ?
       "#{count} wells" : mapClusterAnnotation.annotations.allObjects.first.title
+  end
+
+  def mapClusterController(mapClusterController, subtitleForMapClusterAnnotation:mapClusterAnnotation)
+    if mapClusterAnnotation.annotations.count > 1
+      number_of_annotations = [mapClusterAnnotation.annotations.count, 3].min
+      annotations = mapClusterAnnotation.annotations.allObjects[1..number_of_annotations]
+      titles = annotations.map(&:title)
+      titles.join(', ')
+    end
   end
 
   def show_details(sender)

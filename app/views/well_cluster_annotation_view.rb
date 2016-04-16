@@ -10,41 +10,42 @@ class WellClusterAnnotationView < MKAnnotationView
 
   def initWithAnnotation(annotation, reuseIdentifier:identifier)
     super.tap do |view|
-#      self.setup_label
-      self.count = annotation.annotations.count
-      view.image = WellClusterAnnotationView.image_for_count(count)
+      view.backgroundColor = UIColor.clearColor
+      view.setup_label
+      view.count = annotation.annotations.count
     end
   end
   
-  # def setup_label
-  #   @count_label = UILabel.alloc.initWithFrame(bounds)
-  #   @count_label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight
-  #   @count_label.textAlignment = NSTextAlignmentCenter
-  #   @count_label.backgroundColor = UIColor.clearColor
-  #   @count_label.textColor = UIColor.blueColor
-  #   @count_label.textAlignment = NSTextAlignmentCenter
-  #   @count_label.adjustsFontSizeToFitWidth = true
-  #   @count_label.minimumScaleFactor = 2
-  #   @count_label.numberOfLines = 1
-  #   @count_label.font = UIFont.boldSystemFontOfSize(12)
-  #   @count_label.baselineAdjustment = UIBaselineAdjustmentAlignCenters
-  #
-  #   addSubview(@count_label)
-  # end
+  def setup_label
+    @count_label = UILabel.alloc.initWithFrame(bounds)
+    @count_label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight
+    @count_label.textAlignment = NSTextAlignmentCenter
+    @count_label.backgroundColor = UIColor.clearColor
+    @count_label.textColor = UIColor.blueColor
+    @count_label.textAlignment = NSTextAlignmentCenter
+    @count_label.adjustsFontSizeToFitWidth = true
+    @count_label.minimumScaleFactor = 2
+    @count_label.numberOfLines = 1
+    @count_label.font = UIFont.boldSystemFontOfSize(12)
+    @count_label.baselineAdjustment = UIBaselineAdjustmentAlignCenters
 
-  # def drawRect(rect)
-  #   super
-  #   font = UIFont.boldSystemFontOfSize(12)
-  #   UIColor.whiteColor.set
-  #   text = count.to_s
-  #   text.drawInRect(rect, withFont:font)
-  # end
+    addSubview(@count_label)
+  end
 
   def count=(new_count)
     @count = new_count
+    self.count_label.text = @count.to_s
+    self.setNeedsLayout
   end
 
-  def self.image_for_count(count)
+  # See https://github.com/choefele/CCHMapClusterController/blob/master/CCHMapClusterController%20Example%20iOS/CCHMapClusterController%20Example%20iOS/ClusterAnnotationView.m
+  def layoutSubviews
+    self.image = image_for_count
+    self.count_label.frame = self.bounds
+    self.centerOffset = CGPointZero
+  end
+
+  def image_for_count
     if (count > 5000)
       XLARGE_CLUSTER
     elsif (count > 500)
