@@ -119,26 +119,26 @@ class WellMapController < UIViewController
 
   # Will update the region predicate for the Well Store, so that only visible wells will
   # be in the list, if/when we switch to the list view
-  # def mapView(mapView, regionDidChangeAnimated:animated)
-  #   return if not_so_fast
-  #   if @did_show_details
-  #     @did_show_details = false
-  #     return
-  #   end
-  #   center = mapView.region.center
-  #   span = mapView.region.span
-  #   region_hash = {}
-  #   region_hash['min_lat'] = center.latitude - (span.latitudeDelta/2)
-  #   region_hash['max_lat'] = center.latitude + (span.latitudeDelta/2)
-  #   region_hash['min_lng'] = center.longitude - (span.longitudeDelta/2)
-  #   region_hash['max_lng'] = center.longitude + (span.longitudeDelta/2)
-  #   NSLog("Map Region = #{region_hash}")
-  #   if did_region_hash_change?(region_hash)
-  #     @last_update = Time.now
-  #     App.notification_center.post(RegionChanged, region_hash) unless region_hash['min_lat'].nan?
-  #     mapView.removeAnnotations(mapView.annotations)
-  #   end
-  # end
+  def mapView(mapView, regionDidChangeAnimated:animated)
+    return if not_so_fast
+    if @did_show_details
+      @did_show_details = false
+      return
+    end
+    center = mapView.region.center
+    span = mapView.region.span
+    region_hash = {}
+    region_hash['min_lat'] = center.latitude - (span.latitudeDelta/2)
+    region_hash['max_lat'] = center.latitude + (span.latitudeDelta/2)
+    region_hash['min_lng'] = center.longitude - (span.longitudeDelta/2)
+    region_hash['max_lng'] = center.longitude + (span.longitudeDelta/2)
+    NSLog("Map Region = #{region_hash}")
+    if did_region_hash_change?(region_hash)
+      @last_update = Time.now
+      App.notification_center.post(RegionChanged, region_hash) unless region_hash['min_lat'].nan?
+      mapView.removeAnnotations(mapView.annotations)
+    end
+  end
 
   # Show/hide the slidemenucontroller
   def show_menu(sender)
