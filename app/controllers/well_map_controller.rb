@@ -64,7 +64,10 @@ class WellMapController < UIViewController
 
   def mapClusterController(mapClusterController, willReuseMapClusterAnnotation:mapClusterAnnotation)
     view = mapView(@map, viewForAnnotation:mapClusterAnnotation)
-    view.count = mapClusterAnnotation.annotations.count if mapClusterAnnotation.isCluster
+    if mapClusterAnnotation.isCluster
+      view.count = mapClusterAnnotation.annotations.count
+      view.rightCalloutAccessoryView.hidden = !mapClusterAnnotation.isUniqueLocation
+    end
   end
 
   WellIdentifier = 'WellIdentifier'
@@ -78,7 +81,8 @@ class WellMapController < UIViewController
       end
       view.annotation = annotation
       view.count = annotation.annotations.count
-      add_callout_button(view, action: :show_list) if annotation.isUniqueLocation
+      add_callout_button(view, action: :show_list)
+      view.rightCalloutAccessoryView.hidden = !annotation.isUniqueLocation
     else
       unless view = mapView.dequeueReusableAnnotationViewWithIdentifier(WellIdentifier)
         view = WellAnnotationView.alloc.initWithAnnotation(annotation, reuseIdentifier:WellIdentifier)
