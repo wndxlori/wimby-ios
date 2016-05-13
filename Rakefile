@@ -14,7 +14,7 @@ Motion::Project::App.setup do |app|
   app.info_plist['UIStatusBarHidden'] = true
   app.frameworks += %w(CoreData MapKit)
 
-  app.provisioning_profile = '/Users/lori/Library/MobileDevice/Provisioning Profiles/c3ef702e-a61b-45fc-aa93-acf08f6a1a25.mobileprovision'
+  app.provisioning_profile = '/Users/lori/Library/MobileDevice/Provisioning Profiles/b2209784-4dad-4f8d-8c66-691f3990c8b4.mobileprovision'
   app.codesign_certificate = 'iPhone Developer: Lori Olson (856MK7QV4X)'
 
   app.detect_dependencies = false
