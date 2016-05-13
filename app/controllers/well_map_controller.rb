@@ -78,18 +78,23 @@ class WellMapController < UIViewController
       end
       view.annotation = annotation
       view.count = annotation.annotations.count
+      add_callout_button(view, action: :show_list) if annotation.isUniqueLocation
     else
       unless view = mapView.dequeueReusableAnnotationViewWithIdentifier(WellIdentifier)
         view = WellAnnotationView.alloc.initWithAnnotation(annotation, reuseIdentifier:WellIdentifier)
       end
       view.annotation = annotation
-      button = UIButton.buttonWithType(UIButtonTypeDetailDisclosure)
-      button.addTarget(self, action: :'show_details:', forControlEvents:UIControlEventTouchUpInside)
-      view.rightCalloutAccessoryView = button
+      add_callout_button(view, action: :show_details)
     end
     view.enabled = true
     view.canShowCallout = true
     view
+  end
+
+  def add_callout_button(view, action: callout_action)
+    button = UIButton.buttonWithType(UIButtonTypeDetailDisclosure)
+    button.addTarget(self, action: callout_action, forControlEvents: UIControlEventTouchUpInside)
+    view.rightCalloutAccessoryView = button
   end
 
   def mapClusterController(mapClusterController, titleForMapClusterAnnotation:mapClusterAnnotation)
@@ -107,7 +112,11 @@ class WellMapController < UIViewController
     end
   end
 
-  def show_details(sender)
+  def show_list
+    NSLog("Show a list!")
+  end
+
+  def show_details
     if @map.selectedAnnotations.size == 1
       well = @map.selectedAnnotations.first.annotations.allObjects.first
       controller = UIApplication.sharedApplication.delegate.well_details_controller
