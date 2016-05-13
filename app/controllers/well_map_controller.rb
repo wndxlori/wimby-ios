@@ -113,7 +113,13 @@ class WellMapController < UIViewController
   end
 
   def show_list
-    NSLog("Show a list!")
+    if @map.selectedAnnotations.size == 1
+      wells = @map.selectedAnnotations.first.annotations.allObjects
+      controller = UIApplication.sharedApplication.delegate.cluster_table_view_controller
+      controller.show_cluster(wells)
+      @did_show_cluster = true
+      navigationController.pushViewController(controller, animated:true)
+    end
   end
 
   def show_details
@@ -130,8 +136,8 @@ class WellMapController < UIViewController
   # be in the list, if/when we switch to the list view
   def mapView(mapView, regionDidChangeAnimated:animated)
     return if not_so_fast
-    if @did_show_details
-      @did_show_details = false
+    if @did_show_details || @did_show_cluster
+      @did_show_details = @did_show_cluster = false
       return
     end
     center = mapView.region.center

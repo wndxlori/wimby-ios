@@ -34,6 +34,14 @@ class AppDelegate
     end
   end
 
+  def cluster_table_view_controller
+    @cluster_table_view_controller ||= begin
+      controller =  WellClusterTableViewController.alloc.initWithStyle(UITableViewStylePlain)
+      controller.hidesBottomBarWhenPushed = true
+      controller
+    end
+  end
+
 private
 
   def initialize_datastore
