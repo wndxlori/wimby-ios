@@ -26,6 +26,7 @@ class WellMapController < UIViewController
 
   layout :root do
     @map = subview(MKMapView, :map)
+    @map.mapType = MKMapTypeHybrid
     @map.delegate = self
     @map_cluster_controller = CCHMapClusterController.alloc.initWithMapView(@map)
     @map_cluster_controller.delegate = self
@@ -34,9 +35,12 @@ class WellMapController < UIViewController
     region = MKCoordinateRegionMake(CLLocationCoordinate2D.new(62.4,-96.5), MKCoordinateSpanMake(80.26-42.38,140.43-46.17))
 
     @map.region = region
-    track_button = MKUserTrackingBarButtonItem.alloc.initWithMapView(@map)
-    track_button.target = self
-    track_button.action = "track:"
+    track_button = UIBarButtonItem.alloc.initWithImage(
+      'tracking.png'.uiimage,
+      style: UIBarButtonItemStylePlain,
+      target: self,
+      action: "track"
+    )
     self.navigationItem.rightBarButtonItem = track_button
   end
 
@@ -159,15 +163,33 @@ class WellMapController < UIViewController
     end
   end
 
+  def mapView(mapView, didUpdateUserLocation:location)
+    mapView.setCenterCoordinate(location.location.coordinate, animated:true)
+    region = MKCoordinateRegionMake(location.location.coordinate, MKCoordinateSpanMake(0.05,0.05))
+    mapView.setRegion(region, animated:true)
+  end
+
   # Show/hide the slidemenucontroller
   def show_menu(sender)
     self.navigationController.slideMenuController.toggleMenuAnimated(self)
   end
 
-  # Enable/disable user tracking
-  def track(sender)
-    @map.shows_user_location = !@map.shows_user_location?
-    @map.userTrackingMode = @map.userTrackingMode == MKUserTrackingModeNone ? MKUserTrackingModeFollow : MKUserTrackingModeNone
+  def track
+    if CLLocationManager.locationServicesEnabled #&& location_request_allowed?
+      @location_mgr = CLLocationManager.new
+      @location_mgr.delegate = self
+      @location_mgr.requestWhenInUseAuthorization
+      @location_mgr.desiredAccuracy = KCLLocationAccuracyThreeKilometers
+      @location_mgr.distanceFilter = 5000.0
+      @location_mgr.pausesLocationUpdatesAutomatically = true
+      @location_mgr.startUpdatingLocation
+
+      unless @map.showsUserLocation
+      end
+
+      @map.showsUserLocation = !@map.showsUserLocation
+    end
+
   end
 
   def load_wells(wells)
@@ -202,6 +224,4 @@ private
     App.notification_center.unobserve LocationEntered
     @has_observers = false
   end
-
-
 end
