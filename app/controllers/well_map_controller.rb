@@ -26,7 +26,7 @@ class WellMapController < UIViewController
 
   layout :root do
     @map = subview(MKMapView, :map)
-    @map.mapType = MKMapTypeHybrid
+    @map.mapType = MKMapTypeStandard
     @map.delegate = self
     @map_cluster_controller = CCHMapClusterController.alloc.initWithMapView(@map)
     @map_cluster_controller.delegate = self
@@ -175,17 +175,10 @@ class WellMapController < UIViewController
   end
 
   def track
-    if CLLocationManager.locationServicesEnabled #&& location_request_allowed?
-      @location_mgr = CLLocationManager.new
+    if SimpleLocationManager.user_location_available?
+      @location_mgr = SimpleLocationManager.new
       @location_mgr.delegate = self
-      @location_mgr.requestWhenInUseAuthorization
-      @location_mgr.desiredAccuracy = KCLLocationAccuracyThreeKilometers
-      @location_mgr.distanceFilter = 5000.0
-      @location_mgr.pausesLocationUpdatesAutomatically = true
       @location_mgr.startUpdatingLocation
-
-      unless @map.showsUserLocation
-      end
 
       @map.showsUserLocation = !@map.showsUserLocation
     end
