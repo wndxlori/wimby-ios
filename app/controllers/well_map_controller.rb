@@ -42,6 +42,7 @@ class WellMapController < UIViewController
       action: "track"
     )
     self.navigationItem.rightBarButtonItem = track_button
+    self.navigationItem.rightBarButtonItem.enabled = CLLocationManager.locationServicesEnabled
   end
 
   def viewWillAppear(animated)
@@ -65,6 +66,12 @@ class WellMapController < UIViewController
     super
   end
 
+  def location_manager
+    @location_manager ||= SimpleLocationManager.new.tap do |mgr|
+      mgr.delegate = self
+      mgr.requestWhenInUseAuthorization
+    end
+  end
 
   def mapClusterController(mapClusterController, willReuseMapClusterAnnotation:mapClusterAnnotation)
     view = mapView(@map, viewForAnnotation:mapClusterAnnotation)
@@ -175,14 +182,17 @@ class WellMapController < UIViewController
   end
 
   def track
-    if SimpleLocationManager.user_location_available?
-      @location_mgr = SimpleLocationManager.new
-      @location_mgr.delegate = self
-      @location_mgr.startUpdatingLocation
-
+    if @map.showsUserLocation
+      location_manager.stopUpdatingLocation
       @map.showsUserLocation = !@map.showsUserLocation
+    else
+      if SimpleLocationManager.user_location_allowed?
+        location_manager.startUpdatingLocation
+        @map.showsUserLocation = !@map.showsUserLocation
+      else
+        SimpleLocationManager.request_user_location(self)
+      end
     end
-
   end
 
   def load_wells(wells)

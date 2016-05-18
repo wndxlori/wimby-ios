@@ -5,16 +5,26 @@ class SimpleLocationManager < CLLocationManager
       desiredAccuracy = KCLLocationAccuracyThreeKilometers
       distanceFilter = 5000.0
       pausesLocationUpdatesAutomatically = true
-      requestWhenInUseAuthorization
     end
   end
 
-  def self.user_location_available?
-    CLLocationManager.locationServicesEnabled &&
-      SimpleLocationManager.location_request_allowed?
+  def self.user_location_allowed?
+    App::Persistence['user_location_allowed'] == true
   end
 
-  def self.location_request_allowed?
-    true
+  def self.request_user_location(controller)
+    alert = UIAlertController.alertControllerWithTitle("WIMBY would like to access your location",
+                                   message:"WIMBY uses your location to show abandoned wells near to you",
+                                   preferredStyle:UIAlertControllerStyleAlert)
+
+    ok_action = UIAlertAction.actionWithTitle( "OK", style:UIAlertActionStyleDefault,
+       handler: ->(_) {App::Persistence['user_location_allowed'] = true; controller.track})
+    cancel_action = UIAlertAction.actionWithTitle( "Don't Allow", style:UIAlertActionStyleCancel,
+       handler: ->(_) {})
+
+    alert.addAction(cancel_action)
+    alert.addAction(ok_action)
+
+    controller.presentViewController(alert, animated:true, completion:nil)
   end
 end
