@@ -14,7 +14,7 @@ class Location
     geo = CLGeocoder.new
     geo.geocodeAddressString(address, completionHandler: lambda {|placemarks, err|
       if placemarks.size == 0
-        # TODO: display some error message
+        self.displayError("WIMBY was unable to find #{address}.")
       else
         coordinate = placemarks[0].location.coordinate
         location = Location.new(coordinate.latitude, coordinate.longitude, address)
@@ -24,10 +24,21 @@ class Location
       end
     })
   end
+	
+	def self.displayError(message)
+	  alert = UIAlertController.alertControllerWithTitle("WIMBY is 😳",
+                                   message:message,
+                                   preferredStyle:UIAlertControllerStyleAlert)
 
-  Previous = App::Persistence['previous_locations'].nil? ?
-      App::Persistence['previous_locations'] = [] :
-      App::Persistence['previous_locations']
+    ok_action = UIAlertAction.actionWithTitle( "OK", style:UIAlertActionStyleDefault, handler: ->(_) {})
+    alert.addAction(ok_action)
+    controller.presentViewController(alert, animated:true, completion:nil)
+	end
+
+  Previous = [Location.new(50.3817313,-113.6132034,'Cold Lake, AB')]
+#  Previous = App::Persistence['previous_locations'].nil? ?
+#      App::Persistence['previous_locations'] = [] :
+#      App::Persistence['previous_locations']
 
   Interesting =
     [
