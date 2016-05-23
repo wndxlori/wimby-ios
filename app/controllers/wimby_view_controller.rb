@@ -7,6 +7,9 @@ class WimbyViewController < UIViewController
     @table_view_controller.tableView.dataSource = self
     @table_view_controller.tableView.delegate = self
 
+    subview(UIView, :container) do
+      @location_input = subview(UITextField, :location_input)
+    end
     #Create a UIScrollView subview and add a UITableView into it as a subview
     @scroll_view = subview UIScrollView, :scroll_view do
       subview @table_view_controller.tableView, :table_view
@@ -43,7 +46,7 @@ class WimbyViewController < UIViewController
       cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator
       cell
     end
-    if numberOfSectionsInTableView(tableView) > 1 and section == 0
+    if numberOfSectionsInTableView(tableView) > 1 and indexPath.section == 0
       location = Location::Previous[indexPath.row]
     else
       location = Location::Interesting[indexPath.row]
@@ -58,7 +61,7 @@ class WimbyViewController < UIViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    location = if numberOfSectionsInTableView(tableView) > 1 and section == 0
+    location = if numberOfSectionsInTableView(tableView) > 1 and indexPath.section == 0
       Location::Previous[indexPath.row]
     else
       Location::Interesting[indexPath.row]
