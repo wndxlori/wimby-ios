@@ -196,8 +196,10 @@ class WellMapController < UIViewController
   end
 
   def load_wells(wells)
+    puts 'adding annotations'
     WellStore.shared.context.performBlock -> {
       @map_cluster_controller.addAnnotations(wells, withCompletionHandler:nil)
+      puts 'annotations added'
     }
   end
 
@@ -218,7 +220,7 @@ private
       @map.region = region
     end
     App.notification_center.observe WellsLoaded do |notification|
-      self.load_wells(notification.object) unless App::Persistence['current_location'].nil?
+      self.load_wells(notification.object)
     end
   end
 
