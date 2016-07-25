@@ -13,8 +13,6 @@ class WellClusterTableViewController < UITableViewController
     @wells.count
   end
 
-  CellID = self.class.name
-
   def configureCell(cell, atIndexPath:index)
     well = @wells[index.row]
     cell.textLabel.text = well.uwi_display
@@ -22,7 +20,8 @@ class WellClusterTableViewController < UITableViewController
     return cell
   end
 
-  CellID = 'CellIdentifier'
+  CellID = self.class.name
+
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     cell = tableView.dequeueReusableCellWithIdentifier(CellID) || begin
       cell = WellTableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:CellID)
