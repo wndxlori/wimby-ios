@@ -42,6 +42,17 @@ class AppDelegate
     end
   end
 
+  def displayError(controller, message)
+ 	  alert = UIAlertController.alertControllerWithTitle("WIMBY is 😳",
+                                    message:message,
+                                    preferredStyle:UIAlertControllerStyleAlert)
+
+     ok_action = UIAlertAction.actionWithTitle( "OK", style:UIAlertActionStyleDefault, handler: ->(_) {})
+     alert.addAction(ok_action)
+     controller.presentViewController(alert, animated:true, completion:nil)
+ 	end
+
+
 private
 
   def initialize_datastore
