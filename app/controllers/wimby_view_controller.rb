@@ -24,6 +24,7 @@ class WimbyViewController < UIViewController
 
     @table_view_controller.tableView.tableHeaderView = @search_controller.searchBar
     @search_controller.searchBar.sizeToFit
+    @search_controller.searchBar.placeholder = 'Enter location'
 
     self.definesPresentationContext = true
   end
