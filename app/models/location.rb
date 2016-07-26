@@ -1,11 +1,19 @@
 class Location
+  attr_accessor :name
+
   def initialize(lat, long, name)
     @name = name
     @coordinate = CLLocationCoordinate2DMake(lat, long)
   end
 
+  def self.initWithPlacemark(placemark)
+    new(placemark.location.coordinate.latitude, placemark.location.coordinate.longitude, placemark.name)
+  end
+
   def title; @name; end
   def coordinate; @coordinate; end
+  def latitude; @coordinate.latitude; end
+  def longitude; @coordinate.longitude; end
 
 #  Previous = [Location.new(54.4643,-110.1731,'Cold Lake, AB')]
  Previous = App::Persistence['previous_locations'].nil? ?
