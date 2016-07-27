@@ -31,9 +31,7 @@ class WimbyViewController < UIViewController
     search_bar.delegate = self
     @table_view_controller.tableView.tableHeaderView = search_bar
     search_bar.sizeToFit
-    search_bar.placeholder = 'Enter location'
-    # search_bar.showsSearchResultsButton = true
-    # search_bar.showsCancelButton = true
+    search_bar.placeholder = 'Enter city/town'
   end
 
   def setup_geocoder
@@ -47,12 +45,12 @@ class WimbyViewController < UIViewController
         when 0
           @geocode_placemarks
         when 1
-          Location::Previous
+          Location.previous
         when 2
           Location::Interesting
       end
     else
-      section == 0 ? Location::Previous : Location::Interesting
+      section == 0 ? Location.previous : Location::Interesting
     end
   end
 
@@ -71,8 +69,18 @@ class WimbyViewController < UIViewController
   end
 
   def tableView(tableView, titleForHeaderInSection:section)
-    return 'Search Results' if self.search_active && section == 0
-    section == 0 ? 'Previous Locations' : 'Interesting Locations'
+    if self.search_active
+      case section
+        when 0
+          'Search Results'
+        when 1
+          'Previous Locations'
+        when 2
+          'Interesting Locations'
+      end
+    else
+      section == 0 ? 'Previous Locations' : 'Interesting Locations'
+    end
   end
 
   CellID = 'LocIdentifier'
@@ -94,11 +102,8 @@ class WimbyViewController < UIViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    location = location_at(indexPath)
-
+    Location.current_location = location_at(indexPath)
     self.reset_search
-    App::Persistence['current_location'] = {title: location.title, latitude: location.latitude, longitude: location.longitude }
-    App.notification_center.post(LocationEntered, location)
 
     # Set the map to be the current tab
     controller = UIApplication.sharedApplication.delegate.tab_bar_controller
