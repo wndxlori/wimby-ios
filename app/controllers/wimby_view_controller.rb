@@ -24,8 +24,6 @@ class WimbyViewController < UIViewController
     @search_controller = UISearchController.alloc.initWithSearchResultsController(nil)
     @search_controller.searchResultsUpdater = self
     @search_controller.dimsBackgroundDuringPresentation = false
-
-#    self.definesPresentationContext = true
   end
   
   def setup_search_bar(search_bar)
@@ -33,8 +31,8 @@ class WimbyViewController < UIViewController
     @table_view_controller.tableView.tableHeaderView = search_bar
     search_bar.sizeToFit
     search_bar.placeholder = 'Enter location'
-    puts search_bar.canBecomeFirstResponder
-#    search_bar.setShowsCancelButton(true, animated: false)
+    # search_bar.showsSearchResultsButton = true
+    # search_bar.showsCancelButton = true
   end
 
   def setup_geocoder
@@ -44,7 +42,7 @@ class WimbyViewController < UIViewController
 
   # data source
   def tableView(tableView, numberOfRowsInSection:section)
-    if search_active
+    if self.search_active
       @geocode_placemarks.count
     elsif numberOfSectionsInTableView(tableView) > 1 and section == 0
       Location::Previous.size
@@ -54,7 +52,7 @@ class WimbyViewController < UIViewController
   end
 
   def numberOfSectionsInTableView(tableView)
-    if search_active
+    if self.search_active
       1
     else
       Location::Previous.size > 0 ? 2 : 1
@@ -62,7 +60,7 @@ class WimbyViewController < UIViewController
   end
 
   def tableView(tableView, titleForHeaderInSection:section)
-    if !search_active
+    if !self.search_active
       if numberOfSectionsInTableView(tableView) > 1 and section == 0
         'Previous Locations'
       else
@@ -79,7 +77,7 @@ class WimbyViewController < UIViewController
       cell
     end
 
-    if search_active
+    if self.search_active
       location = @geocode_placemarks[indexPath.row]
     elsif numberOfSectionsInTableView(tableView) > 1 and indexPath.section == 0
       location = Location::Previous[indexPath.row]
@@ -96,7 +94,7 @@ class WimbyViewController < UIViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    location = if search_active
+    location = if self.search_active
       Location.initWithPlacemark(@geocode_placemarks[indexPath.row])
     elsif numberOfSectionsInTableView(tableView) > 1 and indexPath.section == 0
       Location::Previous[indexPath.row]
@@ -113,16 +111,16 @@ class WimbyViewController < UIViewController
     UIApplication.sharedApplication.delegate.slide_menu_controller.closeMenuBehindContentViewController(controller, animated:true, completion:nil)
   end
 
-  def searchBar(search_bar, textDidChange: search_text)
+ def searchBar(search_bar, textDidChange: search_text)
     if search_text.size < 3
       self.search_active = false
     else
       self.search_active = true
-      @geocoder.geocodeAddressString(search_text, completionHandler: lambda {|placemarks, err|
+      search_text_in_canada = "#{search_text}, CANADA"
+      @geocoder.geocodeAddressString(search_text_in_canada, completionHandler: lambda {|placemarks, err|
         if err || placemarks.size == 0
           puts err.to_s
           @geocode_placemarks = []
-          UIApplication.sharedApplication.delegate.displayError(self, "WIMBY was unable to find #{search_text}.")
         else
           placemarks.each { |pm| puts pm.name }
           @geocode_placemarks = placemarks

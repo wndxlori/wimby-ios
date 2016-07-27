@@ -1,5 +1,6 @@
 class Location
   attr_accessor :name
+  CANADA_REGION = MKCoordinateRegionMake(CLLocationCoordinate2D.new(62.4,-96.5), MKCoordinateSpanMake(80.26-42.38,140.43-46.17))
 
   def initialize(lat, long, name)
     @name = name

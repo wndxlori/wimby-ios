@@ -32,9 +32,7 @@ class WellMapController < UIViewController
     @map_cluster_controller.delegate = self
     @map_cluster_controller.reuseExistingClusterAnnotations = false
 
-    region = MKCoordinateRegionMake(CLLocationCoordinate2D.new(62.4,-96.5), MKCoordinateSpanMake(80.26-42.38,140.43-46.17))
-
-    @map.region = region
+    @map.region = Location::CANADA_REGION
     track_button = UIBarButtonItem.alloc.initWithImage(
       'tracking.png'.uiimage,
       style: UIBarButtonItemStylePlain,
