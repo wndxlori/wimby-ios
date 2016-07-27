@@ -7,6 +7,7 @@ class WimbyViewController < UIViewController
     @table_view_controller = UITableViewController.alloc.initWithStyle UITableViewStyleGrouped
     @table_view_controller.tableView.dataSource = self
     @table_view_controller.tableView.delegate = self
+    @table_view_controller.tableView.remembersLastFocusedIndexPath = false
 
     #Create a UIScrollView subview and add a UITableView into it as a subview
     @scroll_view = subview UIScrollView, :scroll_view do
@@ -40,33 +41,38 @@ class WimbyViewController < UIViewController
     @geocoder = CLGeocoder.new
   end
 
+  def source_for(section)
+    if self.search_active
+      case section
+        when 0
+          @geocode_placemarks
+        when 1
+          Location::Previous
+        when 2
+          Location::Interesting
+      end
+    else
+      section == 0 ? Location::Previous : Location::Interesting
+    end
+  end
+
+  def location_at(indexPath)
+    location = source_for(indexPath.section)[indexPath.row]
+    self.search_active && indexPath.section == 0 ? Location.initWithPlacemark(location) : location
+  end
+
   # data source
   def tableView(tableView, numberOfRowsInSection:section)
-    if self.search_active
-      @geocode_placemarks.count
-    elsif numberOfSectionsInTableView(tableView) > 1 and section == 0
-      Location::Previous.size
-    else
-      Location::Interesting.size
-    end
+    source_for(section).size
   end
 
   def numberOfSectionsInTableView(tableView)
-    if self.search_active
-      1
-    else
-      Location::Previous.size > 0 ? 2 : 1
-    end
+    self.search_active ? 3 : 2
   end
 
   def tableView(tableView, titleForHeaderInSection:section)
-    if !self.search_active
-      if numberOfSectionsInTableView(tableView) > 1 and section == 0
-        'Previous Locations'
-      else
-        'Interesting Locations'
-      end
-    end
+    return 'Search Results' if self.search_active && section == 0
+    section == 0 ? 'Previous Locations' : 'Interesting Locations'
   end
 
   CellID = 'LocIdentifier'
@@ -77,13 +83,7 @@ class WimbyViewController < UIViewController
       cell
     end
 
-    if self.search_active
-      location = @geocode_placemarks[indexPath.row]
-    elsif numberOfSectionsInTableView(tableView) > 1 and indexPath.section == 0
-      location = Location::Previous[indexPath.row]
-    else
-      location = Location::Interesting[indexPath.row]
-    end
+    location = source_for(indexPath.section)[indexPath.row]
     cell.textLabel.text = location.name
     cell
   end
@@ -94,13 +94,9 @@ class WimbyViewController < UIViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    location = if self.search_active
-      Location.initWithPlacemark(@geocode_placemarks[indexPath.row])
-    elsif numberOfSectionsInTableView(tableView) > 1 and indexPath.section == 0
-      Location::Previous[indexPath.row]
-    else
-      Location::Interesting[indexPath.row]
-    end
+    location = location_at(indexPath)
+
+    self.reset_search
     App::Persistence['current_location'] = {title: location.title, latitude: location.latitude, longitude: location.longitude }
     App.notification_center.post(LocationEntered, location)
 
@@ -111,7 +107,14 @@ class WimbyViewController < UIViewController
     UIApplication.sharedApplication.delegate.slide_menu_controller.closeMenuBehindContentViewController(controller, animated:true, completion:nil)
   end
 
- def searchBar(search_bar, textDidChange: search_text)
+  def reset_search
+    @search_bar.text = nil
+    @search_bar.resignFirstResponder
+    self.search_active = false
+    @table_view_controller.tableView.reloadData
+  end
+
+  def searchBar(search_bar, textDidChange: search_text)
     if search_text.size < 3
       self.search_active = false
     else
@@ -125,8 +128,8 @@ class WimbyViewController < UIViewController
           placemarks.each { |pm| puts pm.name }
           @geocode_placemarks = placemarks
         end
+        @table_view_controller.tableView.reloadData
       })
     end
-    @table_view_controller.tableView.reloadData
   end
 end
