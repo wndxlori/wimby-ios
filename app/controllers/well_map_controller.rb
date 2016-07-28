@@ -33,14 +33,23 @@ class WellMapController < UIViewController
     @map_cluster_controller.reuseExistingClusterAnnotations = false
 
     @map.region = Location::CANADA_REGION
-    track_button = UIBarButtonItem.alloc.initWithImage(
+    # track_button.setBackgroundImage(
+    #   'tracking-on.png'.uiimage,
+    #   forState: UIControlStateSelected,
+    #   style: UIBarButtonItemStylePlain,
+    #   barMetrics:UIBarMetricsDefault
+    # )
+    self.navigationItem.rightBarButtonItem = create_track_button
+    self.navigationItem.rightBarButtonItem.enabled = CLLocationManager.locationServicesEnabled
+  end
+
+  def create_track_button
+    @track_button = UIBarButtonItem.alloc.initWithImage(
       'tracking.png'.uiimage,
       style: UIBarButtonItemStylePlain,
       target: self,
-      action: "track"
+      action: 'track'
     )
-    self.navigationItem.rightBarButtonItem = track_button
-    self.navigationItem.rightBarButtonItem.enabled = CLLocationManager.locationServicesEnabled
   end
 
   def viewWillAppear(animated)
@@ -70,6 +79,17 @@ class WellMapController < UIViewController
       mgr.requestWhenInUseAuthorization
     end
   end
+
+  #### CLLocationManagerDelegate ####
+
+  def locationManager(_, didChangeAuthorizationStatus: status)
+    @map.showsUserLocation = true if status == KCLAuthorizationStatusAuthorizedWhenInUse
+  end
+
+  def locationmanager(_, didUpdateLocations: _)
+    @map.showsUserLocation = true
+  end
+
 
   def mapClusterController(mapClusterController, willReuseMapClusterAnnotation:mapClusterAnnotation)
     view = mapView(@map, viewForAnnotation:mapClusterAnnotation)
@@ -182,11 +202,11 @@ class WellMapController < UIViewController
   def track
     if @map.showsUserLocation
       location_manager.stopUpdatingLocation
-      @map.showsUserLocation = !@map.showsUserLocation
+      @map.showsUserLocation = false
     else
       if SimpleLocationManager.user_location_allowed?
         location_manager.startUpdatingLocation
-        @map.showsUserLocation = !@map.showsUserLocation
+        @map.showsUserLocation = true if location_manager.locationServicesEnabled
       else
         SimpleLocationManager.request_user_location(self)
       end
