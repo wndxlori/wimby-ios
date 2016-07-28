@@ -14,24 +14,16 @@ class WimbyViewController < UIViewController
       subview @table_view_controller.tableView, :table_view
     end
 
-    # setup_search_controller
-    # setup_search_bar(@search_controller.searchBar)
-    @search_bar = UISearchBar.alloc.initWithFrame(CGRectMake(0, 0, 320, 44))
-    setup_search_bar(@search_bar)
+    setup_search_bar
     setup_geocoder
   end
 
-  def setup_search_controller
-    @search_controller = UISearchController.alloc.initWithSearchResultsController(nil)
-    @search_controller.searchResultsUpdater = self
-    @search_controller.dimsBackgroundDuringPresentation = false
-  end
-  
-  def setup_search_bar(search_bar)
-    search_bar.delegate = self
-    @table_view_controller.tableView.tableHeaderView = search_bar
-    search_bar.sizeToFit
-    search_bar.placeholder = 'Enter city/town'
+  def setup_search_bar
+    @search_bar = UISearchBar.alloc.initWithFrame(CGRectMake(0, 0, 320, 44))
+    @search_bar.delegate = self
+    @table_view_controller.tableView.tableHeaderView = @search_bar
+    @search_bar.sizeToFit
+    @search_bar.placeholder = 'Enter city/town'
   end
 
   def setup_geocoder
@@ -39,6 +31,10 @@ class WimbyViewController < UIViewController
     @geocoder = CLGeocoder.new
   end
 
+  #
+  # When a search is active, we will have 3 sections/groups in the table,
+  # otherwise there will be only 2
+  #
   def source_for(section)
     if self.search_active
       case section
@@ -64,7 +60,7 @@ class WimbyViewController < UIViewController
     source_for(section).size
   end
 
-  def numberOfSectionsInTableView(tableView)
+  def numberOfSectionsInTableView(_)
     self.search_active ? 3 : 2
   end
 
