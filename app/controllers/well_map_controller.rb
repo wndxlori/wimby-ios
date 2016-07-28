@@ -33,23 +33,29 @@ class WellMapController < UIViewController
     @map_cluster_controller.reuseExistingClusterAnnotations = false
 
     @map.region = Location::CANADA_REGION
-    # track_button.setBackgroundImage(
-    #   'tracking-on.png'.uiimage,
-    #   forState: UIControlStateSelected,
-    #   style: UIBarButtonItemStylePlain,
-    #   barMetrics:UIBarMetricsDefault
-    # )
     self.navigationItem.rightBarButtonItem = create_track_button
     self.navigationItem.rightBarButtonItem.enabled = CLLocationManager.locationServicesEnabled
   end
 
   def create_track_button
+    @button_on_img =  'tracking-on.png'.uiimage
+    @button_img = 'tracking.png'.uiimage
     @track_button = UIBarButtonItem.alloc.initWithImage(
-      'tracking.png'.uiimage,
+      @button_img,
       style: UIBarButtonItemStylePlain,
       target: self,
       action: 'track'
     )
+  end
+
+  def set_tracking(enabled)
+    if enabled
+      @map.showsUserLocation = true
+      @track_button.image = @button_on_img
+    else
+      @map.showsUserLocation = false
+      @track_button.image = @button_img
+    end
   end
 
   def viewWillAppear(animated)
@@ -83,13 +89,12 @@ class WellMapController < UIViewController
   #### CLLocationManagerDelegate ####
 
   def locationManager(_, didChangeAuthorizationStatus: status)
-    @map.showsUserLocation = true if status == KCLAuthorizationStatusAuthorizedWhenInUse
+    set_tracking(true) if status == KCLAuthorizationStatusAuthorizedWhenInUse
   end
 
   def locationmanager(_, didUpdateLocations: _)
-    @map.showsUserLocation = true
+    set_tracking(true)
   end
-
 
   def mapClusterController(mapClusterController, willReuseMapClusterAnnotation:mapClusterAnnotation)
     view = mapView(@map, viewForAnnotation:mapClusterAnnotation)
@@ -202,11 +207,11 @@ class WellMapController < UIViewController
   def track
     if @map.showsUserLocation
       location_manager.stopUpdatingLocation
-      @map.showsUserLocation = false
+      set_tracking(false)
     else
       if SimpleLocationManager.user_location_allowed?
         location_manager.startUpdatingLocation
-        @map.showsUserLocation = true if location_manager.locationServicesEnabled
+        set_tracking(true) if location_manager.locationServicesEnabled
       else
         SimpleLocationManager.request_user_location(self)
       end
