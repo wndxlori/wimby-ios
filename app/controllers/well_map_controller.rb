@@ -116,7 +116,6 @@ class WellMapController < UIViewController
       view.annotation = annotation
       view.count = annotation.annotations.count
       add_callout_button(view, action: :show_list)
-      view.rightCalloutAccessoryView.hidden = !annotation.isUniqueLocation
     else
       unless view = mapView.dequeueReusableAnnotationViewWithIdentifier(WellIdentifier)
         view = WellAnnotationView.alloc.initWithAnnotation(annotation, reuseIdentifier:WellIdentifier)
@@ -219,10 +218,8 @@ class WellMapController < UIViewController
   end
 
   def load_wells(wells)
-    puts 'adding annotations'
     WellStore.shared.context.performBlock -> {
       @map_cluster_controller.addAnnotations(wells, withCompletionHandler:nil)
-      puts 'annotations added'
     }
   end
 
