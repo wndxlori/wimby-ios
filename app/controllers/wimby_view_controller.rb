@@ -126,7 +126,6 @@ class WimbyViewController < UIViewController
           puts err.to_s
           @geocode_placemarks = []
         else
-          placemarks.each { |pm| puts pm.name }
           @geocode_placemarks = placemarks
         end
         @table_view_controller.tableView.reloadData

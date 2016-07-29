@@ -1,7 +1,6 @@
 class SimpleLocationManager < CLLocationManager
   def init
     super.tap do
-      puts "Setting up location manager"
       self.desiredAccuracy = KCLLocationAccuracyThreeKilometers
       self.distanceFilter = 5000.0
       self.pausesLocationUpdatesAutomatically = true
