@@ -4,6 +4,11 @@ class AppDelegate
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
 
+    setup_tapstream
+
+    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
+    Theme.apply(Theme::RUST, to_window: @window)
+
     menu = WimbyViewController.new
     tableview = WellTableViewController.alloc.init
     tablenav = UINavigationController.alloc.initWithRootViewController(tableview)
@@ -14,11 +19,6 @@ class AppDelegate
     self.tab_bar_controller.viewControllers = [mapnav, tablenav]
     self.tab_bar_controller.selectedIndex = 0
 
-#    UINavigationBar.appearance.titleTextAttributes = { UITextAttributeFont => 'Copperplate Bold'.uifont(20) }
-
-    setup_tapstream
-
-    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
     self.slide_menu_controller = NVSlideMenuController.alloc.initWithMenuViewController(menu, andContentViewController: tab_bar_controller)
     @window.rootViewController = self.slide_menu_controller
     @window.makeKeyAndVisible
