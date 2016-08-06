@@ -7,7 +7,7 @@ class AppDelegate
     setup_tapstream
 
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
-    Theme.apply(Theme::RUST, to_window: @window)
+    Theme::Base.apply(Theme::RUST, to_window: @window)
 
     menu = WimbyViewController.new
     tableview = WellTableViewController.alloc.init

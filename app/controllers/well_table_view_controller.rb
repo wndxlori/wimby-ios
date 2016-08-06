@@ -23,6 +23,10 @@ class WellTableViewController < UITableViewController
     end
   end
 
+  def viewDidLoad
+    self.clearsSelectionOnViewWillAppear = true
+  end
+
   def viewWillDisappear(animated)
     if view_did_pop?
       remove_observers
@@ -45,9 +49,7 @@ class WellTableViewController < UITableViewController
   CellID = 'CellIdentifier'
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     cell = tableView.dequeueReusableCellWithIdentifier(CellID) || begin
-      cell = WellTableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:CellID)
-      cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton
-      cell
+      WellTableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:CellID)
     end
     configureCell(cell, atIndexPath:indexPath)
   end
