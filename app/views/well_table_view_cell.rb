@@ -1,25 +1,9 @@
-class WellTableViewCell < UITableViewCell
-
+class WellTableViewCell < ThemeTableViewCell
   def initWithStyle(style, reuseIdentifier:ident)
     super.tap do |cell|
-      cell.backgroundColor = Theme::Base.color_theme[:cell_background_color]
-      cell.textLabel.textColor = Theme::Base.color_theme[:dark_text]
-      cell.textLabel.highlightedTextColor = Theme::Base.color_theme[:light_text]
-      cell.detailTextLabel.textColor =Theme::Base.color_theme[:dark_text]
-      cell.detailTextLabel.highlightedTextColor = Theme::Base.color_theme[:light_text]
-
-      highlightView = UIView.alloc.init
-      highlightView.backgroundColor = Theme::Base.color_theme[:cell_highlight_color]
-      cell.selectedBackgroundView = highlightView
       cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator
       cell.prepare_disclosure_indicator
     end
   end
 
-  def prepare_disclosure_indicator
-    self.subviews.select {|view| view.isKindOfClass(UIButton)}.each do |button|
-      image = button.backgroundImageForState(UIControlStateNormal).imageWithRenderingMode(UIImageRenderingModeAlwaysTemplate)
-      button.setBackgroundImage(image, forState: UIControlStateNormal)
-    end
-  end
 end

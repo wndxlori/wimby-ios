@@ -15,6 +15,10 @@ class WellTableViewController < UITableViewController
     tableView.dataSource = self
   end
 
+  def preferredStatusBarStyle
+    UIStatusBarStyleLightContent
+  end
+
   def viewWillAppear(animated)
     if @wells.nil?
       @wells = WellStore.shared.wells

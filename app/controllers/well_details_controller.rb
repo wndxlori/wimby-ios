@@ -2,6 +2,10 @@ class WellDetailsController < UITableViewController
 
   SECTIONS = %w(Name Status Location)
 
+  def preferredStatusBarStyle
+    UIStatusBarStyleLightContent
+  end
+
   def viewDidLoad
     super
     navigationItem.title = "Well Details"
@@ -23,11 +27,27 @@ class WellDetailsController < UITableViewController
     SECTIONS[section]
   end
 
+  HeaderFooterID = 'theme'
+
+  def tableView(tableView, viewForHeaderInSection:section)
+    tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID) || begin
+      tableView.registerClass(ThemeTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier:HeaderFooterID)
+      tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID)
+    end
+  end
+
+  def tableView(tableView, viewForFooterInSection:section)
+    tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID) || begin
+      tableView.registerClass(ThemeTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier:HeaderFooterID)
+      tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID)
+    end
+  end
+
   CellID = self.class.name
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     cell = tableView.dequeueReusableCellWithIdentifier(CellID) || begin
-      cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleValue2, reuseIdentifier:CellID)
+      cell = ThemeTableViewCell.alloc.initWithStyle(UITableViewCellStyleValue2, reuseIdentifier:CellID)
       cell
     end
     cell.textLabel.text = @details[indexPath.section][indexPath.row][:label]

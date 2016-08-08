@@ -1,5 +1,9 @@
 class WellClusterTableViewController < UITableViewController
 
+  def preferredStatusBarStyle
+    UIStatusBarStyleLightContent
+  end
+
   def viewDidLoad
     super
     navigationItem.title = "Cluster List"
@@ -13,6 +17,22 @@ class WellClusterTableViewController < UITableViewController
     @wells.count
   end
 
+  HeaderFooterID = 'theme'
+
+  def tableView(tableView, viewForHeaderInSection:section)
+    tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID) || begin
+      tableView.registerClass(ThemeTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier:HeaderFooterID)
+      tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID)
+    end
+  end
+
+  def tableView(tableView, viewForFooterInSection:section)
+    tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID) || begin
+      tableView.registerClass(ThemeTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier:HeaderFooterID)
+      tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID)
+    end
+  end
+
   def configureCell(cell, atIndexPath:index)
     well = @wells[index.row]
     cell.textLabel.text = well.uwi_display
@@ -24,9 +44,7 @@ class WellClusterTableViewController < UITableViewController
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     cell = tableView.dequeueReusableCellWithIdentifier(CellID) || begin
-      cell = WellTableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:CellID)
-      cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton
-      cell
+      WellTableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:CellID)
     end
     configureCell(cell, atIndexPath:indexPath)
   end

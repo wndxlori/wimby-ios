@@ -12,6 +12,7 @@ Motion::Project::App.setup do |app|
   app.identifier = 'com.wndx.wimby'
   # So it does not display on the splash screen
   app.info_plist['UIStatusBarHidden'] = true
+
   app.info_plist['NSLocationWhenInUseUsageDescription'] = 'WIMBY would like to show your location on the map'
   app.frameworks += %w(CoreData MapKit)
 

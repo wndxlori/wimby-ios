@@ -24,6 +24,10 @@ class WellMapController < UIViewController
     end
   end
 
+  def preferredStatusBarStyle
+    UIStatusBarStyleLightContent
+  end
+
   layout :root do
     @map = subview(MKMapView, :map)
     @map.mapType = MKMapTypeStandard

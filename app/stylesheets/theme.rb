@@ -38,6 +38,16 @@ module Theme
         end
         UITableView.appearance.tap do |a|
           a.separatorColor = self.color_theme[:tint]
+          a.sectionIndexColor = self.color_theme[:tint]
+          a.sectionIndexBackgroundColor = self.color_theme[:cell_highlight_color]
+          a.backgroundColor = self.color_theme[:cell_background_color].colorWithAlphaComponent(0.5)
+        end
+        UILabel.appearanceWhenContainedInInstancesOfClasses([UITableViewHeaderFooterView.self]).tap do |a|
+          a.textColor = self.color_theme[:tint]
+        end
+        UISearchBar.appearance.tap do |a|
+          a.barTintColor = self.color_theme[:cell_background_color]
+          a.setSearchFieldBackgroundImage(self.imageWithColor(self.color_theme[:cell_highlight_color]), forState:UIControlStateNormal)
         end
       end
     end
@@ -64,6 +74,21 @@ module Theme
           cell_background_color: theme_color(theme, 4),
           cell_highlight_color: theme_color(theme, 1),
       }
+    end
+
+    def self.imageWithColor(color)
+      size = CGSizeMake(30, 30)
+      # create context with transparent background
+      UIGraphicsBeginImageContextWithOptions(size, false, UIScreen.mainScreen.scale)
+
+      # Add a clip before drawing anything, in the shape of an rounded rect
+      UIBezierPath.bezierPathWithRoundedRect(CGRectMake(0,0,30,30), cornerRadius:5.0).addClip
+      color.setFill
+
+      UIRectFill(CGRectMake(0, 0, size.width, size.height))
+      image = UIGraphicsGetImageFromCurrentImageContext()
+      UIGraphicsEndImageContext()
+      image
     end
   end
 end

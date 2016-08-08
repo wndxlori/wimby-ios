@@ -2,12 +2,19 @@ class WimbyViewController < UIViewController
   attr_accessor :search_active
   stylesheet :menu_sheet
 
+  # This doesn't appear to work
+  def preferredStatusBarStyle
+    UIStatusBarStyleLightContent
+  end
+
   def viewDidLoad
     super
+
     @table_view_controller = UITableViewController.alloc.initWithStyle UITableViewStyleGrouped
     @table_view_controller.tableView.dataSource = self
     @table_view_controller.tableView.delegate = self
     @table_view_controller.tableView.remembersLastFocusedIndexPath = false
+    @table_view_controller.tableView.backgroundView = UIView.alloc.initWithFrame(CGRectZero)
 
     #Create a UIScrollView subview and add a UITableView into it as a subview
     @scroll_view = subview UIScrollView, :scroll_view do
@@ -24,6 +31,14 @@ class WimbyViewController < UIViewController
     @table_view_controller.tableView.tableHeaderView = @search_bar
     @search_bar.sizeToFit
     @search_bar.placeholder = 'Enter city/town'
+    searchTextField = @search_bar.valueForKey("_searchField")
+
+    leftImageView = searchTextField.leftView
+    leftImageView.image = leftImageView.image.imageWithRenderingMode(UIImageRenderingModeAlwaysTemplate)
+    leftImageView.tintColor = Theme::Base.color_theme[:bar_tint]
+
+    searchTextField.textColor = Theme::Base.color_theme[:tint]
+    searchTextField.attributedPlaceholder = NSAttributedString.alloc.initWithString(@search_bar.placeholder, attributes:{NSForegroundColorAttributeName => Theme::Base.color_theme[:dark_text]})
   end
 
   def setup_geocoder
@@ -79,11 +94,28 @@ class WimbyViewController < UIViewController
     end
   end
 
+  HeaderFooterID = 'theme'
+
+  def tableView(tableView, viewForHeaderInSection:section)
+    tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID) || begin
+      tableView.registerClass(ThemeTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier:HeaderFooterID)
+      tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID)
+    end
+  end
+
+  def tableView(tableView, viewForFooterInSection:section)
+    tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID) || begin
+      tableView.registerClass(ThemeTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier:HeaderFooterID)
+      tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID)
+    end
+  end
+
   CellID = 'LocIdentifier'
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     cell = tableView.dequeueReusableCellWithIdentifier(CellID) || begin
-      cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:CellID)
+      cell = ThemeTableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:CellID)
       cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator
+      cell.prepare_disclosure_indicator
       cell
     end
 
