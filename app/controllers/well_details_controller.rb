@@ -9,6 +9,7 @@ class WellDetailsController < UITableViewController
   def viewDidLoad
     super
     navigationItem.title = "Well Details"
+    self.tableView.allowsSelection = false
   end
 
   def viewWillAppear(animated)
