@@ -26,24 +26,24 @@ module Theme
           a.tintColor = self.color_theme[:tint]
         end
         UITabBar.appearance.tap do |a|
-          a.barTintColor = self.color_theme[:bar_tint]
+          a.barTintColor = self.color_theme[:tabbar_tint]
         end
         UINavigationBar.appearance.tap do |a|
-          a.tintColor = self.color_theme[:tint]
-          a.barTintColor = self.color_theme[:bar_tint]
+          a.tintColor = self.color_theme[:nav_tint]
+          a.barTintColor = self.color_theme[:navbar_tint]
           a.titleTextAttributes = {
             NSFontAttributeName => UIFont.fontWithName('AmericanTypewriter-Bold', size: 17.0),
-            NSForegroundColorAttributeName => self.color_theme[:tint],
+            NSForegroundColorAttributeName => self.color_theme[:navbar_text],
           }
         end
         UITableView.appearance.tap do |a|
-          a.separatorColor = self.color_theme[:tint]
-          a.sectionIndexColor = self.color_theme[:tint]
-          a.sectionIndexBackgroundColor = UIColor.darkGrayColor
-          a.backgroundColor = UIColor.blackColor.colorWithAlphaComponent(0.5)
+          a.separatorColor = self.color_theme[:dark_text]
+          a.sectionIndexColor = self.color_theme[:dark_text]
+          a.sectionIndexBackgroundColor = self.color_theme[:group_table_dark]
+          a.backgroundColor = self.color_theme[:group_table_dark]
         end
         UILabel.appearanceWhenContainedInInstancesOfClasses([UITableViewHeaderFooterView.self]).tap do |a|
-          a.textColor = self.color_theme[:tint]
+          a.textColor = self.color_theme[:dark_text]
         end
       end
     end
@@ -63,12 +63,17 @@ module Theme
 
     def self.color_theme=(theme)
       @@color_theme = {
-          tint: theme_color(theme, 3),
-          bar_tint: theme_color(theme, 0),
-          light_text: theme_color(theme, 1),
-          dark_text: theme_color(theme, 0),
-          cell_background: theme_color(theme, 4),
-          cell_highlight: theme_color(theme, 1),
+        tint: theme_color(theme, 3),
+        tabbar_tint: theme_color(theme, 0),
+        nav_tint: theme_color(theme, 0),
+        navbar_tint: theme_color(theme, 2),
+        navbar_text: theme_color(theme, 4),
+        light_text: theme_color(theme, 4),
+        dark_text: theme_color(theme, 1),
+        cell_background: theme_color(theme, 4),
+        cell_highlight: theme_color(theme, 1),
+        cell_highlight_dark: UIColor.colorWithRed(0.25, green: 0.21, blue: 0.19, alpha: 1.00),
+        group_table_dark: UIColor.colorWithRed(0.25, green: 0.21, blue: 0.19, alpha: 1.00),
       }
     end
 
