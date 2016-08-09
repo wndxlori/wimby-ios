@@ -2,14 +2,14 @@ class ThemeTableViewCell < UITableViewCell
 
   def initWithStyle(style, reuseIdentifier:ident)
     super.tap do |cell|
-      cell.backgroundColor = Theme::Base.color_theme[:cell_background_color]
-      cell.textLabel.textColor = Theme::Base.color_theme[:dark_text]
-      cell.textLabel.highlightedTextColor = Theme::Base.color_theme[:light_text]
-      cell.detailTextLabel.textColor = Theme::Base.color_theme[:dark_text]
-      cell.detailTextLabel.highlightedTextColor = Theme::Base.color_theme[:light_text]
+      cell.backgroundColor = UIColor.blackColor
+      cell.textLabel.textColor = Theme::Base.color_theme[:light_text]
+#      cell.textLabel.highlightedTextColor = Theme::Base.color_theme[:dark_text]
+      cell.detailTextLabel.textColor = Theme::Base.color_theme[:light_text]
+#      cell.detailTextLabel.highlightedTextColor = Theme::Base.color_theme[:dark_text]
 
       highlightView = UIView.alloc.init
-      highlightView.backgroundColor = Theme::Base.color_theme[:cell_highlight_color]
+      highlightView.backgroundColor = UIColor.darkGrayColor
       cell.selectedBackgroundView = highlightView
     end
   end

@@ -39,15 +39,11 @@ module Theme
         UITableView.appearance.tap do |a|
           a.separatorColor = self.color_theme[:tint]
           a.sectionIndexColor = self.color_theme[:tint]
-          a.sectionIndexBackgroundColor = self.color_theme[:cell_highlight_color]
-          a.backgroundColor = self.color_theme[:cell_background_color].colorWithAlphaComponent(0.5)
+          a.sectionIndexBackgroundColor = UIColor.darkGrayColor
+          a.backgroundColor = UIColor.blackColor.colorWithAlphaComponent(0.5)
         end
         UILabel.appearanceWhenContainedInInstancesOfClasses([UITableViewHeaderFooterView.self]).tap do |a|
           a.textColor = self.color_theme[:tint]
-        end
-        UISearchBar.appearance.tap do |a|
-          a.barTintColor = self.color_theme[:cell_background_color]
-          a.setSearchFieldBackgroundImage(self.imageWithColor(self.color_theme[:cell_highlight_color]), forState:UIControlStateNormal)
         end
       end
     end
@@ -69,10 +65,10 @@ module Theme
       @@color_theme = {
           tint: theme_color(theme, 3),
           bar_tint: theme_color(theme, 0),
-          light_text: theme_color(theme, 4),
+          light_text: theme_color(theme, 1),
           dark_text: theme_color(theme, 0),
-          cell_background_color: theme_color(theme, 4),
-          cell_highlight_color: theme_color(theme, 1),
+          cell_background: theme_color(theme, 4),
+          cell_highlight: theme_color(theme, 1),
       }
     end
 

@@ -4,7 +4,7 @@ class WimbyViewController < UIViewController
 
   # This doesn't appear to work
   def preferredStatusBarStyle
-    UIStatusBarStyleLightContent
+    UIStatusBarStyleDefault
   end
 
   def viewDidLoad
@@ -31,14 +31,8 @@ class WimbyViewController < UIViewController
     @table_view_controller.tableView.tableHeaderView = @search_bar
     @search_bar.sizeToFit
     @search_bar.placeholder = 'Enter city/town'
-    searchTextField = @search_bar.valueForKey("_searchField")
-
-    leftImageView = searchTextField.leftView
-    leftImageView.image = leftImageView.image.imageWithRenderingMode(UIImageRenderingModeAlwaysTemplate)
-    leftImageView.tintColor = Theme::Base.color_theme[:bar_tint]
-
-    searchTextField.textColor = Theme::Base.color_theme[:tint]
-    searchTextField.attributedPlaceholder = NSAttributedString.alloc.initWithString(@search_bar.placeholder, attributes:{NSForegroundColorAttributeName => Theme::Base.color_theme[:dark_text]})
+    @search_bar.barStyle = UIBarStyleBlack
+    @search_bar.translucent = true
   end
 
   def setup_geocoder

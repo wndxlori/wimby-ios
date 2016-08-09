@@ -47,7 +47,7 @@ class WellDetailsController < UITableViewController
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     cell = tableView.dequeueReusableCellWithIdentifier(CellID) || begin
-      cell = ThemeTableViewCell.alloc.initWithStyle(UITableViewCellStyleValue2, reuseIdentifier:CellID)
+      cell = ThemeTableViewCell2.alloc.initWithStyle(UITableViewCellStyleValue2, reuseIdentifier:CellID)
       cell
     end
     cell.textLabel.text = @details[indexPath.section][indexPath.row][:label]

@@ -1,7 +1,7 @@
 Teacup::Stylesheet.new(:menu_sheet) do
   style :scroll_view,
     frame: [[0, 0],['85%', '100%']],
-    backgroundColor: Theme::Base.color_theme[:cell_background_color]
+    backgroundColor: UIColor.blackColor
 
   style :table_view,
     scrollEnabled: false,
