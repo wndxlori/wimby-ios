@@ -32,7 +32,7 @@ module Theme
           a.tintColor = self.color_theme[:nav_tint]
           a.barTintColor = self.color_theme[:navbar_tint]
           a.titleTextAttributes = {
-            NSFontAttributeName => UIFont.fontWithName('AmericanTypewriter-Bold', size: 17.0),
+            NSFontAttributeName => UIFont.fontWithName('GillSans-Bold', size: 17.0),
             NSForegroundColorAttributeName => self.color_theme[:navbar_text],
           }
         end

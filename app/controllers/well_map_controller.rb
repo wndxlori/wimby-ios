@@ -12,7 +12,7 @@ class WellMapController < UIViewController
   def init
     super.tap do
       self.tabBarItem = UITabBarItem.alloc.initWithTitle('Map', image:'map.png'.uiimage, tag:1)
-      navigationItem.title = 'Wells'
+      navigationItem.title = 'WIMBY'
       navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithImage(
         'menuicon.png'.uiimage,
         style: UIBarButtonItemStylePlain,
