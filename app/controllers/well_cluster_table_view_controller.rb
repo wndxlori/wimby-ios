@@ -6,7 +6,7 @@ class WellClusterTableViewController < UITableViewController
 
   def viewDidLoad
     super
-    navigationItem.title = "WIMBY"
+    navigationItem.title = 'Well List'
   end
 
   def viewWillAppear(animated)
