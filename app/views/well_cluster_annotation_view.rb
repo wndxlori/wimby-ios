@@ -3,11 +3,6 @@ class WellClusterAnnotationView < MKAnnotationView
   attr_accessor :count
   attr_accessor :count_label
 
-  SMALL_CLUSTER  = UIImage.imageNamed("cluster32.png")
-  MEDIUM_CLUSTER = UIImage.imageNamed("cluster40.png")
-  LARGE_CLUSTER  = UIImage.imageNamed("cluster48.png")
-  XLARGE_CLUSTER = UIImage.imageNamed("cluster56.png")
-
   def initWithAnnotation(annotation, reuseIdentifier:identifier)
     super.tap do |view|
       view.backgroundColor = UIColor.clearColor
@@ -21,12 +16,12 @@ class WellClusterAnnotationView < MKAnnotationView
     @count_label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight
     @count_label.textAlignment = NSTextAlignmentCenter
     @count_label.backgroundColor = UIColor.clearColor
-    @count_label.textColor = UIColor.blueColor
+    @count_label.textColor = Theme::Base.color_theme[:tint]
     @count_label.textAlignment = NSTextAlignmentCenter
     @count_label.adjustsFontSizeToFitWidth = true
     @count_label.minimumScaleFactor = 2
     @count_label.numberOfLines = 1
-    @count_label.font = UIFont.boldSystemFontOfSize(12)
+    @count_label.font = UIFont.boldSystemFontOfSize(10)
     @count_label.baselineAdjustment = UIBaselineAdjustmentAlignCenters
 
     addSubview(@count_label)
@@ -46,14 +41,47 @@ class WellClusterAnnotationView < MKAnnotationView
   end
 
   def image_for_count
-    if (count > 5000)
-      XLARGE_CLUSTER
-    elsif (count > 500)
-      LARGE_CLUSTER
-    elsif (count > 50)
-      MEDIUM_CLUSTER
+    if (count > 10000)
+      self.class.cluster(:xlarge)
+    elsif (count > 1000)
+      self.class.cluster(:large)
+    elsif (count > 100)
+      self.class.cluster(:medium)
     else
-      SMALL_CLUSTER
+      self.class.cluster(:small)
     end
+  end
+
+  def self.cluster(size)
+    base_color = Theme::Base.color_theme[:cell_highlight_dark]
+    case size
+      when :small
+        @@small_cluster ||= WellClusterAnnotationView.colorCircle(base_color, 15)
+      when :medium
+        @@medium_cluster ||= WellClusterAnnotationView.colorCircle(base_color, 20)
+      when :large
+        @@large_cluster ||= WellClusterAnnotationView.colorCircle(base_color, 25)
+      when :xlarge
+        @@xlarge_cluster ||= WellClusterAnnotationView.colorCircle(base_color, 30)
+    end
+  end
+
+  def self.colorCircle(color, radius)
+    diameter = radius*2.0;
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(diameter,diameter), false, 0.0)
+    ctx = UIGraphicsGetCurrentContext()
+    CGContextSaveGState(ctx)
+
+    rect = CGRectMake(0, 0, diameter, diameter)
+    CGContextSetFillColorWithColor(ctx, color.colorWithAlphaComponent(0.4).CGColor)
+    CGContextFillEllipseInRect(ctx, rect)
+    inner_rect = CGRectMake(diameter*0.15, diameter*0.15, diameter*0.7, diameter*0.7)
+    CGContextSetFillColorWithColor(ctx, color.colorWithAlphaComponent(0.7).CGColor)
+    CGContextFillEllipseInRect(ctx, inner_rect)
+
+    CGContextRestoreGState(ctx)
+    circle = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    circle
   end
 end
