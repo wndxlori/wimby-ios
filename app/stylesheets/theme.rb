@@ -37,7 +37,7 @@ module Theme
           }
         end
         UITableView.appearance.tap do |a|
-          a.separatorColor = self.color_theme[:dark_text]
+          a.separatorColor = self.color_theme[:cell_highlight_dark]
           a.sectionIndexColor = self.color_theme[:dark_text]
           a.sectionIndexBackgroundColor = self.color_theme[:group_table_dark]
           a.backgroundColor = self.color_theme[:group_table_dark]
