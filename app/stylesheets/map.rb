@@ -12,4 +12,20 @@ Teacup::Stylesheet.new(:map_sheet) do
       :full_height
     ]
 
+  style :map_type,
+    height: 25, width: 200,
+    center_x: '50%',
+    top: '15%',  # includes an 8px margin from the bottom
+    autoresizingMask: (UIViewAutoresizingFlexibleLeftMargin |
+                       UIViewAutoresizingFlexibleRightMargin |
+                       UIViewAutoresizingFlexibleTopMargin)
+  style :map_type_button,
+    height: 25, width: 25,
+        center_x: '93%',
+        center_y: '88%',
+#    top: '100% - 30',
+    image: 'tracking.png'.uiimage,
+    autoresizingMask: (UIViewAutoresizingFlexibleLeftMargin |
+                       UIViewAutoresizingFlexibleRightMargin |
+                       UIViewAutoresizingFlexibleTopMargin)
 end

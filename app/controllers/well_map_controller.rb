@@ -30,13 +30,16 @@ class WellMapController < UIViewController
 
   layout :root do
     @map = subview(MKMapView, :map)
-    @map.mapType = MKMapTypeStandard
+    @map.mapType = MKMapTypeHybrid
     @map.delegate = self
+    @map.region = Location::CANADA_REGION
+
+    subview(create_map_type_button, :map_type_button)
+
     @map_cluster_controller = CCHMapClusterController.alloc.initWithMapView(@map)
     @map_cluster_controller.delegate = self
     @map_cluster_controller.reuseExistingClusterAnnotations = false
 
-    @map.region = Location::CANADA_REGION
     self.navigationItem.rightBarButtonItem = create_track_button
     self.navigationItem.rightBarButtonItem.enabled = CLLocationManager.locationServicesEnabled
   end
@@ -50,6 +53,23 @@ class WellMapController < UIViewController
       target: self,
       action: 'track'
     )
+  end
+
+  def create_map_type_button
+    @map_type_button = UIButton.buttonWithType(UIButtonTypeSystem).tap do |button|
+      button.addTarget(self, action: 'map_type_action_sheet', forControlEvents: UIControlEventTouchUpInside)
+    end
+  end
+
+  def map_type_action_sheet
+    UIAlertController.alert(self, {title: 'Change Map Type', buttons: %w(Map Satellite), style: UIAlertControllerStyleActionSheet }) do |pressed|
+      case pressed
+        when 'Map'
+          @map.mapType = MKMapTypeStandard
+        when 'Satellite'
+          @map.mapType = MKMapTypeHybrid
+      end
+    end
   end
 
   def set_tracking(enabled)

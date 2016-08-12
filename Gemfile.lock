@@ -50,7 +50,7 @@ GEM
     rake (10.1.0)
     rubymotion_generators (0.1.2)
       thor (~> 0.15)
-    sugarcube (1.0.6)
+    sugarcube (3.4.0)
     sweettea (0.6.0)
       rake
       sugarcube
