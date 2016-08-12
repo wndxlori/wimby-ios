@@ -22,6 +22,7 @@ class WellAnnotationView < MKAnnotationView
       else
         self.image = UIImage.imageNamed('well-marker-yellow.png')
     end
+    self.centerOffset = CGPointMake(0.0, -18)
   end
 
   def well=(new_well)
