@@ -22,9 +22,8 @@ Teacup::Stylesheet.new(:map_sheet) do
   style :map_type_button,
     height: 25, width: 25,
         center_x: '93%',
-        center_y: '88%',
-#    top: '100% - 30',
-    image: 'tracking.png'.uiimage,
+        center_y: '87%',
+    image: 'Info Icon - Inactive.png'.uiimage,
     autoresizingMask: (UIViewAutoresizingFlexibleLeftMargin |
                        UIViewAutoresizingFlexibleRightMargin |
                        UIViewAutoresizingFlexibleTopMargin)

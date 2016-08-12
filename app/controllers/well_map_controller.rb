@@ -62,7 +62,7 @@ class WellMapController < UIViewController
   end
 
   def map_type_action_sheet
-    UIAlertController.alert(self, {title: 'Change Map Type', buttons: %w(Map Satellite), style: UIAlertControllerStyleActionSheet }) do |pressed|
+    map_type_action_sheet = UIAlertController.alert(self, {title: 'Change Map Type', buttons: %w(Map Satellite), style: UIAlertControllerStyleActionSheet }) do |pressed|
       case pressed
         when 'Map'
           @map.mapType = MKMapTypeStandard
@@ -70,6 +70,9 @@ class WellMapController < UIViewController
           @map.mapType = MKMapTypeHybrid
       end
     end
+    # This makes the UIAlertController "dark", without messing with any other appearance
+    visualEffectView = map_type_action_sheet.view.findVisualEffectsSubview
+    visualEffectView.effect = UIBlurEffect.effectWithStyle(UIBlurEffectStyleDark)
   end
 
   def set_tracking(enabled)
