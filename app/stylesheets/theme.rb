@@ -28,11 +28,16 @@ module Theme
         UITabBar.appearance.tap do |a|
           a.barTintColor = self.color_theme[:tabbar_tint]
         end
+        UIBarButtonItem.appearanceWhenContainedInInstancesOfClasses([UINavigationBar.self]).tap do |a|
+          a.setTitleTextAttributes({
+              NSFontAttributeName => UIFont.fontWithName('Avenir-Light', size: 15.0),
+            }, forState:UIControlStateNormal)
+        end
         UINavigationBar.appearance.tap do |a|
           a.tintColor = self.color_theme[:nav_tint]
           a.barTintColor = self.color_theme[:navbar_tint]
           a.titleTextAttributes = {
-            NSFontAttributeName => UIFont.fontWithName('GillSans-Bold', size: 17.0),
+            NSFontAttributeName => UIFont.fontWithName('Avenir-Heavy', size: 18.0),
             NSForegroundColorAttributeName => self.color_theme[:navbar_text],
           }
         end
