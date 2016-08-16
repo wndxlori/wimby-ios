@@ -20,10 +20,10 @@ Teacup::Stylesheet.new(:map_sheet) do
                        UIViewAutoresizingFlexibleRightMargin |
                        UIViewAutoresizingFlexibleTopMargin)
   style :map_type_button,
-    height: 25, width: 25,
-        center_x: '93%',
-        center_y: '87%',
-    image: 'Info Icon - Inactive.png'.uiimage,
+    height: 28, width: 28,
+        center_x: '91%',
+        center_y: '86%',
+    image: 'Settings Icon - Inactive.png'.uiimage,
     autoresizingMask: (UIViewAutoresizingFlexibleLeftMargin |
                        UIViewAutoresizingFlexibleRightMargin |
                        UIViewAutoresizingFlexibleTopMargin)

@@ -11,10 +11,10 @@ class WellMapController < UIViewController
 
   def init
     super.tap do
-      self.tabBarItem = UITabBarItem.alloc.initWithTitle('Map', image:'map.png'.uiimage, tag:1)
+      self.tabBarItem = UITabBarItem.alloc.initWithTitle('Map', image:'Maps Icon - Inactive.png'.uiimage, selectedImage:'Maps Icon - Active.png'.uiimage)
       navigationItem.title = 'Well Map'
       navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithImage(
-        'menuicon.png'.uiimage,
+        'Search Icon - Inactive.png'.uiimage,
         style: UIBarButtonItemStylePlain,
         target: self,
         action: "show_menu:"
@@ -45,8 +45,8 @@ class WellMapController < UIViewController
   end
 
   def create_track_button
-    @button_on_img =  'tracking-on.png'.uiimage
-    @button_img = 'tracking.png'.uiimage
+    @button_on_img = 'Current Location Icon - Active.png'.uiimage
+    @button_img = 'Current Location Icon - Inactive.png'.uiimage
     @track_button = UIBarButtonItem.alloc.initWithImage(
       @button_img,
       style: UIBarButtonItemStylePlain,
