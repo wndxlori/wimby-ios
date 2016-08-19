@@ -29,8 +29,8 @@ Motion::Project::App.setup do |app|
     pod 'NVSlideMenuController'
     pod 'AFNetworking'
     pod 'CCHMapClusterController'
+    pod 'Tapstream'
   end
-  app.vendor_project('vendor/Tapstream', :static)
 
   app.files = (
     app.files.select{|f| f =~ %r(/vendor/bundle/) } +

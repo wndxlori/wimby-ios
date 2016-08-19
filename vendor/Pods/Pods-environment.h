@@ -24,3 +24,9 @@
 #define COCOAPODS_VERSION_MINOR_NVSlideMenuController 5
 #define COCOAPODS_VERSION_PATCH_NVSlideMenuController 0
 
+// Tapstream
+#define COCOAPODS_POD_AVAILABLE_Tapstream
+#define COCOAPODS_VERSION_MAJOR_Tapstream 2
+#define COCOAPODS_VERSION_MINOR_Tapstream 11
+#define COCOAPODS_VERSION_PATCH_Tapstream 3
+

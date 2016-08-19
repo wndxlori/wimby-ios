@@ -2,15 +2,18 @@ PODS:
   - AFNetworking (1.3.0)
   - CCHMapClusterController (1.6.6)
   - NVSlideMenuController (1.5.0)
+  - Tapstream (2.11.3)
 
 DEPENDENCIES:
   - AFNetworking
   - CCHMapClusterController
   - NVSlideMenuController
+  - Tapstream
 
 SPEC CHECKSUMS:
   AFNetworking: 41b8a0001576968fb87be90c3faac525c529a9f5
   CCHMapClusterController: 982db41114b42a575798366371bd9908e0f9ec8b
   NVSlideMenuController: 4b4f919cbd488b0f92707b1b30a92d5b5086854b
+  Tapstream: cb2a8ccf6d5d77ae93db9daa18625ce74bed7940
 
 COCOAPODS: 0.33.1

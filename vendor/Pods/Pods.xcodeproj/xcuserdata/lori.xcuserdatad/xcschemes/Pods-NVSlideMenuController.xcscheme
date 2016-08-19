@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DF86679934014159AE38B7D6"
+               BlueprintIdentifier = "CF7A0FA2B1C546458A0D6453"
                BuildableName = "libPods-NVSlideMenuController.a"
                BlueprintName = "Pods-NVSlideMenuController"
                ReferencedContainer = "container:Pods.xcodeproj">
