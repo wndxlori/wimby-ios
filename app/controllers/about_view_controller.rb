@@ -11,6 +11,7 @@ class AboutViewController < UIViewController
         target: self,
         action: "show_menu"
       )
+      self.edgesForExtendedLayout = UIRectEdgeNone
     end
   end
 

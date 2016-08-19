@@ -5,7 +5,7 @@ Teacup::Stylesheet.new(:about_sheet) do
   style :text_view,
     font: UIFont.fontWithName('Avenir-Light', size: 15.0),
     editable: false,
-    autoresizingMask: autoresize.flexible_height,
+    autoresizingMask: autoresize.fill,
     constraints: [
       :full_width,
       :full_height
