@@ -15,20 +15,7 @@ class AboutViewController < UIViewController
   end
 
   layout :root do
-    @scroll_view = subview UIScrollView, :scroll_view do
-      @text_label = subview UILabel, :text_view, numberOfLines: 0
-    end
-  end
-
-  def viewWillAppear(animated)
-    font = UIFont.fontWithName('Avenir-Light', size: 15.0)
-    frame_size = about_text.sizeWithFont(font, constrainedToSize:[self.view.bounds.size.width - 20, 1000], lineBreakMode:UILineBreakModeWordWrap)
-    rect = [[10, 10], [frame_size.width, frame_size.height]]
-    @text_label.text = about_text
-    @text_label.frame = rect
-    @text_label.font = font
-
-#    view.contentSize = [self.view.frame.size.width, frame_size.height + 20]
+    @text_label = subview UITextView, :text_view, text: about_text
   end
 
   def preferredStatusBarStyle
