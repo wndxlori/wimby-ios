@@ -17,7 +17,7 @@ Motion::Project::App.setup do |app|
 
   app.icons = %w(Icon-20 Icon-24 Icon-27.5 Icon-29 Icon-40 Icon-50 Icon-57 Icon-60 Icon-72 Icon-76 Icon-83.5 Icon-86 Icon-98)
 
-  app.frameworks += %w(CoreData MapKit)
+  app.frameworks += %w(CoreData MapKit WebKit)
 
   app.provisioning_profile = '/Users/lori/Library/MobileDevice/Provisioning Profiles/41b736ea-f4b0-4d77-ba5d-4f46cfb3861f.mobileprovision'
   app.codesign_certificate = 'iPhone Developer: Lori Olson (856MK7QV4X)'

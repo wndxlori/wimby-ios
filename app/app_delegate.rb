@@ -14,9 +14,11 @@ class AppDelegate
     tablenav = UINavigationController.alloc.initWithRootViewController(tableview)
     mapview = WellMapController.alloc.init
     mapnav = UINavigationController.alloc.initWithRootViewController(mapview)
+    aboutview = AboutViewController.alloc.init
+    aboutnav = UINavigationController.alloc.initWithRootViewController(aboutview)
 
     self.tab_bar_controller = UITabBarController.alloc.init
-    self.tab_bar_controller.viewControllers = [mapnav, tablenav]
+    self.tab_bar_controller.viewControllers = [mapnav, tablenav, aboutnav]
     self.tab_bar_controller.selectedIndex = 0
 
     self.slide_menu_controller = NVSlideMenuController.alloc.initWithMenuViewController(menu, andContentViewController: tab_bar_controller)
