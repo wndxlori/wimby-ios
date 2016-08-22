@@ -1,7 +1,17 @@
 class WellInfo < NSManagedObject
 
-  def title; self.well_name; end
   def coordinate; @coordinate ||= CLLocationCoordinate2DMake(self.latitude, self.longitude); end
+
+  def color
+    case
+      when self.status_date.year < 1960
+        'red'
+      when self.status_date.year > 1969
+        'green'
+      else
+        'yellow'
+    end
+  end
 
   # Available fields:
   # UWI_DISPLAY,UWI,UWI_SORT,WELL_NAME,CURRENT_STATUS,STATUS,STATUS_DATE,PLOT_SYMBOL,LATITUDE,LONGITUDE

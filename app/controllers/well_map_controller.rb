@@ -148,7 +148,7 @@ class WellMapController < UIViewController
         view = WellAnnotationView.alloc.initWithAnnotation(annotation, reuseIdentifier:WellIdentifier)
       end
       view.annotation = annotation
-      add_callout_button(view, action: :show_details)
+#      add_callout_button(view, action: :show_details)
     end
     view.enabled = true
     view.canShowCallout = true
@@ -164,16 +164,12 @@ class WellMapController < UIViewController
   def mapClusterController(mapClusterController, titleForMapClusterAnnotation:mapClusterAnnotation)
     count = mapClusterAnnotation.annotations.count
     count > 1 ?
-      "#{count} wells" : mapClusterAnnotation.annotations.allObjects.first.title
+      "#{count} wells" : WellBasic.new(mapClusterAnnotation.annotations.allObjects.first).title
   end
 
   def mapClusterController(mapClusterController, subtitleForMapClusterAnnotation:mapClusterAnnotation)
-    if mapClusterAnnotation.annotations.count > 1
-      number_of_annotations = [mapClusterAnnotation.annotations.count, 3].min
-      annotations = mapClusterAnnotation.annotations.allObjects[1..number_of_annotations]
-      titles = annotations.map(&:title)
-      titles.join(', ')
-    end
+    return if mapClusterAnnotation.annotations.count > 1
+    WellBasic.new(mapClusterAnnotation.annotations.allObjects.first).subtitle
   end
 
   def show_list
@@ -186,15 +182,18 @@ class WellMapController < UIViewController
     end
   end
 
-  def show_details
-    if @map.selectedAnnotations.size == 1
-      well = @map.selectedAnnotations.first.annotations.allObjects.first
-      controller = UIApplication.sharedApplication.delegate.well_details_controller
-      controller.showDetailsForWell(well)
-      @did_show_details = true
-      navigationController.pushViewController(controller, animated:true)
-    end
-  end
+  #
+  # These will be part of the $$ version
+  #
+  # def show_details
+  #   if @map.selectedAnnotations.size == 1
+  #     well = @map.selectedAnnotations.first.annotations.allObjects.first
+  #     controller = UIApplication.sharedApplication.delegate.well_details_controller
+  #     controller.showDetailsForWell(well)
+  #     @did_show_details = true
+  #     navigationController.pushViewController(controller, animated:true)
+  #   end
+  # end
 
   # Will update the region predicate for the Well Store, so that only visible wells will
   # be in the list, if/when we switch to the list view
