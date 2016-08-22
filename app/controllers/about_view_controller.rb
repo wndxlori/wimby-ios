@@ -32,15 +32,15 @@ class AboutViewController < UIViewController
 <<EOS
 WIMBY was an idea I had, quite a few years ago, after reading about an incident w.r.t. an improperly abandoned well in the community of Calmar, AB (more on that later). At the time, I was working with oil & gas data every day (in the development of etriever.com and welltriever.com), and I was appalled at the idea people could have an abandoned well in their back yard, and not be aware of it.
 
-As of the time I wrote this blurb, there were 803928 licensed wells in Canada (numbers courtesy of etriever.com).  That includes water/steam wells, but there were only 16177 of those, so they hardly count against that somewhat mind-boggling total.
+As of the time I wrote this blurb, there were 803928 licensed wells in Canada (numbers courtesy of etriever.com).  That includes water/steam wells, but there were only ~16K of those, so they hardly count against that somewhat mind-boggling total.
 
-Of those 800K wells, 297417 of them were “abandoned”.  This is an official oil industry designation, wherein the wells are no longer being operated, and the mineral leases have been returned to the provincial government. These “abandoned" wells are not the “inactive” wells about which there has been much coverage in the news recently.
+Of those 800K wells, over 250K of them were “abandoned”.  This is an official oil industry designation, wherein the wells are no longer being operated, and the mineral leases have been returned to the provincial government. These “abandoned" wells are not the “inactive” wells about which there has been much coverage in the news recently.
 http://www.ecojustice.ca/wp-content/uploads/2014/12/IWCP-Paper-FINAL-20-Nov-2014.pdf
 http://boereport.com/2016/04/19/albertas-inactive-well-problem-incentives-needed-to-kickstart-reclamations-who-can-afford-to-sign-blank-cheques/
 http://calgaryherald.com/business/energy/5-things-abandoned-and-inactive-wells-in-alberta
 http://globalnews.ca/news/2301432/map-shows-nearly-every-corner-of-alberta-littered-with-inactive-oil-and-gas-wells/
 
-In fact, there’s another 94307 wells that have been “suspended”, which means they are not producing, but the operating company still maintains the mineral lease. In some cases, these wells are just awaiting improved economics, for them to be viable again.  In others, the operating companies have been bankrupted, and they are orphaned.  In both these cases, there would still be a caveat on any surface land title related to these wells, so they aren’t exactly “invisible".
+In fact, there’s another 90K+ wells that have been “suspended”, which means they are not producing, but the operating company still maintains the mineral lease. In some cases, these wells are just awaiting improved economics, for them to be viable again.  In others, the operating companies have been bankrupted, and they are orphaned.  In both these cases, there would still be a caveat on any surface land title related to these wells, so they aren’t exactly “invisible".
 
 It’s those abandoned wells that are the problem WIMBY is intended to address, and most especially the old ones.  Once the operating company cleans up and the mineral lease is returned to the government, there is no requirement for the caveat to remain on the associated surface land title, so it falls off.  At this point, it is difficult to know that these wells even existed. They are, in effect, invisible.
 
