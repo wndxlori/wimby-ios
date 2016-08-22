@@ -44,16 +44,16 @@ class WellTableViewController < UITableViewController
   end
 
   def configureCell(cell, atIndexPath:index)
-    well = @wells[index.row]
-    cell.textLabel.text = well.uwi_display
-    cell.detailTextLabel.text = well.well_name
+    well = WellBasic.new(@wells[index.row])
+    cell.textLabel.text = well.title
+    cell.detailTextLabel.text = well.subtitle
     return cell
   end
 
   CellID = 'CellIdentifier'
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     cell = tableView.dequeueReusableCellWithIdentifier(CellID) || begin
-      WellTableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:CellID)
+      ThemeTableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:CellID)
     end
     configureCell(cell, atIndexPath:indexPath)
   end
@@ -63,20 +63,20 @@ class WellTableViewController < UITableViewController
     UITableViewCellEditingStyleNone
   end
 
-  def selectWellAtIndexPath(indexPath)
-    well = @wells[indexPath.row]
-    controller = UIApplication.sharedApplication.delegate.well_details_controller
-    controller.showDetailsForWell(well)
-    self.navigationController.pushViewController(controller, animated:true)
-  end
-
-  def tableView(tableView, accessoryButtonTappedForRowWithIndexPath:indexPath)
-    selectWellAtIndexPath(indexPath)
-  end
-
-  def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    selectWellAtIndexPath(indexPath)
-  end
+  # def selectWellAtIndexPath(indexPath)
+  #   well = @wells[indexPath.row]
+  #   controller = UIApplication.sharedApplication.delegate.well_details_controller
+  #   controller.showDetailsForWell(well)
+  #   self.navigationController.pushViewController(controller, animated:true)
+  # end
+  #
+  # def tableView(tableView, accessoryButtonTappedForRowWithIndexPath:indexPath)
+  #   selectWellAtIndexPath(indexPath)
+  # end
+  #
+  # def tableView(tableView, didSelectRowAtIndexPath:indexPath)
+  #   selectWellAtIndexPath(indexPath)
+  # end
 
   # Show/hide the slidemenucontroller
   def show_menu(sender)
