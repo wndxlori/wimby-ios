@@ -55,8 +55,18 @@ task :iphone6 do
 end
 
 desc "Run simulator on iPhone"
+task :iphone6s do
+    exec 'rake device_name="iPhone 6s"'
+end
+
+desc "Run simulator on iPhone"
 task :iphone6plus do
     exec 'rake device_name="iPhone 6 Plus"'
+end
+
+desc "Run simulator on iPhone"
+task :iphone6splus do
+    exec 'rake device_name="iPhone 6s Plus"'
 end
 
 desc "Run simulator in iPad Retina"
