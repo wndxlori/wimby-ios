@@ -19,3 +19,4 @@ vendor/**/build*
 .yardoc
 _yardoc
 doc/
+provisioning

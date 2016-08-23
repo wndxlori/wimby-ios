@@ -10,6 +10,31 @@ Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'WIMBY'
   app.identifier = 'com.wndx.wimby'
+
+  app.development do
+    app.codesign_certificate = MotionProvisioning.certificate(
+      type: :development,
+      platform: :ios)
+
+    app.provisioning_profile = MotionProvisioning.profile(
+      bundle_identifier: app.identifier,
+      app_name: app.name,
+      platform: :ios,
+      type: :development)
+  end
+
+  app.release do
+    app.codesign_certificate = MotionProvisioning.certificate(
+      type: :distribution,
+      platform: :ios)
+
+    app.provisioning_profile = MotionProvisioning.profile(
+      bundle_identifier: app.identifier,
+      app_name: app.name,
+      platform: :ios,
+      type: :distribution)
+  end
+
   # So it does not display on the splash screen
   app.info_plist['UIStatusBarHidden'] = true
 
@@ -19,8 +44,8 @@ Motion::Project::App.setup do |app|
 
   app.frameworks += %w(CoreData MapKit WebKit)
 
-  app.provisioning_profile = '/Users/lori/Library/MobileDevice/Provisioning Profiles/41b736ea-f4b0-4d77-ba5d-4f46cfb3861f.mobileprovision'
-  app.codesign_certificate = 'iPhone Developer: Lori Olson (856MK7QV4X)'
+#  app.provisioning_profile = '/Users/lori/Library/MobileDevice/Provisioning Profiles/41b736ea-f4b0-4d77-ba5d-4f46cfb3861f.mobileprovision'
+#  app.codesign_certificate = 'iPhone Developer: Lori Olson (856MK7QV4X)'
 
   app.detect_dependencies = false
 
