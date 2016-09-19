@@ -46,7 +46,7 @@ Motion::Project::App.setup do |app|
 
   app.icons = %w(Icon-20 Icon-24 Icon-27.5 Icon-29 Icon-40 Icon-50 Icon-57 Icon-60 Icon-72 Icon-76 Icon-83.5 Icon-86 Icon-98)
 
-  app.frameworks += %w(CoreData MapKit WebKit)
+  app.frameworks += %w(AdSupport CoreData MapKit WebKit)
 
   app.detect_dependencies = false
 
