@@ -93,7 +93,7 @@ class WellStore
     end
     @store = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(@mom)
     error_ptr = Pointer.new(:object)
-    unless @store.addPersistentStoreWithType(NSSQLiteStoreType, configuration:nil, URL:store_url, options:nil, error:error_ptr)
+    unless @store.addPersistentStoreWithType(NSSQLiteStoreType, configuration:nil, URL:store_url, options:{NSReadOnlyPersistentStoreOption:true}, error:error_ptr)
       raise "Can't add persistent SQLite store: #{error_ptr[0].description}"
     end
 
