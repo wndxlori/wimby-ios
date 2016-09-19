@@ -25,6 +25,10 @@ class WimbyViewController < UIViewController
     setup_geocoder
   end
 
+  def viewWillAppear(_)
+    UIApplication.sharedApplication.delegate.log_event('show-menu')
+  end
+
   def setup_search_bar
     @search_bar = UISearchBar.alloc.initWithFrame(CGRectMake(0, 0, 320, 44))
     @search_bar.delegate = self

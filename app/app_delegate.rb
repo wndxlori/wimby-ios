@@ -54,6 +54,10 @@ class AppDelegate
      controller.presentViewController(alert, animated:true, completion:nil)
  	end
 
+  def log_event(event_name)
+    e = TSEvent.eventWithName(event_name, oneTimeOnly:false)
+    TSTapstream.instance.fireEvent(e)
+  end
 
 private
 

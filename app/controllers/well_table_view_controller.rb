@@ -19,12 +19,13 @@ class WellTableViewController < UITableViewController
     UIStatusBarStyleLightContent
   end
 
-  def viewWillAppear(animated)
+  def viewWillAppear(_)
     if @wells.nil?
       @wells = WellStore.shared.wells
       tableView.reloadData
       add_observers unless @has_observers
     end
+    UIApplication.sharedApplication.delegate.log_event('show-well-table')
   end
 
   def viewDidLoad

@@ -77,6 +77,7 @@ class WellMapController < UIViewController
 
   def set_tracking(enabled)
     if enabled
+      UIApplication.sharedApplication.delegate.log_event('user-location')
       @map.showsUserLocation = true
       @track_button.image = @button_on_img
     else
