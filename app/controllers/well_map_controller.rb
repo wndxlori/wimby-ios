@@ -84,6 +84,21 @@ class WellMapController < UIViewController
       @map.showsUserLocation = false
       @track_button.image = @button_img
     end
+    @user_location_updated = false
+  end
+
+  def track
+    if @map.showsUserLocation
+      location_manager.stopUpdatingLocation
+      set_tracking(false)
+    else
+      if SimpleLocationManager.user_location_allowed?
+        location_manager.startUpdatingLocation
+        set_tracking(true) if location_manager.locationServicesEnabled
+      else
+        SimpleLocationManager.request_user_location(self)
+      end
+    end
   end
 
   def viewWillAppear(animated)
@@ -220,28 +235,17 @@ class WellMapController < UIViewController
   end
 
   def mapView(mapView, didUpdateUserLocation:location)
-    mapView.setCenterCoordinate(location.location.coordinate, animated:true)
-    region = MKCoordinateRegionMake(location.location.coordinate, MKCoordinateSpanMake(0.05,0.05))
-    mapView.setRegion(region, animated:true)
+    unless @user_location_updated
+      mapView.setCenterCoordinate(location.location.coordinate, animated:true)
+      region = MKCoordinateRegionMake(location.location.coordinate, MKCoordinateSpanMake(0.05,0.05))
+      mapView.setRegion(region, animated:true)
+      @user_location_updated = true
+    end
   end
 
   # Show/hide the slidemenucontroller
   def show_menu(sender)
     self.navigationController.slideMenuController.toggleMenuAnimated(self)
-  end
-
-  def track
-    if @map.showsUserLocation
-      location_manager.stopUpdatingLocation
-      set_tracking(false)
-    else
-      if SimpleLocationManager.user_location_allowed?
-        location_manager.startUpdatingLocation
-        set_tracking(true) if location_manager.locationServicesEnabled
-      else
-        SimpleLocationManager.request_user_location(self)
-      end
-    end
   end
 
   def load_wells(wells)
