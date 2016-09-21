@@ -17,6 +17,7 @@ class AboutViewController < UIViewController
 
   layout :root do
     @text_label = subview UITextView, :text_view, attributedText: about_text
+    @text_label.delegate = self
   end
 
   def preferredStatusBarStyle
@@ -38,4 +39,7 @@ class AboutViewController < UIViewController
     )
   end
 
+  def textView(_, shouldInteractWithURL:_, inRange:_ )
+    true
+  end
 end
