@@ -1,3 +1,5 @@
+include SugarCube::Modal
+
 class AppDelegate
 
   attr_accessor :tab_bar_controller, :slide_menu_controller
@@ -24,6 +26,9 @@ class AppDelegate
     self.slide_menu_controller = NVSlideMenuController.alloc.initWithMenuViewController(menu, andContentViewController: tab_bar_controller)
     @window.rootViewController = self.slide_menu_controller
     @window.makeKeyAndVisible
+
+    present_intro #unless App::Persistence['intro_dismissed']
+
     initialize_datastore
     true
   end
@@ -59,6 +64,10 @@ class AppDelegate
     TSTapstream.instance.fireEvent(e)
   end
 
+  def present_intro
+    self.tab_bar_controller.present_modal(IntroViewController.new)
+  end
+
 private
 
   def initialize_datastore
@@ -66,7 +75,7 @@ private
   end
 
   def setup_tapstream
-    config = TSConfig.configWithDefaults();
+    config = TSConfig.configWithDefaults()
     TSTapstream.createWithAccountName("wndxgroup", developerSecret:"SIeEgUZ-QaWg3nDdrAg88g", config:config)
   end
 
