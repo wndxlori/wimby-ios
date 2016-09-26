@@ -3,16 +3,16 @@ class IntroPageViewController < UIViewController
 
   attr_accessor :index
   attr_accessor :title
-  attr_accessor :text
+  attr_accessor :body
 
   def initialize(page, index)
     self.index = index
     self.title = page[:title]
-    self.text = page[:text]
+    self.body = page[:body]
   end
 
   layout :root do
-    @title_label = subview UITextView, :title_label, text: self.title
-    @text_label = subview UILabel, :text_label, self.text
+    @title_label = subview UILabel, :title_label, text: self.title
+    @text_label = subview UITextView, :body_label, text: self.body
   end
 end

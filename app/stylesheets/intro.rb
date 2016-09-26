@@ -29,7 +29,9 @@ Teacup::Stylesheet.new(:intro_sheet) do
     frame: [[0, 0],['100%', '20%']],
     font: UIFont.fontWithName('Avenir-Heavy', size: 24.0)
 
-  style :text_label, extends: :intro_label,
+  style :body_label, extends: :intro_label,
     frame: [[0, '25%'],['100%', '75%']],
-    font: UIFont.fontWithName('Avenir-Light', size: 15.0)
+    font: UIFont.fontWithName('Avenir-Light', size: 15.0),
+    editable: false,
+    autoresizingMask: autoresize.fill
 end
