@@ -17,7 +17,7 @@ Teacup::Stylesheet.new(:intro_sheet) do
 
   style :intro_label,
     backgroundColor: Theme::Base.color_theme[:navbar_tint],
-    color:  Theme::Base.color_theme[:navbar_text]
+    textColor:  Theme::Base.color_theme[:navbar_text]
 
   style :title_page_label, extends: :intro_label,
     font: UIFont.fontWithName('Avenir-Black', size: 24.0)
@@ -26,7 +26,7 @@ Teacup::Stylesheet.new(:intro_sheet) do
     font: UIFont.fontWithName('Avenir-BlackOblique', size: 22.0)
 
   style :title_label, extends: :intro_label,
-    frame: [['5%', '5%'],['90%', '20%']],
+    frame: [['5%', 0],['90%', '25%']],
     font: UIFont.fontWithName('Avenir-Heavy', size: 24.0),
     numberOfLines: 0
 
