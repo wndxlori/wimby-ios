@@ -1,7 +1,7 @@
 class IntroDataSource # UIPageViewControllerDataSource
   INTRO = [
       {title: 'WIMBY is', body: 'A collection of the abandoned oil & gas wells of Canada'},
-      {title: 'What is an "abandoned well"', body: 'Well, it\'s not one of the orphaned wells you\'ve been hearing about.  Those tend to be viable (if currently uneconomic to produce) wells, which still have active mineral leases.' },
+      {title: 'What is an "abandoned well"?', body: 'Well, it\'s not one of the orphaned wells you\'ve been hearing about.  Those tend to be viable (if currently uneconomic to produce) wells, which still have active mineral leases.' },
   ]
   attr_accessor :pages
 

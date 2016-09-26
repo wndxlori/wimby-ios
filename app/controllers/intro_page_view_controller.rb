@@ -12,7 +12,7 @@ class IntroPageViewController < UIViewController
   end
 
   layout :root do
-    @title_label = subview UILabel, :title_label, text: self.title
+    @title_label = subview UILabel, :title_label, text: NSString.stringWithFormat(self.title)
     @text_label = subview UITextView, :body_label, text: self.body
   end
 end
