@@ -6,7 +6,7 @@ class IntroViewController < UIViewController
   layout :root do
     setup_page_controller
 
-    subview(self.page_controller.view, :page, frame: UIEdgeInsetsInsetRect(self.view.frame, UIEdgeInsetsMake(20, 20, 35, 20)))
+    subview(self.page_controller.view, :page, frame: UIEdgeInsetsInsetRect(self.view.frame, UIEdgeInsetsMake(20, 20, 20, 20)))
     @dismiss_button = subview(UIButton.custom, :dismiss_button).tap do |button|
 #      button.tintColor = Theme::Base.color_theme[:tint]
       button.on(:touch) do
