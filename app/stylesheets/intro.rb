@@ -15,6 +15,18 @@ Teacup::Stylesheet.new(:intro_sheet) do
                        UIViewAutoresizingFlexibleRightMargin |
                        UIViewAutoresizingFlexibleTopMargin)
 
+  style :goaway_button,
+    tintColor: Theme::Base.color_theme[:tabbar_tint],
+    title: "Don't show this again",
+    height: 50, width: 200,
+    center_x: '45%', center_y: '79%'
+
+  style :close_button,
+    tintColor: Theme::Base.color_theme[:tabbar_tint],
+    title: "Close",
+    height: 50, width: 150,
+    center_x: '45%', center_y: '85%'
+
   style :intro_label,
     backgroundColor: Theme::Base.color_theme[:navbar_tint],
     textColor:  Theme::Base.color_theme[:navbar_text]
@@ -37,7 +49,7 @@ Teacup::Stylesheet.new(:intro_sheet) do
     editable: false
 
   style :body_image,
-    frame: [['5%', '25%'],['80%', '55%']],
+    frame: [['5%', '20%'],['80%', '55%']],
     contentMode: UIViewContentModeScaleAspectFit,
     backgroundColor: Theme::Base.color_theme[:navbar_tint]
 end

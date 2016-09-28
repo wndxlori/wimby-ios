@@ -11,7 +11,6 @@ class IntroViewController < UIViewController
 #      button.tintColor = Theme::Base.color_theme[:tint]
       button.on(:touch) do
         dismiss_modal
-        App::Persistence['intro_dismissed'] = true
       end
     end
     self.page_controller.didMoveToParentViewController(self)

@@ -27,7 +27,7 @@ class AppDelegate
     @window.rootViewController = self.slide_menu_controller
     @window.makeKeyAndVisible
 
-    present_intro #unless App::Persistence['intro_dismissed']
+    present_intro unless App::Persistence['intro_dismissed']
 
     initialize_datastore
     true

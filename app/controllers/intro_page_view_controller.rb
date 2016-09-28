@@ -19,6 +19,15 @@ class IntroPageViewController < UIViewController
       @text_label = subview UITextView, :body_label, text: NSString.stringWithFormat(self.body)
     else
       @image_label = subview UIImageView, :body_image, image: self.body_image.uiimage
+      @goaway_button = subview UIButton.system, :goaway_button
+      @goaway_button.on(:touch) do
+        dismiss_modal
+        App::Persistence['intro_dismissed'] = true
+      end
+      @close_button = subview UIButton.system, :close_button
+      @close_button.on(:touch) do
+        dismiss_modal
+      end
     end
   end
 end
