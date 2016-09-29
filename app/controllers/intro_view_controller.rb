@@ -4,11 +4,17 @@ class IntroViewController < UIViewController
   attr_accessor :page_controller, :page_data
 
   layout :root do
+    UIGraphicsBeginImageContext(self.view.frame.size)
+    "Default".uiimage.drawInRect(self.view.bounds)
+    image = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+
+    self.view.backgroundColor = UIColor.colorWithPatternImage(image).colorWithAlphaComponent(0.4)
+
     setup_page_controller
 
     subview(self.page_controller.view, :page, frame: UIEdgeInsetsInsetRect(self.view.frame, UIEdgeInsetsMake(20, 20, 20, 20)))
-    @dismiss_button = subview(UIButton.custom, :dismiss_button).tap do |button|
-#      button.tintColor = Theme::Base.color_theme[:tint]
+    @dismiss_button = subview(UIButton.system, :dismiss_button).tap do |button|
       button.on(:touch) do
         dismiss_modal
       end
