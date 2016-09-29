@@ -10,7 +10,7 @@ Teacup::Stylesheet.new(:intro_sheet) do
         center_x: '91%',
         center_y: '7%',
     tintColor: Theme::Base.color_theme[:tint],
-    image: 'Checklist Icon.png'.uiimage,
+    image: 'Delete Button - Line.png'.uiimage,
     autoresizingMask: (UIViewAutoresizingFlexibleLeftMargin |
                        UIViewAutoresizingFlexibleRightMargin |
                        UIViewAutoresizingFlexibleTopMargin)

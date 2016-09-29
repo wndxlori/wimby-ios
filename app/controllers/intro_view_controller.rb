@@ -5,7 +5,7 @@ class IntroViewController < UIViewController
 
   layout :root do
     UIGraphicsBeginImageContext(self.view.frame.size)
-    "Default".uiimage.drawInRect(self.view.bounds)
+    "Default".uiimage.drawInRect(UIEdgeInsetsInsetRect(self.view.bounds, UIEdgeInsetsMake(0, 0, 20, 0)))
     image = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
 
