@@ -24,7 +24,7 @@ Motion::Project::App.setup do |app|
   end
 
   app.release do
-    app.version = '0.1.0'
+    app.version = '0.2.0'
 
     app.entitlements['beta-reports-active'] = true
 
