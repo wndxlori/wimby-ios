@@ -42,6 +42,10 @@ class WellMapController < UIViewController
 
     self.navigationItem.rightBarButtonItem = create_track_button
     self.navigationItem.rightBarButtonItem.enabled = CLLocationManager.locationServicesEnabled
+
+    @spinny = UIActivityIndicatorView.large
+    @spinny.center = self.view.center
+    subview(@spinny)
   end
 
   def create_track_button
@@ -113,6 +117,7 @@ class WellMapController < UIViewController
     region_hash['max_lat'] = center.latitude + (span.latitudeDelta/2)
     region_hash['min_lng'] = center.longitude - (span.longitudeDelta/2)
     region_hash['max_lng'] = center.longitude + (span.longitudeDelta/2)
+    @spinny.startAnimating
     App.notification_center.post(RegionChanged, region_hash)
     super
   end
@@ -229,6 +234,7 @@ class WellMapController < UIViewController
     NSLog("Map Region = #{region_hash}")
     if did_region_hash_change?(region_hash)
       @last_update = Time.now
+      @spinny.startAnimating
       App.notification_center.post(RegionChanged, region_hash) unless region_hash['min_lat'].nan?
       mapView.removeAnnotations(mapView.annotations)
     end
@@ -250,7 +256,9 @@ class WellMapController < UIViewController
 
   def load_wells(wells)
     WellStore.shared.context.performBlock -> {
-      @map_cluster_controller.addAnnotations(wells, withCompletionHandler:nil)
+      @map_cluster_controller.addAnnotations(wells, withCompletionHandler: ->{
+        @spinny.stopAnimating
+      })
     }
   end
 

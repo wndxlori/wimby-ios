@@ -50,6 +50,9 @@ module Theme
         UILabel.appearanceWhenContainedInInstancesOfClasses([UITableViewHeaderFooterView.self]).tap do |a|
           a.textColor = self.color_theme[:dark_text]
         end
+        UIActivityIndicatorView.appearance.tap do |a|
+          a.color = self.color_theme[:tint]
+        end
       end
     end
 
