@@ -66,9 +66,9 @@ class WellMapController < UIViewController
   end
 
   def map_type_action_sheet
-    map_type_action_sheet = UIAlertController.alert(self, {title: 'Change Map Type', buttons: %w(Map Satellite), style: UIAlertControllerStyleActionSheet }) do |pressed|
+    map_type_action_sheet = UIAlertController.alert(self, {title: 'Change Map Type', buttons: %w(Roads Satellite), style: UIAlertControllerStyleActionSheet }) do |pressed|
       case pressed
-        when 'Map'
+        when 'Roads'
           @map.mapType = MKMapTypeStandard
         when 'Satellite'
           @map.mapType = MKMapTypeHybrid
