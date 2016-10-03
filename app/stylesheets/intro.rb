@@ -30,17 +30,17 @@ Teacup::Stylesheet.new(:intro_sheet) do
     textColor: Theme::Base.color_theme[:tint]
 
   style :title_label, extends: :intro_label,
-    frame: [['5%', 0],['80%', '25%']],
-    font: UIFont.fontWithName('Avenir-Heavy', size: 24.0),
+    frame: [['5%', 0],['80%', '20%']],
+    font: UIFont.fontWithName('Avenir-Heavy', size: 22.0),
     numberOfLines: 0
 
   style :body_label, extends: :intro_label,
-    frame: [['5%', '25%'],['80%', '45%']],
-    font: UIFont.fontWithName('Avenir-Light', size: 18.0),
+    frame: [['5%', '20%'],['80%', '55%']],
+    font: UIFont.fontWithName('Avenir-Light', size: 16.0),
     editable: false
 
   style :body_image,
-    frame: [['15%', '20%'],['60%', '55%']],
+    frame: [['15%', '16%'],['60%', '55%']],
     contentMode: UIViewContentModeScaleAspectFit,
     backgroundColor: :clear.uicolor
 end
