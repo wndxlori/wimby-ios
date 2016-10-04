@@ -58,8 +58,9 @@ class Location
 
   Interesting =
     [
-      Location.new(50.67390, -114.27886, 'Turner Valley AB'),
+      Location.new(53.2631929, -113.8403818, 'Calmar AB'),
       Location.new(50.041069, -110.678093, 'Medicine Hat AB'),
-      Location.new(49.39593, -103.41105, 'Midale SK')
+      Location.new(50.67390, -114.27886, 'Turner Valley AB'),
     ]
 end
+
