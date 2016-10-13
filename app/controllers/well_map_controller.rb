@@ -228,6 +228,7 @@ class WellMapController < UIViewController
       @did_show_details = @did_show_cluster = false
       return
     end
+    check_user_location
     center = mapView.region.center
     span = mapView.region.span
     region_hash = {}
@@ -249,7 +250,7 @@ class WellMapController < UIViewController
       mapView.setCenterCoordinate(location.location.coordinate, animated:true)
       region = MKCoordinateRegionMake(location.location.coordinate, MKCoordinateSpanMake(0.05,0.05))
       mapView.setRegion(region, animated:true)
-      @user_location_updated = true
+      @user_location_updated = location
     end
   end
 
@@ -303,5 +304,17 @@ private
 
   def stop_activity_indicator
     @activity_indicator.startAnimating if slow_device?
+  end
+
+  def check_user_location
+    if @user_location_updated
+      set_tracking(false) unless user_in_region?
+    end
+  end
+
+  def user_in_region?
+    userPoint = MKMapPointForCoordinate(@user_location_updated.location.coordinate)
+    mapRect = @map.visibleMapRect
+    MKMapRectContainsPoint(mapRect, userPoint)
   end
 end
