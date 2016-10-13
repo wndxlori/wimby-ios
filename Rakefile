@@ -24,7 +24,7 @@ Motion::Project::App.setup do |app|
   end
 
   app.release do
-    app.version = '0.2.0'
+    app.version = '0.2.1'
 
     app.entitlements['beta-reports-active'] = true
 
@@ -56,6 +56,7 @@ Motion::Project::App.setup do |app|
     pod 'AFNetworking'
     pod 'CCHMapClusterController'
     pod 'Tapstream'
+    pod 'UIDevice-Hardware'
   end
 
   app.files = (

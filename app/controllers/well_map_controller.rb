@@ -43,9 +43,7 @@ class WellMapController < UIViewController
     self.navigationItem.rightBarButtonItem = create_track_button
     self.navigationItem.rightBarButtonItem.enabled = CLLocationManager.locationServicesEnabled
 
-    @spinny = UIActivityIndicatorView.large
-    @spinny.center = self.view.center
-    subview(@spinny)
+    create_activity_indicator if slow_device?
   end
 
   def create_track_button
@@ -63,6 +61,12 @@ class WellMapController < UIViewController
     @map_type_button = UIButton.buttonWithType(UIButtonTypeSystem).tap do |button|
       button.addTarget(self, action: 'map_type_action_sheet', forControlEvents: UIControlEventTouchUpInside)
     end
+  end
+
+  def create_activity_indicator
+    @activity_indicator = UIActivityIndicatorView.large
+    @activity_indicator.center = self.view.center
+    subview(@activity_indicator)
   end
 
   def map_type_action_sheet
@@ -117,7 +121,7 @@ class WellMapController < UIViewController
     region_hash['max_lat'] = center.latitude + (span.latitudeDelta/2)
     region_hash['min_lng'] = center.longitude - (span.longitudeDelta/2)
     region_hash['max_lng'] = center.longitude + (span.longitudeDelta/2)
-    @spinny.startAnimating
+    start_activity_indicator
     App.notification_center.post(RegionChanged, region_hash)
     super
   end
@@ -234,7 +238,7 @@ class WellMapController < UIViewController
     NSLog("Map Region = #{region_hash}")
     if did_region_hash_change?(region_hash)
       @last_update = Time.now
-      @spinny.startAnimating
+      start_activity_indicator
       App.notification_center.post(RegionChanged, region_hash) unless region_hash['min_lat'].nan?
       mapView.removeAnnotations(mapView.annotations)
     end
@@ -257,7 +261,7 @@ class WellMapController < UIViewController
   def load_wells(wells)
     WellStore.shared.context.performBlock -> {
       @map_cluster_controller.addAnnotations(wells, withCompletionHandler: ->{
-        @spinny.stopAnimating
+        stop_activity_indicator
       })
     }
   end
@@ -287,5 +291,17 @@ private
     App.notification_center.unobserve WellsLoaded
     App.notification_center.unobserve LocationEntered
     @has_observers = false
+  end
+
+  def slow_device?
+    UIDevice.currentDevice.modelName.start_with?('iPhone 4', 'iPhone 5')
+  end
+
+  def start_activity_indicator
+    @activity_indicator.startAnimating if slow_device?
+  end
+
+  def stop_activity_indicator
+    @activity_indicator.startAnimating if slow_device?
   end
 end

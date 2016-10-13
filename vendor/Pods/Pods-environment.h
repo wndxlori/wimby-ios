@@ -30,3 +30,9 @@
 #define COCOAPODS_VERSION_MINOR_Tapstream 11
 #define COCOAPODS_VERSION_PATCH_Tapstream 3
 
+// UIDevice-Hardware
+#define COCOAPODS_POD_AVAILABLE_UIDevice_Hardware
+#define COCOAPODS_VERSION_MAJOR_UIDevice_Hardware 0
+#define COCOAPODS_VERSION_MINOR_UIDevice_Hardware 1
+#define COCOAPODS_VERSION_PATCH_UIDevice_Hardware 8
+
