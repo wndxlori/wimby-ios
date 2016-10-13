@@ -43,7 +43,7 @@ class WellMapController < UIViewController
     self.navigationItem.rightBarButtonItem = create_track_button
     self.navigationItem.rightBarButtonItem.enabled = CLLocationManager.locationServicesEnabled
 
-    create_activity_indicator if slow_device?
+    create_activity_indicator
   end
 
   def create_track_button
@@ -121,7 +121,7 @@ class WellMapController < UIViewController
     region_hash['max_lat'] = center.latitude + (span.latitudeDelta/2)
     region_hash['min_lng'] = center.longitude - (span.longitudeDelta/2)
     region_hash['max_lng'] = center.longitude + (span.longitudeDelta/2)
-    start_activity_indicator
+    @activity_indicator.startAnimating
     App.notification_center.post(RegionChanged, region_hash)
     super
   end
@@ -239,7 +239,7 @@ class WellMapController < UIViewController
     NSLog("Map Region = #{region_hash}")
     if did_region_hash_change?(region_hash)
       @last_update = Time.now
-      start_activity_indicator
+      @activity_indicator.startAnimating if slow_device?
       App.notification_center.post(RegionChanged, region_hash) unless region_hash['min_lat'].nan?
       mapView.removeAnnotations(mapView.annotations)
     end
@@ -262,7 +262,7 @@ class WellMapController < UIViewController
   def load_wells(wells)
     WellStore.shared.context.performBlock -> {
       @map_cluster_controller.addAnnotations(wells, withCompletionHandler: ->{
-        stop_activity_indicator
+        @activity_indicator.stopAnimating
       })
     }
   end
@@ -296,14 +296,6 @@ private
 
   def slow_device?
     UIDevice.currentDevice.modelName.start_with?('iPhone 4', 'iPhone 5')
-  end
-
-  def start_activity_indicator
-    @activity_indicator.startAnimating if slow_device?
-  end
-
-  def stop_activity_indicator
-    @activity_indicator.startAnimating if slow_device?
   end
 
   def check_user_location
