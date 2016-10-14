@@ -20,3 +20,4 @@ vendor/**/build*
 _yardoc
 doc/
 provisioning
+wimby-osx-load/resources/*
