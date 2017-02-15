@@ -10,6 +10,8 @@ class WellDetailsController < UITableViewController
     super
     navigationItem.title = "Well Details"
     self.tableView.allowsSelection = false
+    self.tableView.registerClass(ThemeTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier:HeaderFooterID)
+    self.view.registerClass(ThemeTableViewCell2.self, forCellReuseIdentifier:self.class.name)
   end
 
   def viewWillAppear(animated)
@@ -31,26 +33,15 @@ class WellDetailsController < UITableViewController
   HeaderFooterID = 'theme'
 
   def tableView(tableView, viewForHeaderInSection:section)
-    tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID) || begin
-      tableView.registerClass(ThemeTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier:HeaderFooterID)
-      tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID)
-    end
+    tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID)
   end
 
   def tableView(tableView, viewForFooterInSection:section)
-    tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID) || begin
-      tableView.registerClass(ThemeTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier:HeaderFooterID)
-      tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID)
-    end
+    tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID)
   end
 
-  CellID = self.class.name
-
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    cell = tableView.dequeueReusableCellWithIdentifier(CellID) || begin
-      cell = ThemeTableViewCell2.alloc.initWithStyle(UITableViewCellStyleValue2, reuseIdentifier:CellID)
-      cell
-    end
+    cell = tableView.dequeueReusableCellWithIdentifier(self.class.name)
     cell.textLabel.text = @details[indexPath.section][indexPath.row][:label]
     cell.detailTextLabel.text = @details[indexPath.section][indexPath.row][:value]
     cell

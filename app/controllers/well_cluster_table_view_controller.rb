@@ -7,6 +7,8 @@ class WellClusterTableViewController < UITableViewController
   def viewDidLoad
     super
     navigationItem.title = 'Well List'
+    self.tableView.registerClass(ThemeTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier:HeaderFooterID)
+    self.view.registerClass(ThemeTableViewCell.self, forCellReuseIdentifier:self.class.name)
   end
 
   def viewWillAppear(_)
@@ -21,17 +23,11 @@ class WellClusterTableViewController < UITableViewController
   HeaderFooterID = 'theme'
 
   def tableView(tableView, viewForHeaderInSection:section)
-    tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID) || begin
-      tableView.registerClass(ThemeTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier:HeaderFooterID)
-      tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID)
-    end
+    tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID)
   end
 
   def tableView(tableView, viewForFooterInSection:section)
-    tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID) || begin
-      tableView.registerClass(ThemeTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier:HeaderFooterID)
-      tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID)
-    end
+    tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID)
   end
 
   def configureCell(cell, atIndexPath:index)
@@ -41,12 +37,8 @@ class WellClusterTableViewController < UITableViewController
     return cell
   end
 
-  CellID = self.class.name
-
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    cell = tableView.dequeueReusableCellWithIdentifier(CellID) || begin
-      ThemeTableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:CellID)
-    end
+    cell = tableView.dequeueReusableCellWithIdentifier(self.class.name)
     configureCell(cell, atIndexPath:indexPath)
   end
 

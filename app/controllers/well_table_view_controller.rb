@@ -30,6 +30,7 @@ class WellTableViewController < UITableViewController
 
   def viewDidLoad
     self.clearsSelectionOnViewWillAppear = true
+    self.view.registerClass(ThemeTableViewCell.self, forCellReuseIdentifier:self.class.name)
   end
 
   def viewWillDisappear(animated)
@@ -53,9 +54,7 @@ class WellTableViewController < UITableViewController
 
   CellID = 'CellIdentifier'
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    cell = tableView.dequeueReusableCellWithIdentifier(CellID) || begin
-      ThemeTableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:CellID)
-    end
+    cell = tableView.dequeueReusableCellWithIdentifier(CellID)
     configureCell(cell, atIndexPath:indexPath)
   end
 

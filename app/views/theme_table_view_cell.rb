@@ -1,7 +1,7 @@
 class ThemeTableViewCell < UITableViewCell
 
   def initWithStyle(style, reuseIdentifier:ident)
-    super.tap do |cell|
+    super(UITableViewCellStyleSubtitle, reuseIdentifier: ident).tap do |cell|
       cell.backgroundColor = UIColor.blackColor
       cell.textLabel.textColor = Theme::Base.color_theme[:dark_text]
       cell.detailTextLabel.textColor = Theme::Base.color_theme[:dark_text]
