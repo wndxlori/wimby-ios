@@ -1,9 +1,10 @@
 class IntroViewController < UIViewController
   stylesheet :intro_sheet
+  layout :root
 
   attr_accessor :page_controller, :page_data
 
-  layout :root do
+  def teacup_layout
     UIGraphicsBeginImageContext(self.view.frame.size)
     "Default".uiimage.drawInRect(UIEdgeInsetsInsetRect(self.view.bounds, UIEdgeInsetsMake(0, 0, 20, 0)))
     image = UIGraphicsGetImageFromCurrentImageContext()

@@ -1,5 +1,6 @@
 class IntroPageViewController < UIViewController
   stylesheet :intro_sheet
+  layout :root
 
   attr_accessor :index
   attr_accessor :title
@@ -13,7 +14,7 @@ class IntroPageViewController < UIViewController
     self.body_image = page[:body_image]
   end
 
-  layout :root do
+  def teacup_layout
     @title_label = subview UILabel, :title_label, text: NSString.stringWithFormat(self.title)
     if self.body
       @text_label = subview UITextView, :body_label, text: NSString.stringWithFormat(self.body)

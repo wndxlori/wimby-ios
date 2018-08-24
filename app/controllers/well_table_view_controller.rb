@@ -54,7 +54,7 @@ class WellTableViewController < UITableViewController
 
   CellID = 'CellIdentifier'
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    cell = tableView.dequeueReusableCellWithIdentifier(CellID)
+    cell = tableView.dequeueReusableCellWithIdentifier(self.class.name)
     configureCell(cell, atIndexPath:indexPath)
   end
 

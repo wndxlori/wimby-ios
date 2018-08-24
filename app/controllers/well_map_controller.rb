@@ -5,6 +5,7 @@ WellsLoaded = "WellsLoaded"
 class WellMapController < UIViewController
 
   stylesheet :map_sheet
+  layout :root
 
   attr_accessor :map,
                 :saved_region
@@ -28,7 +29,7 @@ class WellMapController < UIViewController
     UIStatusBarStyleLightContent
   end
 
-  layout :root do
+  def teacup_layout
     @map = subview(MKMapView, :map)
     @map.mapType = MKMapTypeHybrid
     @map.delegate = self

@@ -1,6 +1,7 @@
 class AboutViewController < UIViewController
   stylesheet :about_sheet
-
+  layout :root
+  
   def init
     super.tap do
       self.tabBarItem = UITabBarItem.alloc.initWithTitle('About', image:'Info Icon - Inactive.png'.uiimage, selectedImage:'Info Icon - Active.png'.uiimage)
@@ -15,7 +16,7 @@ class AboutViewController < UIViewController
     end
   end
 
-  layout :root do
+  def teacup_layout
     @text_label = subview UITextView, :text_view, attributedText: about_text
     @text_label.delegate = self
   end
