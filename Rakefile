@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 $:.unshift("/Library/RubyMotion/lib")
+$:.unshift("~/.rubymotion/rubymotion-templates")
 require 'motion/project/template/ios'
 
 require 'bundler'
@@ -48,7 +49,7 @@ Motion::Project::App.setup do |app|
 
   app.frameworks += %w(AdSupport CoreData MapKit WebKit)
 
-  app.detect_dependencies = false
+  app.detect_dependencies = true
 
   # Dependencies
   app.pods do
@@ -59,21 +60,11 @@ Motion::Project::App.setup do |app|
     pod 'UIDevice-Hardware'
   end
 
-  app.files = (
-    app.files.select{|f| f =~ %r(/vendor/bundle/) } +
-    app.files.select{|f| f =~ %r(/lib/) } +
-    app.files
-  ).uniq
 end
 
 desc "Run simulator on iPhone"
-task :iphone4 do
-    exec 'rake device_name="iPhone 4s"'
-end
-
-desc "Run simulator on iPhone"
-task :iphone5 do
-    exec 'rake device_name="iPhone 5"'
+task :iphonese do
+    exec 'rake device_name="iPhone SE"'
 end
 
 desc "Run simulator on iPhone"
@@ -96,12 +87,7 @@ task :iphone6splus do
     exec 'rake device_name="iPhone 6s Plus"'
 end
 
-desc "Run simulator in iPad Retina"
-task :retina do
-    exec 'rake device_name="iPad Retina"'
-end
-
-desc "Run simulator on iPad Air"
-task :ipad do
-    exec 'rake device_name="iPad Air"'
+desc "Run simulator on iPhone X"
+task :iphonex do
+    exec 'rake device_name="iPhone X"'
 end

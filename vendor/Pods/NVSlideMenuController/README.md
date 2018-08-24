@@ -5,13 +5,12 @@ A slide menu done right.
 ## Requirements
 
 * You can use ARC or not, this library supports both
-* iOS 5.0+ (since `UIViewController containment API` is used)
+* iOS 5.0+
 
 ## Usage
 
 * Drop `lib/NVSlideMenuController/NVSlideMenuController.{h|m}` in your project
 * Add `QuartzCore.framework`
-* (optional) set `-fno-objc-arc` to `NVSlideMenuController.m` if you use ARC
 
 **Create a slide menu**
 
@@ -30,6 +29,22 @@ self.window.rootViewController = slideMenuController; // Assuming you are in app
 // Inside your menuViewController
 UIViewController *newContentViewController = ... ; // Create & configure your new content view controller (as usual)
 [self.slideMenuController closeMenuBehindContentViewController:newContentViewController animated:YES completion:nil];
+```
+
+**NVSlideMenuController callbacks**
+
+The library provides 4 methods through a UIViewController category. 
+You can override them to manage the slide in/out of the content view controller. It is best described by the provided demo app.
+
+```objective-c
+@interface UIViewController (NVSlideMenuControllerCallbacks)
+
+- (void)viewWillSlideIn:(BOOL)animated inSlideMenuController:(NVSlideMenuController *)slideMenuController;
+- (void)viewDidSlideIn:(BOOL)animated inSlideMenuController:(NVSlideMenuController *)slideMenuController;
+- (void)viewWillSlideOut:(BOOL)animated inSlideMenuController:(NVSlideMenuController *)slideMenuController;
+- (void)viewDidSlideOut:(BOOL)animated inSlideMenuController:(NVSlideMenuController *)slideMenuController;
+
+@end
 ```
 
 **Change the slide direction**
@@ -60,28 +75,7 @@ You could need to disable the pan gesture, for example when your content view co
 }
 ```
 
-**NVSlideMenuController callbacks**
-
-The library provides 4 methods through a UIViewController category. 
-You can override them to manage the slide in/out of the content view controller. It is best described by the provided demo app.
-
-```objective-c
-@interface UIViewController (NVSlideMenuControllerCallbacks)
-
-- (void)viewWillSlideIn:(BOOL)animated inSlideMenuController:(NVSlideMenuController *)slideMenuController;
-- (void)viewDidSlideIn:(BOOL)animated inSlideMenuController:(NVSlideMenuController *)slideMenuController;
-- (void)viewWillSlideOut:(BOOL)animated inSlideMenuController:(NVSlideMenuController *)slideMenuController;
-- (void)viewDidSlideOut:(BOOL)animated inSlideMenuController:(NVSlideMenuController *)slideMenuController;
-
-@end
-```
-
 For more have a look at the demo app `;-]`
-
-## What's next ?
-
-* Support Storyboard
-* iPad support done right, can already be done according to the `contentViewWidthWhenMenuIsOpen` property
 
 ## Author
 
@@ -89,4 +83,4 @@ Nicolas VERINAUD ([@nverinaud](https://twitter.com/nverinaud))
 
 ## License
 
-See `LICENSE.md`.
+Released under the MIT License. For more see `LICENSE.md`.

@@ -4,32 +4,32 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Pods-AFNetworking.xcscheme</key>
+		<key>AFNetworking.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-CCHMapClusterController.xcscheme</key>
+		<key>CCHMapClusterController.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-NVSlideMenuController.xcscheme</key>
+		<key>NVSlideMenuController.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-Tapstream.xcscheme</key>
+		<key>Pods-RubyMotion.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-UIDevice-Hardware.xcscheme</key>
+		<key>Tapstream.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods.xcscheme</key>
+		<key>UIDevice-Hardware.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

@@ -20,10 +20,15 @@
 #define BOUNCE_DURATION                 0.3f
 
 @interface NVSlideMenuController ()
+{
+	CGFloat _contentViewWidthWhenMenuIsOpen;
+}
 
+/** Children view controllers */
 @property (nonatomic, readwrite, strong) UIViewController *menuViewController;
 @property (nonatomic, readwrite, strong) UIViewController *contentViewController;
 
+/** Shadow */
 - (void)setShadowOnContentView;
 - (void)removeShadowOnContentView;
 - (CGSize)shadowOffsetAccordingToCurrentSlideDirection;
@@ -44,10 +49,9 @@
 - (void)panGestureTriggered:(UIPanGestureRecognizer *)panGesture;
 
 /** Utils */
-//- (CGFloat)offsetXWhenMenuIsOpen;
-//- (CGFloat)offsetXWhenContentViewIsHidden;
 - (CGFloat)contentViewMinX;
 - (CGRect)menuViewFrameAccordingToCurrentSlideDirection;
+- (UIViewAutoresizing)menuViewAutoresizingMaskAccordingToCurrentSlideDirection;
 
 
 /** State */
@@ -86,8 +90,10 @@
 		self.contentViewController = contentViewController;
 		self.panGestureEnabled = YES;
         self.slideDirection = NVSlideMenuControllerSlideFromLeftToRight;
-		self.contentViewWidthWhenMenuIsOpen = 44.f;
+		_contentViewWidthWhenMenuIsOpen = -1;
+		self.menuWidth = 276;
         self.autoAdjustMenuWidth = YES;
+		self.showShadowOnContentView = YES;
 	}
 	
 	return self;
@@ -105,6 +111,7 @@
 		self.panGestureEnabled = YES;
         self.slideDirection = NVSlideMenuControllerSlideFromLeftToRight;
         self.autoAdjustMenuWidth = YES;
+		self.showShadowOnContentView = YES;
 	}
 	
 	return self;
@@ -132,9 +139,6 @@
 #else
 		_menuViewController = menuViewController;
 #endif
-		
-		[self addChildViewController:_menuViewController];
-		[_menuViewController didMoveToParentViewController:self];
 	}
 }
 
@@ -152,9 +156,6 @@
 #else
 		_contentViewController = contentViewController;
 #endif
-		
-		[self addChildViewController:_contentViewController];
-		[_contentViewController didMoveToParentViewController:self];
 	}
 }
 
@@ -165,7 +166,14 @@
 {
     [super viewDidLoad];
 	
+	if (_contentViewWidthWhenMenuIsOpen >= 0)
+		self.menuWidth = CGRectGetWidth(self.view.bounds) - _contentViewWidthWhenMenuIsOpen;
+	
+	[self addChildViewController:self.contentViewController];
+	self.contentViewController.view.frame = self.view.bounds;
 	[self.view addSubview:self.contentViewController.view];
+	[self.contentViewController didMoveToParentViewController:self];
+	
 	[self setShadowOnContentView];
 	
 	[self.contentViewController.view addGestureRecognizer:self.tapGesture];
@@ -237,15 +245,50 @@
 }
 
 
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+	UIViewController *vc = self.contentViewController;
+	
+	if ([self isMenuOpen])
+		vc = self.menuViewController;
+	
+	return [vc preferredStatusBarStyle];
+}
+
+
+- (UIViewController *)childViewControllerForStatusBarStyle
+{
+	UIViewController *vc = self.contentViewController;
+	
+	if ([self isMenuOpen])
+		vc = self.menuViewController;
+	
+	return vc;
+}
+
+
+- (UIViewController *)childViewControllerForStatusBarHidden
+{
+	UIViewController *vc = self.contentViewController;
+	
+	if ([self isMenuOpen])
+		vc = self.menuViewController;
+	
+	return vc;
+}
+
+
 #pragma mark - Rotation
 
 - (BOOL)shouldAutorotate
 {
-	return [self.menuViewController shouldAutorotate] && [self.contentViewController shouldAutorotate];
+	return	[self.menuViewController shouldAutorotate] &&
+			[self.contentViewController shouldAutorotate] &&
+			self.panGesture.state != UIGestureRecognizerStateChanged;
 }
 
 
-- (NSUInteger)supportedInterfaceOrientations
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
 	return [self.menuViewController supportedInterfaceOrientations] & [self.contentViewController supportedInterfaceOrientations];
 }
@@ -301,16 +344,36 @@
 
 #pragma mark - Shadow
 
+- (void)setShowShadowOnContentView:(BOOL)showShadowOnContentView
+{
+	if (showShadowOnContentView != _showShadowOnContentView)
+	{
+		_showShadowOnContentView = showShadowOnContentView;
+		
+		if ([self.contentViewController isViewLoaded])
+		{
+			if (_showShadowOnContentView)
+				[self setShadowOnContentView];
+			else if (!_showShadowOnContentView)
+				[self removeShadowOnContentView];
+		}
+	}
+}
+
+
 - (void)setShadowOnContentView
 {
-	UIView *contentView = self.contentViewController.view;
-	CALayer *layer = contentView.layer;
-	layer.masksToBounds = NO;
-	layer.shadowColor = [[UIColor blackColor] CGColor];
-	layer.shadowOpacity = 1.f;
-	layer.shadowRadius = 5.f;
-	layer.shadowPath = [[UIBezierPath bezierPathWithRect:contentView.bounds] CGPath];
-	layer.shadowOffset = [self shadowOffsetAccordingToCurrentSlideDirection];
+	if ([self showShadowOnContentView])
+	{
+		UIView *contentView = self.contentViewController.view;
+		CALayer *layer = contentView.layer;
+		layer.masksToBounds = NO;
+		layer.shadowColor = [[UIColor blackColor] CGColor];
+		layer.shadowOpacity = 1.f;
+		layer.shadowRadius = 5.f;
+		layer.shadowPath = [[UIBezierPath bezierPathWithRect:contentView.bounds] CGPath];
+		layer.shadowOffset = [self shadowOffsetAccordingToCurrentSlideDirection];
+	}
 }
 
 
@@ -349,6 +412,8 @@
 		
 		if ([self.menuViewController isViewLoaded] && [self.contentViewController isViewLoaded])
 		{
+			self.menuViewController.view.autoresizingMask = [self menuViewAutoresizingMaskAccordingToCurrentSlideDirection];
+			
 			BOOL menuIsOpen = [self isMenuOpen];
 			NSTimeInterval duration = (animated && menuIsOpen) ? ANIMATION_DURATION*1.5 : 0;
 			CGRect targetedContentViewFrame = self.view.bounds;
@@ -375,8 +440,11 @@
 {
 	if (!self.menuViewController.view.window)
 	{
+		[self addChildViewController:self.menuViewController];
 		self.menuViewController.view.frame = [self menuViewFrameAccordingToCurrentSlideDirection];
+		self.menuViewController.view.autoresizingMask = [self menuViewAutoresizingMaskAccordingToCurrentSlideDirection];
 		[self.view insertSubview:self.menuViewController.view atIndex:0];
+		[self.menuViewController didMoveToParentViewController:self];
 	}
 }
 
@@ -410,6 +478,10 @@
 		self.menuViewController.view.frame = [self menuViewFrameAccordingToCurrentSlideDirection];
 	} completion:^(BOOL finished) {
 		[self.menuViewController endAppearanceTransition];
+		
+		if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)])
+			[self setNeedsStatusBarAppearanceUpdate];
+		
 		[self.contentViewController viewDidSlideOut:animated inSlideMenuController:self];
 		
 		self.tapGesture.enabled = YES;
@@ -422,32 +494,45 @@
 
 - (void)closeMenuAnimated:(BOOL)animated completion:(void(^)(BOOL finished))completion
 {
-	// Remove gestures
-	self.tapGesture.enabled = NO;
-	
-	self.menuViewController.view.userInteractionEnabled = NO;
-	
-	NSTimeInterval duration = animated ? ANIMATION_DURATION : 0;
-	
-	UIView *contentView = self.contentViewController.view;
-	CGRect contentViewFrame = contentView.frame;
-	contentViewFrame.origin.x = 0;
-	
-	[self.menuViewController beginAppearanceTransition:NO animated:animated];
-	[self.contentViewController viewWillSlideIn:animated inSlideMenuController:self];
-	
-	[UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-		contentView.frame = contentViewFrame;
-	} completion:^(BOOL finished) {
-		[self.menuViewController endAppearanceTransition];
-		[self.contentViewController viewDidSlideIn:animated inSlideMenuController:self];
-		self.contentViewHidden = NO;
-		
-		self.menuViewController.view.userInteractionEnabled = YES;
-		
-		if (completion)
-			completion(finished);
-	}];
+    if ([self isMenuOpen])
+    {
+        // Remove gestures
+        self.tapGesture.enabled = NO;
+        
+        self.menuViewController.view.userInteractionEnabled = NO;
+        
+        NSTimeInterval duration = animated ? ANIMATION_DURATION : 0;
+        
+        UIView *contentView = self.contentViewController.view;
+        CGRect contentViewFrame = contentView.frame;
+        contentViewFrame.origin.x = 0;
+        
+        [self loadMenuViewControllerViewIfNeeded];
+        [self.menuViewController beginAppearanceTransition:NO animated:animated];
+        [self.contentViewController viewWillSlideIn:animated inSlideMenuController:self];
+        
+        [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            contentView.frame = contentViewFrame;
+        } completion:^(BOOL finished) {
+            [self.menuViewController endAppearanceTransition];
+            
+            if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)])
+                [self setNeedsStatusBarAppearanceUpdate];
+            
+            [self.contentViewController viewDidSlideIn:animated inSlideMenuController:self];
+            self.contentViewHidden = NO;
+            
+            self.menuViewController.view.userInteractionEnabled = YES;
+            
+            if (completion)
+                completion(finished);
+        }];
+    }
+    else
+    {
+        if (completion)
+            completion(YES);
+    }
 }
 
 
@@ -456,7 +541,9 @@
 	[self closeMenuBehindContentViewController:contentViewController animated:animated bounce:self.bounceWhenNavigating completion:completion];
 }
 
-- (void)closeMenuBehindContentViewController:(UIViewController *)contentViewController animated:(BOOL)animated bounce:(BOOL)bounce completion:(void(^)(BOOL finished))completion {
+
+- (void)closeMenuBehindContentViewController:(UIViewController *)contentViewController animated:(BOOL)animated bounce:(BOOL)bounce completion:(void(^)(BOOL finished))completion
+{
     NSAssert(contentViewController != nil, @"Can't show a nil content view controller.");
     
 	void (^swapContentViewController)() = nil;
@@ -474,9 +561,11 @@
             BOOL contentViewWasAlreadyHidden = [self isContentViewHidden];
             if (!contentViewWasAlreadyHidden)
                 [self.contentViewController beginAppearanceTransition:NO animated:NO];
-            
+
+            [self.contentViewController willMoveToParentViewController:nil];
             [self.contentViewController.view removeFromSuperview];
-            
+            [self.contentViewController removeFromParentViewController];
+
             if (!contentViewWasAlreadyHidden)
                 [self.contentViewController endAppearanceTransition];
             
@@ -487,7 +576,9 @@
             [self.contentViewController.view addGestureRecognizer:self.panGesture];
             [self setShadowOnContentView];
             [self.contentViewController beginAppearanceTransition:YES animated:NO];
+            [self addChildViewController:self.contentViewController];
             [self.view addSubview:self.contentViewController.view];
+            [self.contentViewController didMoveToParentViewController:self];
             [self.contentViewController endAppearanceTransition];
         };
 	}
@@ -495,7 +586,8 @@
     if (bounce && animated && ![self isContentViewHidden])
 	{
         CGFloat offScreenDistance = 10.0f;
-        CGFloat bounceDistance = offScreenDistance + self.contentViewWidthWhenMenuIsOpen;
+        CGFloat bounceDistance = offScreenDistance + CGRectGetWidth(self.contentViewController.view.bounds) - self.menuWidth;
+		
         //Invert the bounce distance if needed for the slide direction
         if (self.slideDirection == NVSlideMenuControllerSlideFromRightToLeft)
 			bounceDistance *= -1;
@@ -504,8 +596,12 @@
         CGRect contentBounceFrame = contentView.frame;
         contentBounceFrame.origin.x += bounceDistance;
         
+        CGRect menuBounceFrame = self.menuViewController.view.frame;
+        menuBounceFrame.size.width += bounceDistance;
+
         [UIView animateWithDuration:BOUNCE_DURATION delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             contentView.frame = contentBounceFrame;
+            self.menuViewController.view.frame = menuBounceFrame;
         } completion:^(BOOL finished) {
             if (swapContentViewController)
 				swapContentViewController();
@@ -537,6 +633,8 @@
 		self.contentViewHidden = YES;
 		contentViewFrame.origin.x = [self contentViewMinX];
 		
+        [self loadMenuViewControllerViewIfNeeded];
+        
 		if (!menuIsOpen)
 			[self.menuViewController beginAppearanceTransition:YES animated:animated];
 		
@@ -681,7 +779,7 @@
             close = (velocity.x < 0);
         else
             close = (velocity.x > 0);
-				
+		
 		if (close) // Close
 		{
 			// Compute animation duration
@@ -708,12 +806,16 @@
 				self.contentViewController.view.frame = frame;
 			} completion:^(BOOL finished) {
 				[self.menuViewController endAppearanceTransition];
+				
+				if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)])
+					[self setNeedsStatusBarAppearanceUpdate];
+				
 				[self.contentViewController viewDidSlideIn:YES inSlideMenuController:self];
 			}];
 		}
 		else // Open
 		{
-			distance = fabsf(contentViewMinX - frame.origin.x);
+			distance = fabs(contentViewMinX - frame.origin.x);
 			animationDuration = fabs(distance / velocity.x);
 			if (animationDuration > ANIMATION_DURATION)
 				animationDuration = ANIMATION_DURATION;
@@ -733,6 +835,9 @@
 				
 				if (!self.menuWasOpenAtPanBegin)
 					[self.menuViewController endAppearanceTransition];
+				
+				if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)])
+					[self setNeedsStatusBarAppearanceUpdate];
 				
 				[self.contentViewController viewDidSlideOut:YES inSlideMenuController:self];
 			}];
@@ -760,15 +865,20 @@
 {
 	CGFloat minX = 0;
 	
-	if (self.slideDirection == NVSlideMenuControllerSlideFromLeftToRight)
-        minX = CGRectGetWidth(self.view.bounds);
-    else
-		minX = -CGRectGetWidth(self.view.bounds);
-	
-	if (![self isContentViewHidden] && self.slideDirection == NVSlideMenuControllerSlideFromLeftToRight)
-		minX -= self.contentViewWidthWhenMenuIsOpen;
-	else if (![self isContentViewHidden] && self.slideDirection == NVSlideMenuControllerSlideFromRightToLeft)
-		minX += self.contentViewWidthWhenMenuIsOpen;
+	if ([self isContentViewHidden])
+	{
+		if (self.slideDirection == NVSlideMenuControllerSlideFromLeftToRight)
+			minX = CGRectGetWidth(self.view.bounds);
+		else
+			minX = -CGRectGetWidth(self.view.bounds);
+	}
+	else
+	{
+		if (self.slideDirection == NVSlideMenuControllerSlideFromLeftToRight)
+			minX = self.menuWidth;
+		else
+			minX = -self.menuWidth;
+	}
 	
 	return minX;
 }
@@ -779,12 +889,25 @@
 	CGRect menuFrame = self.view.bounds;
 	
 	if (self.autoAdjustMenuWidth && ![self isContentViewHidden])
-		menuFrame.size.width -= self.contentViewWidthWhenMenuIsOpen;
+		menuFrame.size.width = self.menuWidth;
 	
 	if (self.autoAdjustMenuWidth && self.slideDirection == NVSlideMenuControllerSlideFromRightToLeft && ![self isContentViewHidden])
-		menuFrame.origin.x = self.contentViewWidthWhenMenuIsOpen;
+		menuFrame.origin.x = CGRectGetWidth(self.view.bounds) - self.menuWidth;
 	
 	return menuFrame;
+}
+
+
+- (UIViewAutoresizing)menuViewAutoresizingMaskAccordingToCurrentSlideDirection
+{
+	UIViewAutoresizing resizingMask = UIViewAutoresizingFlexibleHeight;
+	
+	if (self.slideDirection == NVSlideMenuControllerSlideFromLeftToRight)
+		resizingMask = resizingMask | UIViewAutoresizingFlexibleRightMargin;
+	else
+		resizingMask = resizingMask | UIViewAutoresizingFlexibleLeftMargin;
+	
+	return resizingMask;
 }
 
 @end
@@ -847,6 +970,23 @@
 #pragma mark - NVSlideMenuController (Deprecated)
 
 @implementation NVSlideMenuController (Deprecated)
+
+- (void)setContentViewWidthWhenMenuIsOpen:(CGFloat)contentViewWidthWhenMenuIsOpen
+{
+	if (contentViewWidthWhenMenuIsOpen != _contentViewWidthWhenMenuIsOpen)
+	{
+		_contentViewWidthWhenMenuIsOpen = contentViewWidthWhenMenuIsOpen;
+		if ([self isViewLoaded])
+			self.menuWidth = CGRectGetWidth(self.view.bounds) - _contentViewWidthWhenMenuIsOpen;
+	}
+}
+
+
+- (CGFloat)contentViewWidthWhenMenuIsOpen
+{
+	return _contentViewWidthWhenMenuIsOpen;
+}
+
 
 - (void)setPanEnabledWhenSlideMenuIsHidden:(BOOL)panEnabledWhenSlideMenuIsHidden
 {
