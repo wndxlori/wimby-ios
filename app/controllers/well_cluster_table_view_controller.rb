@@ -7,7 +7,6 @@ class WellClusterTableViewController < UITableViewController
   def viewDidLoad
     super
     navigationItem.title = 'Well List'
-    self.tableView.registerClass(ThemeTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier:HeaderFooterID)
     self.view.registerClass(ThemeTableViewCell.self, forCellReuseIdentifier:self.class.name)
   end
 
@@ -18,16 +17,6 @@ class WellClusterTableViewController < UITableViewController
 
   def tableView(tableView, numberOfRowsInSection:section)
     @wells.count
-  end
-
-  HeaderFooterID = 'theme'
-
-  def tableView(tableView, viewForHeaderInSection:section)
-    tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID)
-  end
-
-  def tableView(tableView, viewForFooterInSection:section)
-    tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterID)
   end
 
   def configureCell(cell, atIndexPath:index)

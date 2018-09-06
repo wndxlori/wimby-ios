@@ -6,7 +6,7 @@ class IntroViewController < UIViewController
 
   def teacup_layout
     UIGraphicsBeginImageContext(self.view.frame.size)
-    "Default".uiimage.drawInRect(UIEdgeInsetsInsetRect(self.view.bounds, UIEdgeInsetsMake(0, 0, 20, 0)))
+    "IntroBackground".uiimage.drawInRect(UIEdgeInsetsInsetRect(self.view.bounds, UIEdgeInsetsMake(0, 0, 20, 0)))
     image = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
 

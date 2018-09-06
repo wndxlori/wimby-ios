@@ -34,16 +34,14 @@ class AppDelegate
   end
 
   def well_details_controller
-    @well_details_controller ||= begin
-      controller =  WellDetailsController.alloc.initWithStyle(UITableViewStyleGrouped)
+    @well_details_controller ||= WellDetailsController.alloc.initWithStyle(UITableViewStyleGrouped).tap do |controller|
       controller.hidesBottomBarWhenPushed = true
       controller
     end
   end
 
   def cluster_table_view_controller
-    @cluster_table_view_controller ||= begin
-      controller =  WellClusterTableViewController.alloc.initWithStyle(UITableViewStylePlain)
+    @cluster_table_view_controller ||= WellClusterTableViewController.alloc.initWithStyle(UITableViewStylePlain).tap do |controller|
       controller.hidesBottomBarWhenPushed = true
       controller
     end
