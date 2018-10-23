@@ -9,9 +9,12 @@ Bundler.require
 
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
+  define_icon_defaults!(app)
+
   app.name = 'WIMBY'
   app.identifier = 'com.wndx.wimby'
   app.deployment_target = '11.4'
+  app.archs['iPhoneOS'] = ['arm64']
   app.development do
     app.codesign_certificate = MotionProvisioning.certificate(
       type: :development,
@@ -25,7 +28,7 @@ Motion::Project::App.setup do |app|
   end
 
   app.release do
-    app.version = '0.9.0'
+    app.version = '1.1.2'
 
     app.entitlements['beta-reports-active'] = true
 
@@ -45,7 +48,7 @@ Motion::Project::App.setup do |app|
 
   app.info_plist['NSLocationWhenInUseUsageDescription'] = 'WIMBY would like to show your location on the map'
 
-  app.icons = %w(Icon-20 Icon-24 Icon-27.5 Icon-29 Icon-40 Icon-50 Icon-57 Icon-60 Icon-72 Icon-76 Icon-83.5 Icon-86 Icon-98)
+  app.info_plist['UIRequiredDeviceCapabilities'] = ['arm64']
 
   app.frameworks += %w(AdSupport CoreData MapKit WebKit)
 
@@ -91,3 +94,25 @@ desc "Run simulator on iPhone X"
 task :iphonex do
     exec 'rake device_name="iPhone X"'
 end
+
+task 'build:icons' => 'resources/app-icon.icon_asset'
+
+def define_icon_defaults!(app)
+  # This is required as of iOS 11.0 (you must use asset catalogs to
+  # define icons or your app will be rejected. More information in
+  # located in the readme.
+
+  app.info_plist['CFBundleIcons'] = {
+     'CFBundlePrimaryIcon' => {
+       'CFBundleIconName' => 'AppIcon',
+       'CFBundleIconFiles' => ['AppIcon60x60']
+     }
+   }
+
+   app.info_plist['CFBundleIcons~ipad'] = {
+     'CFBundlePrimaryIcon' => {
+       'CFBundleIconName' => 'AppIcon',
+       'CFBundleIconFiles' => ['AppIcon60x60', 'AppIcon76x76']
+     }
+   }
+ end
