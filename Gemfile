@@ -8,4 +8,7 @@ gem 'motion-provisioning'
 
 gem 'sugarcube', :require => 'sugarcube-classic'
 gem 'teacup'
-gem 'sweettea'
+gem 'sweettea', :path => '../sweettea'
+
+gem 'motion-ios-devices'
+gem 'rspec'

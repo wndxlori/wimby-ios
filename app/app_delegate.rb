@@ -5,7 +5,7 @@ class AppDelegate
   attr_accessor :tab_bar_controller, :slide_menu_controller
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
-
+    return true if RUBYMOTION_ENV == 'test'
     setup_tapstream
 
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)

@@ -1,4 +1,4 @@
-# Wrapper provides basic well info in the interface. Enhanced info will be $$
+# Wrapper provides basic well info in the interface. Complete WellInfo will be $$
 class WellBasic
   def initialize(well)
     @well = well
@@ -8,5 +8,4 @@ class WellBasic
   def coordinate; @well.coordinate; end
 
   def color; @well.color; end
-#  alias_attribute :detail, :subtitle
 end

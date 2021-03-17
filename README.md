@@ -1,4 +1,4 @@
 wimby-ios
 =========
 
-iOS version of WIMBY written using RubyMotion
+iOS version of WIMBY (Wells In My Back Yard) written using RubyMotion

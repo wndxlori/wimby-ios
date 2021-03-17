@@ -13,7 +13,7 @@ Motion::Project::App.setup do |app|
 
   app.name = 'WIMBY'
   app.identifier = 'com.wndx.wimby'
-  app.deployment_target = '11.4'
+  app.deployment_target = '14.4'
   app.archs['iPhoneOS'] = ['arm64']
   app.development do
     app.codesign_certificate = MotionProvisioning.certificate(
@@ -51,6 +51,7 @@ Motion::Project::App.setup do |app|
   app.info_plist['UIRequiredDeviceCapabilities'] = ['arm64']
 
   app.frameworks += %w(AdSupport CoreData MapKit WebKit)
+  app.files
 
   app.detect_dependencies = true
 
@@ -65,34 +66,9 @@ Motion::Project::App.setup do |app|
 
 end
 
-desc "Run simulator on iPhone"
-task :iphonese do
-    exec 'rake device_name="iPhone SE"'
-end
-
-desc "Run simulator on iPhone"
-task :iphone6 do
-    exec 'rake device_name="iPhone 6"'
-end
-
-desc "Run simulator on iPhone"
-task :iphone6s do
-    exec 'rake device_name="iPhone 6s"'
-end
-
-desc "Run simulator on iPhone"
-task :iphone6plus do
-    exec 'rake device_name="iPhone 6 Plus"'
-end
-
-desc "Run simulator on iPhone"
-task :iphone6splus do
-    exec 'rake device_name="iPhone 6s Plus"'
-end
-
-desc "Run simulator on iPhone X"
-task :iphonex do
-    exec 'rake device_name="iPhone X"'
+desc "Run simulator on iPhone 12 mini"
+task :iphone12m do
+    exec 'rake device_name="iPhone 12 mini"'
 end
 
 task 'build:icons' => 'resources/app-icon.icon_asset'
