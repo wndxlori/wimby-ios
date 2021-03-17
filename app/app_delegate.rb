@@ -5,8 +5,6 @@ class AppDelegate
   attr_accessor :tab_bar_controller, :slide_menu_controller
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
-    return true if RUBYMOTION_ENV == 'test'
-    setup_tapstream
 
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
     Theme::Base.apply(Theme::RUST, to_window: @window)
@@ -26,6 +24,8 @@ class AppDelegate
     self.slide_menu_controller = NVSlideMenuController.alloc.initWithMenuViewController(menu, andContentViewController: tab_bar_controller)
     @window.rootViewController = self.slide_menu_controller
     @window.makeKeyAndVisible
+
+    setup_tapstream unless RUBYMOTION_ENV == 'test'
 
     present_intro unless App::Persistence['intro_dismissed']
 
