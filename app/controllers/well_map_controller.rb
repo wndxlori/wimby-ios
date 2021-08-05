@@ -166,6 +166,7 @@ class WellMapController < UIViewController
       unless view = mapView.dequeueReusableAnnotationViewWithIdentifier(ClusterIdentifier)
         view = WellClusterAnnotationView.alloc.initWithAnnotation(annotation, reuseIdentifier:ClusterIdentifier)
       end
+      view.canShowCallout = true
       view.annotation = annotation
       view.count = annotation.annotations.count
       add_callout_button(view, action: :show_list)
@@ -177,7 +178,6 @@ class WellMapController < UIViewController
 #      add_callout_button(view, action: :show_details)
     end
     view.enabled = true
-    view.canShowCallout = true
     view
   end
 
