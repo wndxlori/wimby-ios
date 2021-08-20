@@ -4,7 +4,6 @@ class ThemeAnnotationView < MKAnnotationView
   def initWithAnnotation(annotation, reuseIdentifier:identifier)
     super(annotation, reuseIdentifier:identifier).tap do |view|
       view.canShowCallout = false
-      view.animatesDrop = true
     end
   end
 

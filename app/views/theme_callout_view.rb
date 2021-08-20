@@ -34,8 +34,6 @@ class ThemeCalloutView < UIView
         content_view.heightAnchor.constraintGreaterThanOrEqualToConstant(INSET.top + INSET.bottom),
     ])
 
-    add_background_button_to_view(content_view)
-
     self.layer.insertSublayer(bubble_layer, atIndex: 0)
   end
 
@@ -56,8 +54,6 @@ class ThemeCalloutView < UIView
     content_view_point = convertPoint(point, toView: content_view)
     content_view.hitTest(content_view_point, withEvent: event)
   end
-
-  def did_touch_up_in_callout; end
 
   def add_to_annotation_view(annotation_view)
     annotation_view.addSubview(self)
@@ -124,7 +120,7 @@ class ThemeCalloutView < UIView
     point = CGPointMake(bounds.size.width / 2.0 + Math::tan(angle) * INSET.bottom, bounds.size.height - INSET.bottom)
     path.addLineToPoint(point)
 
-    # right side of arrow
+    # right side of pointer
     point = CGPointMake(bounds.size.width / 2.0, bounds.size.height)
     path.addLineToPoint(point)
 
@@ -133,16 +129,4 @@ class ThemeCalloutView < UIView
     path.addLineToPoint(point)
   end
 
-  def add_background_button_to_view(view)
-    button = UIButton.buttonWithType(UIButtonTypeCustom)
-    button.translatesAutoresizingMaskIntoConstraints = false
-    view.addSubview(button)
-    NSLayoutConstraint.activateConstraints([
-        button.topAnchor.constraintEqualToAnchor(view.topAnchor),
-        button.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor),
-        button.leadingAnchor.constraintEqualToAnchor(view.leadingAnchor),
-        button.trailingAnchor.constraintEqualToAnchor(view.trailingAnchor)
-    ])
-    button.addTarget(self, action: :did_touch_up_in_callout, forControlEvents: UIControlEventTouchUpInside)
-  end
 end
