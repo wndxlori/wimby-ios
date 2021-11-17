@@ -8,7 +8,7 @@ Teacup::Stylesheet.new(:intro_sheet) do
   style :dismiss_button,
     height: 50, width: 50,
         center_x: '91%',
-        center_y: '7%',
+        center_y: '10%',
     tintColor: Theme::Base.color_theme[:tint],
     image: 'Delete Button - Line.png'.uiimage,
     autoresizingMask: (UIViewAutoresizingFlexibleLeftMargin |

@@ -5,12 +5,18 @@ class IntroViewController < UIViewController
   attr_accessor :page_controller, :page_data
 
   def teacup_layout
-    UIGraphicsBeginImageContext(self.view.frame.size)
-    "IntroBackground".uiimage.drawInRect(UIEdgeInsetsInsetRect(self.view.bounds, UIEdgeInsetsMake(0, 0, 20, 0)))
-    image = UIGraphicsGetImageFromCurrentImageContext()
+
+    image = "IntroBackground".uiimage
+    color = Theme::Base.color_theme[:cell_highlight_dark]
+    UIGraphicsBeginImageContext(image.size)
+    image.drawInRect(CGRectMake(0, 0, image.size.width, image.size.height),blendMode: KCGBlendModeNormal, alpha:1)
+    path = UIBezierPath.bezierPathWithRect(CGRectMake(0, 0, image.size.width, image.size.height))
+    color.setFill
+    path.fillWithBlendMode(KCGBlendModeMultiply,alpha:1)
+    newImage = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
 
-    self.view.backgroundColor = UIColor.colorWithPatternImage(image).colorWithAlphaComponent(0.4)
+    self.view.backgroundColor = UIColor.colorWithPatternImage(newImage).colorWithAlphaComponent(0.7)
 
     setup_page_controller
 
