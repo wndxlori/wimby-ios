@@ -2,11 +2,6 @@ class WimbyViewController < UIViewController
   attr_accessor :search_active
   stylesheet :menu_sheet
 
-  # This doesn't appear to work
-  def preferredStatusBarStyle
-    UIStatusBarStyleDefault
-  end
-
   def viewDidLoad
     super
 

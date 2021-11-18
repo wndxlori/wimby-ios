@@ -25,15 +25,26 @@ module Theme
         UIWindow.appearance.tap do |a|
           a.tintColor = self.color_theme[:tint]
         end
+        tabAppearance = UITabBarAppearance.new.tap do |na|
+          na.configureWithOpaqueBackground()
+          na.backgroundColor = self.color_theme[:tabbar_tint]
+        end
         UITabBar.appearance.tap do |a|
-          a.barTintColor = self.color_theme[:tabbar_tint]
+          a.standardAppearance = tabAppearance
+          a.scrollEdgeAppearance = tabAppearance
         end
         UIBarButtonItem.appearanceWhenContainedInInstancesOfClasses([UINavigationBar.self]).tap do |a|
           a.setTitleTextAttributes({
               NSFontAttributeName => UIFont.fontWithName('Avenir-Light', size: 15.0),
             }, forState:UIControlStateNormal)
         end
+        navAppearance = UINavigationBarAppearance.new.tap do |na|
+          na.configureWithOpaqueBackground()
+          na.backgroundColor = self.color_theme[:navbar_tint]
+        end
         UINavigationBar.appearance.tap do |a|
+          a.standardAppearance = navAppearance
+          a.scrollEdgeAppearance = navAppearance
           a.tintColor = self.color_theme[:nav_tint]
           a.barTintColor = self.color_theme[:navbar_tint]
           a.titleTextAttributes = {

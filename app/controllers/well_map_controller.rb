@@ -26,7 +26,7 @@ class WellMapController < UIViewController
   end
 
   def preferredStatusBarStyle
-    UIStatusBarStyleLightContent
+    UIStatusBarStyleDefault
   end
 
   def teacup_layout
