@@ -65,9 +65,14 @@ Motion::Project::App.setup do |app|
 
 end
 
-desc "Run simulator on iPhone 12 mini"
-task :iphone12m do
+task :promax do
+  exec 'rake device_name="iPhone 13 Pro Max"'
+end
+task :mini do
   exec 'rake device_name="iPhone 12 mini"'
+end
+task :pro do
+  exec 'rake device_name="iPhone 11 Pro"'
 end
 task :se do
   exec 'rake device_name="iPhone SE (2nd generation)"'
