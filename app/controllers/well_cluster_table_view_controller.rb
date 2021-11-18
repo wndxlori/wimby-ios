@@ -12,7 +12,6 @@ class WellClusterTableViewController < UITableViewController
 
   def viewWillAppear(_)
     navigationController.setNavigationBarHidden(false, animated:true)
-    UIApplication.sharedApplication.delegate.log_event('show-cluster-table')
   end
 
   def tableView(tableView, numberOfRowsInSection:section)

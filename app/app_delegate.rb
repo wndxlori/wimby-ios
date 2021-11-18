@@ -6,7 +6,6 @@ class AppDelegate
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
     return true if RUBYMOTION_ENV == 'test'
-    setup_tapstream
 
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
     Theme::Base.apply(Theme::RUST, to_window: @window)
@@ -57,11 +56,6 @@ class AppDelegate
      controller.presentViewController(alert, animated:true, completion:nil)
  	end
 
-  def log_event(event_name)
-    e = TSEvent.eventWithName(event_name, oneTimeOnly:false)
-    TSTapstream.instance.fireEvent(e)
-  end
-
   def present_intro
     self.tab_bar_controller.present_modal(IntroViewController.new)
   end
@@ -70,11 +64,6 @@ private
 
   def initialize_datastore
     WellStore.shared
-  end
-
-  def setup_tapstream
-    config = TSConfig.configWithDefaults()
-    TSTapstream.createWithAccountName("wndxgroup", developerSecret:"SIeEgUZ-QaWg3nDdrAg88g", config:config)
   end
 
 end

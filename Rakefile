@@ -13,7 +13,7 @@ Motion::Project::App.setup do |app|
 
   app.name = 'WIMBY'
   app.identifier = 'com.wndx.wimby'
-  app.deployment_target = '14.4'
+  app.deployment_target = '13.7'
   app.archs['iPhoneOS'] = ['arm64']
   app.development do
     app.codesign_certificate = MotionProvisioning.certificate(
@@ -28,7 +28,7 @@ Motion::Project::App.setup do |app|
   end
 
   app.release do
-    app.version = '1.1.2'
+    app.version = '1.1.3'
 
     app.entitlements['beta-reports-active'] = true
 
@@ -60,7 +60,6 @@ Motion::Project::App.setup do |app|
     pod 'NVSlideMenuController'
     pod 'AFNetworking'
     pod 'CCHMapClusterController'
-    pod 'Tapstream'
     pod 'UIDevice-Hardware'
   end
 
@@ -68,7 +67,10 @@ end
 
 desc "Run simulator on iPhone 12 mini"
 task :iphone12m do
-    exec 'rake device_name="iPhone 12 mini"'
+  exec 'rake device_name="iPhone 12 mini"'
+end
+task :se do
+  exec 'rake device_name="iPhone SE (2nd generation)"'
 end
 
 task 'build:icons' => 'resources/app-icon.icon_asset'

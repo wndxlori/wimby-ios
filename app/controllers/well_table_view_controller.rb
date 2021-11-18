@@ -25,7 +25,6 @@ class WellTableViewController < UITableViewController
       tableView.reloadData
       add_observers unless @has_observers
     end
-    UIApplication.sharedApplication.delegate.log_event('show-well-table')
   end
 
   def viewDidLoad

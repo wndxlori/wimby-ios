@@ -16,14 +16,12 @@ PODS:
     - AFNetworking/NSURLSession
   - CCHMapClusterController (1.7.1)
   - NVSlideMenuController (1.5.8)
-  - Tapstream (2.12.0)
   - UIDevice-Hardware (0.1.11)
 
 DEPENDENCIES:
   - AFNetworking
   - CCHMapClusterController
   - NVSlideMenuController
-  - Tapstream
   - UIDevice-Hardware
 
 SPEC REPOS:
@@ -31,16 +29,14 @@ SPEC REPOS:
     - AFNetworking
     - CCHMapClusterController
     - NVSlideMenuController
-    - Tapstream
     - UIDevice-Hardware
 
 SPEC CHECKSUMS:
   AFNetworking: 8ac6017b94ea105479f7776e5288e48ae9c59bb4
   CCHMapClusterController: 3de2f03cb659a98ef8518d22de3fcb129d888049
   NVSlideMenuController: 43420b8aa46d7fe7c1a9adbf49b538b4c589cbb3
-  Tapstream: a2f97ac2f4460916c4e51f7deaf1b85d99316878
   UIDevice-Hardware: 72b0ea097ed0b239fe88073e2b9ac0b18f75bc05
 
-PODFILE CHECKSUM: 492e9a74c8e4e36d8b66fb53f0340038874c6987
+PODFILE CHECKSUM: f02773c72ec0cac92eadbec0b85c0f7185677136
 
 COCOAPODS: 1.5.3
