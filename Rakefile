@@ -28,7 +28,7 @@ Motion::Project::App.setup do |app|
   end
 
   app.release do
-    app.version = '1.1.3'
+    app.version = '1.2.0'
 
     app.entitlements['beta-reports-active'] = true
 
@@ -42,6 +42,9 @@ Motion::Project::App.setup do |app|
       platform: :ios,
       type: :distribution)
   end
+
+  # AppStore Stuff
+  app.info_plist['LSApplicationCategoryType'] = 'public.app-category.reference'
 
   # So it does not display on the splash screen
   app.info_plist['UIStatusBarHidden'] = true
