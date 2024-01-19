@@ -7,11 +7,21 @@ class IntroPageViewController < UIViewController
   attr_accessor :body
   attr_accessor :body_image
 
-  def initialize(page, index)
-    self.index = index
-    self.title = page[:title]
-    self.body = page[:body]
-    self.body_image = page[:body_image]
+  def title
+    @title
+  end
+
+  def title=(new_title)
+    @title = new_title
+  end
+
+  def initWithPageSource(page, index)
+    self.init.tap do
+      self.index = index
+      self.title = page[:title]
+      self.body = page[:body]
+      self.body_image = page[:body_image]
+    end
   end
 
   def teacup_layout
