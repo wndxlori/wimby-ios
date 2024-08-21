@@ -16,34 +16,19 @@ Motion::Project::App.setup do |app|
   app.deployment_target = '13.7'
   app.archs['iPhoneOS'] = ['arm64']
   app.development do
-    app.codesign_certificate = MotionProvisioning.certificate(
-      type: :development,
-      platform: :ios)
-
-    app.provisioning_profile = MotionProvisioning.profile(
-      bundle_identifier: app.identifier,
-      app_name: app.name,
-      platform: :ios,
-      type: :development)
+    app.codesign_certificate = "Apple Development: Lori Olson (856MK7QV4X)"
+    app.provisioning_profile = "/Users/lori/Library/MobileDevice/Provisioning Profiles/9f5fbea4-be8c-4aae-9b52-ee7ae56b54c7.mobileprovision"
   end
 
   app.release do
-    app.version = '1.2.0'
+    app.version = '1.2.3'
 
-    app.entitlements['beta-reports-active'] = true
-
-    app.codesign_certificate = MotionProvisioning.certificate(
-      type: :distribution,
-      platform: :ios)
-
-    app.provisioning_profile = MotionProvisioning.profile(
-      bundle_identifier: app.identifier,
-      app_name: app.name,
-      platform: :ios,
-      type: :distribution)
+    app.codesign_certificate = "Apple Distribution: The WNDX Group Inc (S3E5U9BKJV)"
+    app.provisioning_profile = "/Users/lori/Library/MobileDevice/Provisioning Profiles/d36555fb-59b9-4e25-a14f-eaef4ee5494f.mobileprovision"
   end
 
   # AppStore Stuff
+  app.info_plist['ITSAppUsesNonExemptEncryption'] = false
   app.info_plist['LSApplicationCategoryType'] = 'public.app-category.reference'
 
   # So it does not display on the splash screen
@@ -63,19 +48,18 @@ Motion::Project::App.setup do |app|
     pod 'NVSlideMenuController'
     pod 'AFNetworking'
     pod 'CCHMapClusterController'
-    pod 'UIDevice-Hardware'
   end
 
 end
 
 task :promax do
-  exec 'rake device_name="iPhone 13 Pro Max"'
+  exec 'rake device_name="iPhone 15 Pro Max"'
 end
 task :mini do
   exec 'rake device_name="iPhone 12 mini"'
 end
 task :pro do
-  exec 'rake device_name="iPhone 11 Pro"'
+  exec 'rake device_name="iPhone 15 Pro"'
 end
 task :se do
   exec 'rake device_name="iPhone SE (2nd generation)"'
