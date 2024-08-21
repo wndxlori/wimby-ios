@@ -5,6 +5,7 @@ class AboutViewController < UIViewController
   def init
     super.tap do
       self.tabBarItem = UITabBarItem.alloc.initWithTitle('About', image:'Info Icon - Inactive.png'.uiimage, selectedImage:'Info Icon - Active.png'.uiimage)
+      self.tabBarItem.imageInsets = UIEdgeInsetsMake(6, 0, 0, 0)
       navigationItem.title = 'About WIMBY'
       navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithImage(
         'Search Icon - Inactive.png'.uiimage,

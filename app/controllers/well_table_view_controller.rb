@@ -3,6 +3,7 @@ class WellTableViewController < UITableViewController
   def init
     super.tap do
       self.tabBarItem = UITabBarItem.alloc.initWithTitle('List', image:'List Icon - Inactive.png'.uiimage, selectedImage:'List Icon - Active.png'.uiimage)
+      self.tabBarItem.imageInsets = UIEdgeInsetsMake(6, 0, 0, 0)
       self.navigationItem.title = 'Well List'
       self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithImage(
         'Search Icon - Inactive.png'.uiimage,

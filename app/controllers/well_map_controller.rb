@@ -13,6 +13,8 @@ class WellMapController < UIViewController
   def init
     super.tap do
       self.tabBarItem = UITabBarItem.alloc.initWithTitle('Map', image:'Maps Icon - Inactive.png'.uiimage, selectedImage:'Maps Icon - Active.png'.uiimage)
+      self.tabBarItem.imageInsets = UIEdgeInsetsMake(6, 0, 0, 0)
+
       navigationItem.title = 'Well Map'
       navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithImage(
         'Search Icon - Inactive.png'.uiimage,
@@ -239,7 +241,6 @@ class WellMapController < UIViewController
     NSLog("Map Region = #{region_hash}")
     if did_region_hash_change?(region_hash)
       @last_update = Time.now
-      @activity_indicator.startAnimating if slow_device?
       App.notification_center.post(RegionChanged, region_hash) unless region_hash['min_lat'].nan?
       mapView.removeAnnotations(mapView.annotations)
     end
@@ -292,10 +293,6 @@ private
     App.notification_center.unobserve WellsLoaded
     App.notification_center.unobserve LocationEntered
     @has_observers = false
-  end
-
-  def slow_device?
-    UIDevice.currentDevice.modelName.start_with?('iPhone 4', 'iPhone 5')
   end
 
   def check_user_location
