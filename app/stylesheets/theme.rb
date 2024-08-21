@@ -25,14 +25,23 @@ module Theme
         UIWindow.appearance.tap do |a|
           a.tintColor = self.color_theme[:tint]
         end
+
+        tabBarItemAppearance = UITabBarItemAppearance.new.tap do |na|
+          na.normal.titlePositionAdjustment = UIOffsetMake(0,6)
+          na.selected.titlePositionAdjustment = UIOffsetMake(0,6)
+        end
+
         tabAppearance = UITabBarAppearance.new.tap do |na|
           na.configureWithOpaqueBackground()
           na.backgroundColor = self.color_theme[:tabbar_tint]
+          na.stackedLayoutAppearance = tabBarItemAppearance
         end
+
         UITabBar.appearance.tap do |a|
           a.standardAppearance = tabAppearance
           a.scrollEdgeAppearance = tabAppearance
         end
+
         UIBarButtonItem.appearanceWhenContainedInInstancesOfClasses([UINavigationBar.self]).tap do |a|
           a.setTitleTextAttributes({
               NSFontAttributeName => UIFont.fontWithName('Avenir-Light', size: 15.0),
