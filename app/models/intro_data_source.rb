@@ -16,12 +16,12 @@ class IntroDataSource # UIPageViewControllerDataSource
 
   def initialize
     @pages = []
-    @pages << IntroPageViewController.new(INTRO[0], 0)
+    @pages << IntroPageViewController.new.initWithPageSource(INTRO[0], 0)
   end
 
   def viewControllerAtIndex(index)
     return nil if index >= INTRO.length
-    @pages[index] ||= IntroPageViewController.new(INTRO[index], index)
+    @pages[index] ||= IntroPageViewController.new.initWithPageSource(INTRO[index], index)
   end
 
   def indexOfViewController(viewController)
