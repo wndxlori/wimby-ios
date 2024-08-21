@@ -1,42 +1,38 @@
 PODS:
-  - AFNetworking (3.2.0):
-    - AFNetworking/NSURLSession (= 3.2.0)
-    - AFNetworking/Reachability (= 3.2.0)
-    - AFNetworking/Security (= 3.2.0)
-    - AFNetworking/Serialization (= 3.2.0)
-    - AFNetworking/UIKit (= 3.2.0)
-  - AFNetworking/NSURLSession (3.2.0):
+  - AFNetworking (4.0.1):
+    - AFNetworking/NSURLSession (= 4.0.1)
+    - AFNetworking/Reachability (= 4.0.1)
+    - AFNetworking/Security (= 4.0.1)
+    - AFNetworking/Serialization (= 4.0.1)
+    - AFNetworking/UIKit (= 4.0.1)
+  - AFNetworking/NSURLSession (4.0.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (3.2.0)
-  - AFNetworking/Security (3.2.0)
-  - AFNetworking/Serialization (3.2.0)
-  - AFNetworking/UIKit (3.2.0):
+  - AFNetworking/Reachability (4.0.1)
+  - AFNetworking/Security (4.0.1)
+  - AFNetworking/Serialization (4.0.1)
+  - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
-  - CCHMapClusterController (1.7.1)
+  - CCHMapClusterController (1.7.2)
   - NVSlideMenuController (1.5.8)
-  - UIDevice-Hardware (0.1.11)
 
 DEPENDENCIES:
   - AFNetworking
   - CCHMapClusterController
   - NVSlideMenuController
-  - UIDevice-Hardware
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - AFNetworking
     - CCHMapClusterController
     - NVSlideMenuController
-    - UIDevice-Hardware
 
 SPEC CHECKSUMS:
-  AFNetworking: 8ac6017b94ea105479f7776e5288e48ae9c59bb4
-  CCHMapClusterController: 3de2f03cb659a98ef8518d22de3fcb129d888049
+  AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
+  CCHMapClusterController: 682e1eb1373a7decda1b75fd7b24b3047fed9daa
   NVSlideMenuController: 43420b8aa46d7fe7c1a9adbf49b538b4c589cbb3
-  UIDevice-Hardware: 72b0ea097ed0b239fe88073e2b9ac0b18f75bc05
 
-PODFILE CHECKSUM: f02773c72ec0cac92eadbec0b85c0f7185677136
+PODFILE CHECKSUM: cd52f3e3c632b13501ae7afcf66d45b8752e9787
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.9.3

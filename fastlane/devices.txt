@@ -1,0 +1,2 @@
+Device ID	Device Name
+00008101-00023D4C3EE8001E	Viserion

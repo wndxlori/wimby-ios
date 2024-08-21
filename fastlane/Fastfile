@@ -1,0 +1,5 @@
+lane :register_devices do
+  register_devices(
+    devices_file: "devices.txt"
+  )
+end

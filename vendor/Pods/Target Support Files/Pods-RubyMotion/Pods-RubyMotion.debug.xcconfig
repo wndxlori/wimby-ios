@@ -1,9 +1,9 @@
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AFNetworking" "${PODS_ROOT}/Headers/Public/CCHMapClusterController" "${PODS_ROOT}/Headers/Public/NVSlideMenuController" "${PODS_ROOT}/Headers/Public/UIDevice-Hardware"
-LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/AFNetworking" "${PODS_CONFIGURATION_BUILD_DIR}/CCHMapClusterController" "${PODS_CONFIGURATION_BUILD_DIR}/NVSlideMenuController" "${PODS_CONFIGURATION_BUILD_DIR}/UIDevice-Hardware"
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/AFNetworking" -isystem "${PODS_ROOT}/Headers/Public/CCHMapClusterController" -isystem "${PODS_ROOT}/Headers/Public/NVSlideMenuController" -isystem "${PODS_ROOT}/Headers/Public/UIDevice-Hardware"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"AFNetworking" -l"CCHMapClusterController" -l"NVSlideMenuController" -l"UIDevice-Hardware" -framework "CoreGraphics" -framework "CoreLocation" -framework "MapKit" -framework "MobileCoreServices" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AFNetworking" "${PODS_ROOT}/Headers/Public/CCHMapClusterController" "${PODS_ROOT}/Headers/Public/NVSlideMenuController"
+LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/AFNetworking" "${PODS_CONFIGURATION_BUILD_DIR}/CCHMapClusterController" "${PODS_CONFIGURATION_BUILD_DIR}/NVSlideMenuController"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"AFNetworking" -l"CCHMapClusterController" -l"NVSlideMenuController" -framework "CoreLocation" -framework "MapKit" -framework "QuartzCore"
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_PODFILE_DIR_PATH = ${SRCROOT}/..
 PODS_ROOT = ${SRCROOT}/Pods
+USE_RECURSIVE_SCRIPT_INPUTS_IN_SCRIPT_PHASES = YES
